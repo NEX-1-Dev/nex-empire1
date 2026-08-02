@@ -35,76 +35,113 @@ document.querySelectorAll('nav a').forEach(link => {
     });
 });
 
-// ====== شات NEX ======
-const chatNexToggle = document.getElementById('chatNexToggle');
-const chatNexOverlay = document.getElementById('chatNexOverlay');
-const chatNexClose = document.getElementById('chatNexClose');
-const chatNexMessages = document.getElementById('chatNexMessages');
-const chatNexInput = document.getElementById('chatNexInput');
-const chatNexSend = document.getElementById('chatNexSend');
+// ====== نافذة الشات الموحدة ======
+const chatOverlay = document.getElementById('chatOverlay');
+const chatClose = document.getElementById('chatClose');
 
-// خيارات DeepSeek
+// فتح الشات من أي زر
+function openChat(tab = 'nex') {
+    chatOverlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    // تفعيل التبويب المطلوب
+    document.querySelectorAll('.chat-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.chat-tab-content').forEach(c => c.classList.remove('active'));
+    document.querySelector(`.chat-tab[data-tab="${tab}"]`)?.classList.add('active');
+    document.getElementById(`tab-${tab}`)?.classList.add('active');
+    if (tab === 'nex') {
+        document.getElementById('chatNexInput')?.focus();
+    }
+}
+
+// إغلاق الشات
+function closeChat() {
+    chatOverlay.classList.remove('open');
+    document.body.style.overflow = '';
+}
+
+// أزرار فتح الشات
+document.getElementById('chatNexToggle').addEventListener('click', (e) => {
+    e.preventDefault();
+    openChat('nex');
+});
+
+document.getElementById('chatTawkToggle').addEventListener('click', (e) => {
+    e.preventDefault();
+    openChat('tawk');
+});
+
+// إغلاق الشات
+chatClose.addEventListener('click', closeChat);
+
+// إغلاق بالضغط على الخلفية
+chatOverlay.addEventListener('click', (e) => {
+    if (e.target === chatOverlay) closeChat();
+});
+
+// إغلاق بزر Escape
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && chatOverlay.classList.contains('open')) closeChat();
+});
+
+// ====== تبديل علامات التبويب ======
+document.querySelectorAll('.chat-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+        const target = tab.dataset.tab;
+        document.querySelectorAll('.chat-tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.chat-tab-content').forEach(c => c.classList.remove('active'));
+        tab.classList.add('active');
+        document.getElementById(`tab-${target}`).classList.add('active');
+        if (target === 'nex') {
+            document.getElementById('chatNexInput')?.focus();
+        }
+    });
+});
+
+// ====== خيارات شات NEX ======
 let currentThinking = true;
 let currentSearch = true;
 
-// تحديد الخيار النشط
-document.querySelectorAll('.nex-option-btn').forEach(btn => {
+document.querySelectorAll('.nex-option').forEach(btn => {
     btn.addEventListener('click', () => {
-        document.querySelectorAll('.nex-option-btn').forEach(b => b.classList.remove('active'));
+        if (btn.id === 'nexNewChat') {
+            // بدء محادثة جديدة
+            const messages = document.getElementById('chatNexMessages');
+            messages.innerHTML = `
+                <div class="message bot">
+                    <div class="msg-avatar">🤖</div>
+                    <div class="msg-bubble">👋 تم بدء محادثة جديدة! كيف يمكنني مساعدتك اليوم؟</div>
+                </div>
+            `;
+            document.getElementById('chatNexInput').focus();
+            return;
+        }
+        document.querySelectorAll('.nex-option').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         currentThinking = btn.dataset.thinking === 'true';
         currentSearch = btn.dataset.search === 'true';
     });
 });
 
-// فتح/إغلاق الشات
-chatNexToggle.addEventListener('click', (e) => {
-    e.preventDefault();
-    chatNexOverlay.classList.toggle('open');
-    document.body.style.overflow = chatNexOverlay.classList.contains('open') ? 'hidden' : '';
-    if (chatNexOverlay.classList.contains('open')) {
-        chatNexInput.focus();
-    }
-});
+// ====== شات NEX ======
+const chatNexMessages = document.getElementById('chatNexMessages');
+const chatNexInput = document.getElementById('chatNexInput');
+const chatNexSend = document.getElementById('chatNexSend');
 
-chatNexClose.addEventListener('click', () => {
-    chatNexOverlay.classList.remove('open');
-    document.body.style.overflow = '';
-});
-
-// إغلاق الشات بالضغط على الخلفية
-chatNexOverlay.addEventListener('click', (e) => {
-    if (e.target === chatNexOverlay) {
-        chatNexOverlay.classList.remove('open');
-        document.body.style.overflow = '';
-    }
-});
-
-// إغلاق الشات بزر Escape
-document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && chatNexOverlay.classList.contains('open')) {
-        chatNexOverlay.classList.remove('open');
-        document.body.style.overflow = '';
-    }
-});
-
-// إضافة رسالة
 function addNexMessage(text, type) {
     const div = document.createElement('div');
-    div.className = `nex-message ${type}`;
+    div.className = `message ${type}`;
     const avatar = type === 'bot' ? '🤖' : '👤';
-    // تحويل النص إلى HTML مع دعم السطور
     const formattedText = text.replace(/\n/g, '<br>');
     div.innerHTML = `
-        <div class="nex-avatar">${avatar}</div>
-        <div class="nex-bubble">${formattedText}</div>
+        <div class="msg-avatar">${avatar}</div>
+        <div class="msg-bubble">${formattedText}</div>
     `;
     chatNexMessages.appendChild(div);
     chatNexMessages.scrollTop = chatNexMessages.scrollHeight;
 }
 
 // ====== الاتصال بـ DeepSeek API ======
-// 🚨 استبدل هذا الرابط برابط API الخاص بك بعد النشر
+// 🚨 استبدل هذا الرابط برابط API الخاص بك
 const DEEPSEEK_API_URL = 'https://your-api-url.vercel.app/api/deepseek';
 
 async function callDeepSeek(query, thinking, search) {
@@ -127,7 +164,7 @@ async function callDeepSeek(query, thinking, search) {
     }
 }
 
-// ====== إرسال رسالة ======
+// ====== إرسال رسالة NEX ======
 async function sendNexMessage() {
     const text = chatNexInput.value.trim();
     if (!text) return;
@@ -137,13 +174,12 @@ async function sendNexMessage() {
     chatNexInput.disabled = true;
     chatNexSend.disabled = true;
 
-    // عرض رسالة "جاري التفكير..."
     const loadingMsg = document.createElement('div');
-    loadingMsg.className = 'nex-message bot';
+    loadingMsg.className = 'message bot';
     loadingMsg.id = 'nexLoading';
     loadingMsg.innerHTML = `
-        <div class="nex-avatar">🤖</div>
-        <div class="nex-bubble">⏳ جاري التفكير والبحث... <span class="dot-loader">● ● ●</span></div>
+        <div class="msg-avatar">🤖</div>
+        <div class="msg-bubble">⏳ جاري التفكير والبحث... <span class="dot-loader">● ● ●</span></div>
     `;
     chatNexMessages.appendChild(loadingMsg);
     chatNexMessages.scrollTop = chatNexMessages.scrollHeight;
@@ -165,6 +201,53 @@ async function sendNexMessage() {
 chatNexSend.addEventListener('click', sendNexMessage);
 chatNexInput.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') sendNexMessage();
+});
+
+// ====== خيارات Tawk.to ======
+document.querySelectorAll('.tawk-option').forEach(btn => {
+    btn.addEventListener('click', () => {
+        document.querySelectorAll('.tawk-option').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        // محاكاة تغيير الحالة
+        const container = document.getElementById('tawkContainer');
+        if (btn.id === 'tawkLive') {
+            container.innerHTML = `
+                <div class="message system">
+                    <div class="msg-bubble" style="background:var(--input-bg);color:var(--text-secondary);">
+                        <i class="fas fa-circle" style="color:#00c853;"></i> المحادثة المباشرة متاحة الآن!
+                        <br><small>سيظهر شات الدعم هنا تلقائياً</small>
+                    </div>
+                </div>
+            `;
+            // محاولة إظهار iframe مرة أخرى
+            const tawkIframe = document.querySelector('#tawk-container iframe');
+            if (tawkIframe) {
+                container.innerHTML = '';
+                container.appendChild(tawkIframe);
+                tawkIframe.style.width = '100%';
+                tawkIframe.style.height = '100%';
+                tawkIframe.style.border = 'none';
+            }
+        } else if (btn.id === 'tawkHistory') {
+            container.innerHTML = `
+                <div class="message system">
+                    <div class="msg-bubble" style="background:var(--input-bg);color:var(--text-secondary);">
+                        <i class="fas fa-history"></i> سجل المحادثات السابقة
+                        <br><small>سيتم عرض تاريخ محادثاتك هنا</small>
+                    </div>
+                </div>
+            `;
+        } else if (btn.id === 'tawkNew') {
+            container.innerHTML = `
+                <div class="message system">
+                    <div class="msg-bubble" style="background:var(--input-bg);color:var(--text-secondary);">
+                        <i class="fas fa-plus"></i> بدء محادثة جديدة مع الدعم
+                        <br><small>جاري الاتصال بأحد ممثلي الدعم...</small>
+                    </div>
+                </div>
+            `;
+        }
+    });
 });
 
 // ====== عداد الأرقام المتحرك ======
@@ -210,3 +293,18 @@ console.log('🌟 تابعنا على تليغرام وواتساب!');
 setTimeout(() => {
     addNexMessage('👋 مرحباً بك في ℕ𝔼𝕏! أنا شات NEX المدعوم بذكاء DeepSeek. كيف يمكنني مساعدتك اليوم؟', 'bot');
 }, 500);
+
+// ====== محاولة تحميل Tawk في الخلفية ======
+setTimeout(() => {
+    const tawkContainer = document.getElementById('tawkContainer');
+    const tawkIframe = document.querySelector('#tawk-container iframe');
+    if (tawkIframe && tawkContainer) {
+        tawkContainer.innerHTML = '';
+        tawkContainer.appendChild(tawkIframe);
+        tawkIframe.style.width = '100%';
+        tawkIframe.style.height = '100%';
+        tawkIframe.style.border = 'none';
+        tawkIframe.style.borderRadius = '0';
+        tawkIframe.style.minHeight = '400px';
+    }
+}, 3000);
