@@ -13,6 +13,10 @@
     --input-bg: rgba(255, 255, 255, 0.05);
     --radius: 20px;
     --transition: 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    --chat-width: 90%;
+    --chat-max-width: 800px;
+    --chat-height: 80vh;
+    --chat-max-height: 700px;
 }
 
 [data-theme="light"] {
@@ -67,157 +71,151 @@ body {
     transform: scale(1.1) rotate(20deg);
 }
 
-/* ====== زر شات NEX ====== */
-.chat-nex-btn {
-    position: fixed;
-    bottom: 100px;
-    right: 30px;
-    z-index: 999;
-    background: linear-gradient(135deg, var(--gradient-2), var(--gradient-3));
-    color: #fff;
-    border: none;
-    padding: 14px 22px;
-    border-radius: 50px;
-    font-size: 1rem;
-    font-weight: 700;
-    cursor: pointer;
-    box-shadow: 0 4px 30px rgba(0, 212, 255, 0.4);
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    transition: var(--transition);
-}
-
-.chat-nex-btn:hover {
-    transform: scale(1.05);
-    box-shadow: 0 8px 40px rgba(0, 212, 255, 0.6);
-}
-
-.chat-nex-btn i {
-    font-size: 1.4rem;
-}
-
 /* ====== نافذة شات NEX ====== */
-.chat-nex-window {
+.chat-nex-overlay {
+    display: none;
     position: fixed;
-    bottom: 160px;
-    right: 30px;
-    z-index: 1000;
-    width: 380px;
-    max-height: 550px;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(10px);
+    z-index: 10000;
+    justify-content: center;
+    align-items: center;
+    animation: overlayFadeIn 0.3s ease;
+}
+
+.chat-nex-overlay.open {
+    display: flex;
+}
+
+@keyframes overlayFadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.chat-nex-container {
+    width: var(--chat-width);
+    max-width: var(--chat-max-width);
+    height: var(--chat-height);
+    max-height: var(--chat-max-height);
     background: var(--bg-secondary);
     border-radius: var(--radius);
-    border: 1px solid var(--border-color);
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
-    display: none;
+    box-shadow: 0 25px 80px rgba(0, 0, 0, 0.8);
+    display: flex;
     flex-direction: column;
     overflow: hidden;
     animation: slideUp 0.4s ease;
-}
-
-.chat-nex-window.open {
-    display: flex;
+    border: 1px solid var(--border-color);
 }
 
 @keyframes slideUp {
     from {
         opacity: 0;
-        transform: translateY(30px);
+        transform: translateY(50px) scale(0.95);
     }
     to {
         opacity: 1;
-        transform: translateY(0);
+        transform: translateY(0) scale(1);
     }
 }
 
 .chat-nex-header {
     background: linear-gradient(135deg, var(--gradient-1), var(--gradient-2));
-    padding: 12px 18px;
+    padding: 16px 24px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     color: #fff;
+    flex-shrink: 0;
 }
 
 .chat-nex-title {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
     font-weight: 700;
-    font-size: 0.95rem;
+    font-size: 1.1rem;
 }
 
 .chat-nex-badge {
     background: rgba(255, 255, 255, 0.2);
-    padding: 2px 12px;
+    padding: 2px 14px;
     border-radius: 30px;
-    font-size: 0.55rem;
+    font-size: 0.6rem;
     font-weight: 400;
+}
+
+.chat-nex-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.nex-option-btn {
+    background: rgba(255, 255, 255, 0.15);
+    border: none;
+    color: #fff;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 0.8rem;
+    transition: var(--transition);
+}
+
+.nex-option-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.nex-option-btn.active {
+    background: rgba(255, 255, 255, 0.4);
 }
 
 .chat-nex-close {
     background: rgba(255, 255, 255, 0.15);
     border: none;
     color: #fff;
-    width: 30px;
-    height: 30px;
+    width: 34px;
+    height: 34px;
     border-radius: 50%;
     cursor: pointer;
-    font-size: 0.9rem;
-}
-
-.chat-nex-close:hover {
-    background: rgba(255, 255, 255, 0.25);
-}
-
-/* ====== خيارات DeepSeek ====== */
-.chat-nex-options {
-    display: flex;
-    gap: 6px;
-    padding: 8px 12px;
-    background: var(--input-bg);
-    border-bottom: 1px solid var(--border-color);
-    flex-wrap: wrap;
-}
-
-.nex-option {
-    padding: 4px 12px;
-    border-radius: 30px;
-    border: 1px solid var(--border-color);
-    background: transparent;
-    color: var(--text-secondary);
-    font-size: 0.7rem;
-    cursor: pointer;
+    font-size: 1rem;
     transition: var(--transition);
 }
 
-.nex-option:hover {
-    background: var(--gradient-1);
-    color: #fff;
-    border-color: var(--gradient-1);
+.chat-nex-close:hover {
+    background: rgba(255, 0, 0, 0.4);
 }
 
-.nex-option.active {
-    background: linear-gradient(45deg, var(--gradient-1), var(--gradient-2));
-    color: #fff;
-    border-color: transparent;
+/* ====== جسم الشات ====== */
+.chat-nex-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
 }
 
-/* ====== رسائل الشات ====== */
 .chat-nex-messages {
     flex: 1;
-    padding: 12px 15px;
+    padding: 20px;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    max-height: 280px;
+    gap: 12px;
     background: var(--bg-primary);
 }
 
+/* ====== رسائل الشات ====== */
 .nex-message {
     display: flex;
-    gap: 8px;
+    gap: 10px;
     align-items: flex-start;
     animation: fadeIn 0.3s ease;
 }
@@ -227,27 +225,32 @@ body {
 }
 
 .nex-avatar {
-    width: 32px;
-    height: 32px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     background: var(--input-bg);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1rem;
+    font-size: 1.2rem;
     flex-shrink: 0;
 }
 
 .nex-bubble {
-    max-width: 80%;
-    padding: 8px 14px;
-    border-radius: 14px;
-    font-size: 0.9rem;
-    line-height: 1.6;
+    max-width: 75%;
+    padding: 12px 18px;
+    border-radius: 16px;
+    font-size: 0.95rem;
+    line-height: 1.7;
     background: var(--bg-card);
     color: var(--text-primary);
     border: 1px solid var(--border-color);
     word-wrap: break-word;
+}
+
+.nex-bubble br {
+    display: block;
+    margin: 4px 0;
 }
 
 .nex-message.bot .nex-bubble {
@@ -259,7 +262,7 @@ body {
 @keyframes fadeIn {
     from {
         opacity: 0;
-        transform: translateY(8px);
+        transform: translateY(10px);
     }
     to {
         opacity: 1;
@@ -267,63 +270,66 @@ body {
     }
 }
 
-/* ====== مدخل الشات ====== */
-.chat-nex-input {
-    display: flex;
-    padding: 10px 12px;
-    gap: 8px;
+/* ====== منطقة إدخال النص ====== */
+.chat-nex-input-area {
     border-top: 1px solid var(--border-color);
-    background: var(--bg-primary);
+    background: var(--bg-secondary);
+    flex-shrink: 0;
 }
 
-.chat-nex-input input {
+.chat-nex-input-wrapper {
+    display: flex;
+    padding: 12px 16px;
+    gap: 10px;
+}
+
+.chat-nex-input-wrapper input {
     flex: 1;
-    padding: 8px 14px;
+    padding: 12px 18px;
     border-radius: 30px;
     border: 1px solid var(--border-color);
     background: var(--input-bg);
     color: var(--text-primary);
-    font-size: 0.9rem;
+    font-size: 0.95rem;
 }
 
-.chat-nex-input input:focus {
+.chat-nex-input-wrapper input:focus {
     outline: none;
     border-color: var(--gradient-2);
 }
 
-.chat-nex-input input:disabled {
+.chat-nex-input-wrapper input:disabled {
     opacity: 0.5;
     cursor: not-allowed;
 }
 
-.chat-nex-input button {
-    width: 40px;
-    height: 40px;
+.chat-nex-input-wrapper button {
+    width: 48px;
+    height: 48px;
     border-radius: 50%;
     border: none;
     background: linear-gradient(135deg, var(--gradient-1), var(--gradient-2));
     color: #fff;
-    font-size: 1rem;
+    font-size: 1.1rem;
     cursor: pointer;
     transition: var(--transition);
 }
 
-.chat-nex-input button:hover {
+.chat-nex-input-wrapper button:hover {
     transform: scale(1.05);
 }
 
-.chat-nex-input button:disabled {
+.chat-nex-input-wrapper button:disabled {
     opacity: 0.5;
     cursor: not-allowed;
 }
 
 .chat-nex-footer {
     text-align: center;
-    padding: 6px;
-    font-size: 0.65rem;
+    padding: 8px;
+    font-size: 0.7rem;
     color: var(--text-secondary);
     border-top: 1px solid var(--border-color);
-    background: var(--bg-primary);
 }
 
 /* ====== الهيدر ====== */
@@ -355,6 +361,7 @@ header {
 nav {
     display: flex;
     gap: 20px;
+    align-items: center;
 }
 
 nav a {
@@ -369,6 +376,20 @@ nav a {
 nav a:hover {
     background: linear-gradient(45deg, var(--gradient-1), var(--gradient-2));
     color: #fff;
+}
+
+/* ====== زر شات NEX في القائمة ====== */
+.nav-chat-btn {
+    background: linear-gradient(45deg, var(--gradient-2), var(--gradient-3));
+    color: #fff !important;
+    font-weight: 700;
+    box-shadow: 0 4px 20px rgba(0, 212, 255, 0.3);
+}
+
+.nav-chat-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(0, 212, 255, 0.5);
+    background: linear-gradient(45deg, var(--gradient-1), var(--gradient-2)) !important;
 }
 
 .menu-toggle {
@@ -844,10 +865,10 @@ footer {
     .about-container {
         grid-template-columns: 1fr;
     }
-    .chat-nex-window {
-        width: 340px;
-        right: 20px;
-        bottom: 150px;
+    .chat-nex-container {
+        width: 95%;
+        height: 85vh;
+        max-height: 85vh;
     }
 }
 
@@ -884,24 +905,54 @@ footer {
     .support-links {
         grid-template-columns: 1fr;
     }
-    .chat-nex-window {
-        width: 300px;
-        right: 10px;
-        bottom: 140px;
-        max-height: 420px;
+    .chat-nex-container {
+        width: 98%;
+        height: 90vh;
+        max-height: 90vh;
+        border-radius: 12px;
     }
-    .chat-nex-btn {
-        padding: 10px 16px;
+    .chat-nex-header {
+        padding: 12px 16px;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    .chat-nex-title {
+        font-size: 0.9rem;
+    }
+    .chat-nex-actions {
+        gap: 4px;
+    }
+    .nex-option-btn {
+        width: 30px;
+        height: 30px;
+        font-size: 0.7rem;
+    }
+    .chat-nex-messages {
+        padding: 12px;
+    }
+    .nex-bubble {
+        max-width: 85%;
         font-size: 0.85rem;
-        bottom: 90px;
-        right: 15px;
+        padding: 10px 14px;
+    }
+    .chat-nex-input-wrapper {
+        padding: 8px 12px;
+    }
+    .chat-nex-input-wrapper input {
+        font-size: 0.85rem;
+        padding: 10px 14px;
+    }
+    .chat-nex-input-wrapper button {
+        width: 42px;
+        height: 42px;
+        font-size: 0.9rem;
     }
     .theme-btn {
         width: 48px;
         height: 48px;
         font-size: 1.2rem;
-        bottom: 25px;
-        right: 15px;
+        bottom: 20px;
+        right: 20px;
     }
 }
 
@@ -919,10 +970,17 @@ footer {
     .stat .number {
         font-size: 2rem;
     }
-    .chat-nex-window {
-        width: 280px;
-        right: 10px;
-        bottom: 130px;
-        max-height: 380px;
+    .chat-nex-container {
+        height: 95vh;
+        max-height: 95vh;
+        border-radius: 8px;
+    }
+    .chat-nex-messages {
+        padding: 10px;
+    }
+    .nex-bubble {
+        max-width: 90%;
+        font-size: 0.8rem;
+        padding: 8px 12px;
     }
 }
