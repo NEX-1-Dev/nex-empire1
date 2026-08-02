@@ -286,7 +286,7 @@ body {
     border-color: transparent;
 }
 
-/* ====== رسائل الشات ====== */
+/* ====== الرسائل ====== */
 .chat-messages {
     flex: 1;
     padding: 16px 20px;
@@ -297,7 +297,6 @@ body {
     background: var(--bg-primary);
 }
 
-/* ====== حاوية Tawk ====== */
 .tawk-container {
     padding: 0 !important;
     position: relative;
@@ -311,7 +310,6 @@ body {
     min-height: 400px;
 }
 
-/* ====== الرسائل ====== */
 .message {
     display: flex;
     gap: 10px;
@@ -442,6 +440,26 @@ body {
     border-top: 1px solid var(--border-color);
 }
 
+/* ====== إخفاء زر Tawk.to العائم ====== */
+#tawk-container,
+.tawk-container,
+.tawk-min-container,
+.tawk-widget,
+.tawk-branding,
+.tawk-chat-widget,
+.tawk-iframe-container {
+    display: none !important;
+}
+
+#tab-tawk .tawk-container,
+#tab-tawk #tawk-container {
+    display: flex !important;
+}
+
+iframe[src*="tawk.to"]:not(#tab-tawk iframe) {
+    display: none !important;
+}
+
 /* ====== الهيدر ====== */
 header {
     display: flex;
@@ -489,7 +507,6 @@ nav a:hover {
     color: #fff;
 }
 
-/* ====== أزرار الشات في القائمة ====== */
 .nav-chat-btn {
     background: linear-gradient(45deg, var(--gradient-2), var(--gradient-3));
     color: #fff !important;
@@ -519,7 +536,7 @@ nav a:hover {
     cursor: pointer;
 }
 
-/* ====== باقي التصميم (نفس السابق) ====== */
+/* ====== باقي التصميم ====== */
 .hero {
     min-height: 90vh;
     display: flex;
@@ -989,19 +1006,4 @@ footer {
 
 @media (max-width: 768px) {
     header {
-        padding: 15px 20px;
-        flex-wrap: wrap;
-    }
-    nav {
-        display: none;
-        flex-direction: column;
-        width: 100%;
-        padding-top: 15px;
-    }
-    nav.open {
-        display: flex;
-    }
-    .menu-toggle {
-        display: block;
-    }
-    .h
+        padding: 15px 
