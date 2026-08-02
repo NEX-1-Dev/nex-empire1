@@ -1,29 +1,30 @@
-/* ====== المتغيرات الأسطورية ====== */
+/* ====== المتغيرات ====== */
 :root {
-    --bg-primary: #080812;
-    --bg-secondary: #0d0d20;
-    --bg-card: rgba(255, 215, 0, 0.05);
-    --text-primary: #f0e8d0;
-    --text-secondary: #a09070;
-    --gold: #ffd700;
-    --gold-dark: #b8860b;
-    --gold-glow: rgba(255, 215, 0, 0.3);
-    --gradient-gold: linear-gradient(135deg, #ffd700, #ff8c00);
-    --gradient-dark: linear-gradient(135deg, #1a0a2e, #0d0d20);
-    --shadow-gold: 0 4px 40px rgba(255, 215, 0, 0.15);
-    --border-gold: rgba(255, 215, 0, 0.15);
-    --radius: 16px;
-    --transition: 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    --sidebar-width: 280px;
+    --bg-primary: #0a0a12;
+    --bg-secondary: #111122;
+    --bg-card: rgba(255, 255, 255, 0.03);
+    --text-primary: #e8e8f0;
+    --text-secondary: #8888aa;
+    --accent: #6c5ce7;
+    --accent-light: #a29bfe;
+    --accent-dark: #4834d4;
+    --gradient-main: linear-gradient(135deg, #6c5ce7, #a29bfe);
+    --gradient-dark: linear-gradient(135deg, #0a0a12, #111122);
+    --shadow: 0 4px 30px rgba(108, 92, 231, 0.15);
+    --border: rgba(255, 255, 255, 0.06);
+    --radius: 12px;
+    --transition: 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    --sidebar-width: 260px;
 }
 
 [data-theme="light"] {
-    --bg-primary: #f5f0e8;
+    --bg-primary: #f0f0f5;
     --bg-secondary: #ffffff;
-    --bg-card: rgba(0, 0, 0, 0.03);
-    --text-primary: #1a1a1a;
-    --text-secondary: #555555;
-    --border-gold: rgba(184, 134, 11, 0.2);
+    --bg-card: rgba(0, 0, 0, 0.02);
+    --text-primary: #1a1a2e;
+    --text-secondary: #555577;
+    --border: rgba(0, 0, 0, 0.06);
+    --shadow: 0 4px 30px rgba(108, 92, 231, 0.08);
 }
 
 /* ====== الأساسيات ====== */
@@ -55,88 +56,95 @@ body {
     width: var(--sidebar-width);
     height: 100vh;
     background: var(--bg-secondary);
-    border-left: 2px solid var(--gold);
+    border-left: 1px solid var(--border);
     padding: 30px 20px;
     display: flex;
     flex-direction: column;
     z-index: 1000;
     transition: transform 0.4s ease;
-    box-shadow: -10px 0 60px rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(20px);
 }
 
 .sidebar-brand {
     text-align: center;
-    padding-bottom: 30px;
-    border-bottom: 1px solid var(--border-gold);
-    margin-bottom: 30px;
+    padding-bottom: 25px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 25px;
 }
 
 .sidebar-brand h1 {
-    font-size: 2.2rem;
-    background: var(--gradient-gold);
+    font-size: 2rem;
+    background: var(--gradient-main);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     font-weight: 900;
+    letter-spacing: -1px;
 }
 
 .sidebar-brand p {
     color: var(--text-secondary);
-    font-size: 0.85rem;
-    letter-spacing: 2px;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
 }
 
 .sidebar-nav {
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 4px;
 }
 
 .sidebar-nav a {
     display: flex;
     align-items: center;
-    gap: 15px;
-    padding: 12px 18px;
-    border-radius: 12px;
+    gap: 14px;
+    padding: 12px 16px;
+    border-radius: var(--radius);
     color: var(--text-secondary);
     text-decoration: none;
     transition: all 0.3s;
-    font-weight: 700;
+    font-weight: 500;
     font-size: 0.95rem;
     border: 1px solid transparent;
 }
 
 .sidebar-nav a i {
-    width: 24px;
+    width: 22px;
     text-align: center;
-    font-size: 1.1rem;
+    font-size: 1rem;
 }
 
 .sidebar-nav a:hover {
     background: var(--bg-card);
-    color: var(--gold);
-    border-color: var(--border-gold);
-    transform: translateX(-5px);
+    color: var(--text-primary);
+    border-color: var(--border);
 }
 
 .sidebar-nav a.active {
-    background: var(--gradient-gold);
-    color: #0d0d20;
-    border-color: var(--gold);
-    box-shadow: var(--shadow-gold);
+    background: var(--gradient-main);
+    color: #fff;
+    box-shadow: var(--shadow);
+}
+
+.sidebar-nav a.active i {
+    color: #fff;
 }
 
 .sidebar-footer {
     padding-top: 20px;
-    border-top: 1px solid var(--border-gold);
+    border-top: 1px solid var(--border);
     text-align: center;
     color: var(--text-secondary);
     font-size: 0.85rem;
 }
 
 .sidebar-footer p {
-    font-weight: 700;
-    color: var(--gold);
+    font-weight: 600;
+    color: var(--accent-light);
+}
+
+.sidebar-footer small {
+    font-size: 0.75rem;
 }
 
 /* ====== زر فتح القائمة الجانبية ====== */
@@ -146,15 +154,15 @@ body {
     top: 20px;
     right: 20px;
     z-index: 1001;
-    background: var(--gradient-gold);
-    color: #0d0d20;
+    background: var(--gradient-main);
+    color: #fff;
     border: none;
-    width: 50px;
-    height: 50px;
+    width: 48px;
+    height: 48px;
     border-radius: 50%;
-    font-size: 1.4rem;
+    font-size: 1.2rem;
     cursor: pointer;
-    box-shadow: var(--shadow-gold);
+    box-shadow: var(--shadow);
 }
 
 /* ====== المحتوى الرئيسي ====== */
@@ -169,20 +177,20 @@ body {
     position: fixed;
     bottom: 30px;
     left: 30px;
-    z-index: 9999;
-    background: var(--gradient-gold);
-    color: #0d0d20;
+    z-index: 999;
+    background: var(--gradient-main);
+    color: #fff;
     border: none;
-    width: 55px;
-    height: 55px;
+    width: 52px;
+    height: 52px;
     border-radius: 50%;
-    font-size: 1.4rem;
+    font-size: 1.3rem;
     cursor: pointer;
-    box-shadow: var(--shadow-gold);
+    box-shadow: var(--shadow);
 }
 
 .theme-btn:hover {
-    transform: scale(1.1) rotate(20deg);
+    transform: scale(1.05);
 }
 
 /* ====== نافذة الشات ====== */
@@ -193,8 +201,8 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.8);
-    backdrop-filter: blur(15px);
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(10px);
     z-index: 2000;
     justify-content: center;
     align-items: center;
@@ -207,92 +215,92 @@ body {
 .chat-container {
     width: 92%;
     max-width: 900px;
-    height: 85vh;
-    max-height: 750px;
+    height: 80vh;
+    max-height: 700px;
     background: var(--bg-secondary);
     border-radius: var(--radius);
-    border: 2px solid var(--gold);
-    box-shadow: 0 25px 80px rgba(255, 215, 0, 0.1);
+    border: 1px solid var(--border);
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    animation: slideUp 0.4s ease;
+    animation: slideUp 0.3s ease;
 }
 
 @keyframes slideUp {
     from {
         opacity: 0;
-        transform: translateY(50px) scale(0.95);
+        transform: translateY(30px);
     }
     to {
         opacity: 1;
-        transform: translateY(0) scale(1);
+        transform: translateY(0);
     }
 }
 
 .chat-header {
-    background: var(--gradient-gold);
-    padding: 16px 24px;
+    background: var(--gradient-main);
+    padding: 14px 24px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    color: #0d0d20;
+    color: #fff;
     flex-shrink: 0;
 }
 
 .chat-title {
     display: flex;
     align-items: center;
-    gap: 12px;
-    font-weight: 900;
-    font-size: 1.1rem;
+    gap: 10px;
+    font-weight: 700;
+    font-size: 1rem;
 }
 
 .chat-badge {
-    background: rgba(0, 0, 0, 0.15);
-    padding: 2px 14px;
-    border-radius: 30px;
+    background: rgba(255, 255, 255, 0.15);
+    padding: 2px 12px;
+    border-radius: 20px;
     font-size: 0.6rem;
-    font-weight: 700;
+    font-weight: 500;
 }
 
 .chat-close {
-    background: rgba(0, 0, 0, 0.15);
+    background: rgba(255, 255, 255, 0.1);
     border: none;
-    color: #0d0d20;
-    width: 36px;
-    height: 36px;
+    color: #fff;
+    width: 34px;
+    height: 34px;
     border-radius: 50%;
     cursor: pointer;
-    font-size: 1.1rem;
+    font-size: 1rem;
 }
 
 .chat-close:hover {
-    background: rgba(0, 0, 0, 0.3);
+    background: rgba(255, 255, 255, 0.2);
 }
 
 .chat-tabs {
     display: flex;
     background: var(--bg-primary);
-    border-bottom: 1px solid var(--border-gold);
+    border-bottom: 1px solid var(--border);
     flex-shrink: 0;
 }
 
 .chat-tab {
     flex: 1;
-    padding: 12px 20px;
+    padding: 10px 16px;
     background: transparent;
     border: none;
     color: var(--text-secondary);
-    font-size: 0.95rem;
-    font-weight: 700;
+    font-size: 0.9rem;
+    font-weight: 600;
     cursor: pointer;
     transition: var(--transition);
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
-    border-bottom: 3px solid transparent;
+    border-bottom: 2px solid transparent;
 }
 
 .chat-tab:hover {
@@ -300,8 +308,8 @@ body {
 }
 
 .chat-tab.active {
-    color: var(--gold);
-    border-bottom-color: var(--gold);
+    color: var(--accent-light);
+    border-bottom-color: var(--accent);
 }
 
 .chat-tab-content {
@@ -315,26 +323,25 @@ body {
     display: flex;
 }
 
-/* ====== خيارات الشات ====== */
 .chat-nex-options,
 .chat-tawk-options {
     display: flex;
     gap: 6px;
-    padding: 8px 12px;
-    background: var(--input-bg);
-    border-bottom: 1px solid var(--border-gold);
+    padding: 6px 12px;
+    background: var(--bg-primary);
+    border-bottom: 1px solid var(--border);
     flex-wrap: wrap;
     flex-shrink: 0;
 }
 
 .nex-option,
 .tawk-option {
-    padding: 6px 14px;
-    border-radius: 30px;
-    border: 1px solid var(--border-gold);
+    padding: 4px 12px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
     background: transparent;
     color: var(--text-secondary);
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     cursor: pointer;
     transition: var(--transition);
     display: flex;
@@ -344,16 +351,15 @@ body {
 
 .nex-option:hover,
 .tawk-option:hover {
-    background: var(--gold);
-    color: #0d0d20;
-    border-color: var(--gold);
+    background: var(--bg-card);
+    color: var(--text-primary);
 }
 
 .nex-option.active,
 .tawk-option.active {
-    background: var(--gradient-gold);
-    color: #0d0d20;
-    border-color: var(--gold);
+    background: var(--gradient-main);
+    color: #fff;
+    border-color: var(--accent);
 }
 
 /* ====== الرسائل ====== */
@@ -375,7 +381,7 @@ body {
     width: 100% !important;
     height: 100% !important;
     border: none !important;
-    min-height: 400px;
+    min-height: 350px;
 }
 
 .message {
@@ -394,40 +400,40 @@ body {
 }
 
 .msg-avatar {
-    width: 38px;
-    height: 38px;
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
     background: var(--bg-card);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     flex-shrink: 0;
-    border: 1px solid var(--border-gold);
+    border: 1px solid var(--border);
 }
 
 .msg-bubble {
     max-width: 75%;
     padding: 10px 16px;
-    border-radius: 14px;
+    border-radius: 12px;
     font-size: 0.95rem;
-    line-height: 1.7;
+    line-height: 1.6;
     background: var(--bg-card);
     color: var(--text-primary);
-    border: 1px solid var(--border-gold);
+    border: 1px solid var(--border);
     word-wrap: break-word;
 }
 
 .message.bot .msg-bubble {
-    background: var(--gradient-gold);
-    color: #0d0d20;
+    background: var(--gradient-main);
+    color: #fff;
     border: none;
 }
 
 @keyframes fadeIn {
     from {
         opacity: 0;
-        transform: translateY(10px);
+        transform: translateY(8px);
     }
     to {
         opacity: 1;
@@ -437,7 +443,7 @@ body {
 
 /* ====== منطقة الإدخال ====== */
 .chat-input-area {
-    border-top: 1px solid var(--border-gold);
+    border-top: 1px solid var(--border);
     background: var(--bg-secondary);
     flex-shrink: 0;
 }
@@ -451,26 +457,31 @@ body {
 .chat-input-wrapper input {
     flex: 1;
     padding: 10px 16px;
-    border-radius: 30px;
-    border: 1px solid var(--border-gold);
-    background: var(--input-bg);
+    border-radius: 25px;
+    border: 1px solid var(--border);
+    background: var(--bg-primary);
     color: var(--text-primary);
     font-size: 0.95rem;
 }
 
 .chat-input-wrapper input:focus {
     outline: none;
-    border-color: var(--gold);
+    border-color: var(--accent);
+}
+
+.chat-input-wrapper input:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
 }
 
 .chat-input-wrapper button {
-    width: 46px;
-    height: 46px;
+    width: 44px;
+    height: 44px;
     border-radius: 50%;
     border: none;
-    background: var(--gradient-gold);
-    color: #0d0d20;
-    font-size: 1.1rem;
+    background: var(--gradient-main);
+    color: #fff;
+    font-size: 1rem;
     cursor: pointer;
     transition: var(--transition);
 }
@@ -479,15 +490,39 @@ body {
     transform: scale(1.05);
 }
 
-.chat-footer {
-    text-align: center;
-    padding: 6px;
-    font-size: 0.7rem;
-    color: var(--text-secondary);
-    border-top: 1px solid var(--border-gold);
+.chat-input-wrapper button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
 }
 
-/* ====== القسم الرئيسي (Hero) ====== */
+.chat-footer {
+    text-align: center;
+    padding: 5px;
+    font-size: 0.65rem;
+    color: var(--text-secondary);
+    border-top: 1px solid var(--border);
+}
+
+/* ====== إخفاء Tawk العائم ====== */
+#tawk-container,
+.tawk-container,
+.tawk-min-container,
+.tawk-widget,
+.tawk-branding,
+.tawk-chat-widget {
+    display: none !important;
+}
+
+#tab-tawk .tawk-container,
+#tab-tawk #tawk-container {
+    display: flex !important;
+}
+
+iframe[src*="tawk.to"]:not(#tab-tawk iframe) {
+    display: none !important;
+}
+
+/* ====== القسم الرئيسي ====== */
 .hero {
     min-height: 90vh;
     display: flex;
@@ -511,7 +546,7 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.65);
+    background: rgba(0, 0, 0, 0.6);
     z-index: 0;
 }
 
@@ -523,33 +558,33 @@ body {
 
 .hero-badge {
     display: inline-block;
-    background: rgba(255, 215, 0, 0.15);
-    color: var(--gold);
-    padding: 5px 25px;
-    border-radius: 30px;
-    font-size: 0.85rem;
-    font-weight: 700;
-    margin-bottom: 15px;
-    border: 1px solid rgba(255, 215, 0, 0.2);
+    background: rgba(255, 255, 255, 0.05);
     backdrop-filter: blur(10px);
+    color: var(--accent-light);
+    padding: 4px 20px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-bottom: 15px;
+    border: 1px solid var(--border);
 }
 
 .hero h1 {
-    font-size: 5rem;
+    font-size: 4.5rem;
     font-weight: 900;
-    text-shadow: 0 4px 40px rgba(0, 0, 0, 0.8);
+    text-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
 }
 
 .hero h1 span {
-    background: var(--gradient-gold);
+    background: var(--gradient-main);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
 .hero p {
-    font-size: 1.3rem;
-    color: rgba(255, 255, 255, 0.85);
-    text-shadow: 0 2px 20px rgba(0, 0, 0, 0.7);
+    font-size: 1.2rem;
+    color: rgba(255, 255, 255, 0.8);
+    text-shadow: 0 2px 15px rgba(0, 0, 0, 0.5);
     margin: 20px 0 30px;
     max-width: 600px;
 }
@@ -562,10 +597,10 @@ body {
 }
 
 .btn {
-    padding: 14px 35px;
+    padding: 12px 32px;
     border-radius: 50px;
     text-decoration: none;
-    font-weight: 700;
+    font-weight: 600;
     font-size: 1rem;
     transition: var(--transition);
     border: none;
@@ -573,26 +608,25 @@ body {
 }
 
 .btn.primary {
-    background: var(--gradient-gold);
-    color: #0d0d20;
-    box-shadow: var(--shadow-gold);
+    background: var(--gradient-main);
+    color: #fff;
+    box-shadow: var(--shadow);
 }
 
 .btn.primary:hover {
     transform: translateY(-3px);
-    box-shadow: 0 8px 50px rgba(255, 215, 0, 0.3);
+    box-shadow: 0 8px 40px rgba(108, 92, 231, 0.3);
 }
 
 .btn.secondary {
-    background: rgba(0, 0, 0, 0.4);
+    background: rgba(255, 255, 255, 0.05);
     backdrop-filter: blur(5px);
     color: #fff;
-    border: 2px solid var(--gold);
+    border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 .btn.secondary:hover {
-    background: var(--gold);
-    color: #0d0d20;
+    background: rgba(255, 255, 255, 0.1);
 }
 
 .hero-stats {
@@ -604,17 +638,17 @@ body {
 }
 
 .stat .number {
-    font-size: 3rem;
+    font-size: 2.8rem;
     font-weight: 900;
-    background: var(--gradient-gold);
+    background: var(--gradient-main);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
 .stat .label {
     display: block;
-    color: rgba(255, 255, 255, 0.8);
-    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.85rem;
 }
 
 /* ====== الأقسام ====== */
@@ -624,17 +658,17 @@ section {
 }
 
 section h2 {
-    font-size: 2.6rem;
+    font-size: 2.4rem;
     margin-bottom: 10px;
 }
 
 section h2 i {
-    color: var(--gold);
+    color: var(--accent-light);
 }
 
 .section-desc {
     color: var(--text-secondary);
-    font-size: 1.05rem;
+    font-size: 1rem;
     margin-bottom: 50px;
 }
 
@@ -642,7 +676,7 @@ section h2 i {
 .bots-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 30px;
+    gap: 25px;
     max-width: 1200px;
     margin: 0 auto;
 }
@@ -651,110 +685,109 @@ section h2 i {
     background: var(--bg-card);
     padding: 30px 25px;
     border-radius: var(--radius);
-    border: 1px solid var(--border-gold);
+    border: 1px solid var(--border);
     transition: var(--transition);
 }
 
 .bot-card:hover {
-    transform: translateY(-10px);
-    box-shadow: var(--shadow-gold);
-    border-color: var(--gold);
+    transform: translateY(-5px);
+    box-shadow: var(--shadow);
+    border-color: var(--accent);
 }
 
 .bot-icon {
-    font-size: 3rem;
+    font-size: 2.8rem;
     margin-bottom: 10px;
 }
 
 .bot-card h3 {
-    font-size: 1.3rem;
-    color: var(--gold);
+    font-size: 1.2rem;
 }
 
 .bot-card p {
     color: var(--text-secondary);
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     margin: 10px 0;
 }
 
 .bot-features {
     display: flex;
     flex-wrap: wrap;
-    gap: 6px;
+    gap: 5px;
     justify-content: center;
     margin: 12px 0;
 }
 
 .bot-features span {
     background: var(--bg-card);
-    padding: 4px 12px;
-    border-radius: 20px;
-    font-size: 0.75rem;
+    padding: 3px 10px;
+    border-radius: 15px;
+    font-size: 0.7rem;
     color: var(--text-secondary);
-    border: 1px solid var(--border-gold);
+    border: 1px solid var(--border);
 }
 
 .bot-features span i {
-    color: var(--gold);
-    margin-left: 5px;
+    color: var(--accent-light);
+    margin-left: 4px;
 }
 
 .status {
     display: inline-block;
-    padding: 4px 18px;
-    border-radius: 30px;
-    font-size: 0.85rem;
-    font-weight: 700;
+    padding: 3px 16px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
     margin: 12px 0;
 }
 
 .status.online {
-    background: rgba(0, 200, 83, 0.15);
+    background: rgba(0, 200, 83, 0.12);
     color: #00c853;
 }
 .status.maintenance {
-    background: rgba(255, 160, 0, 0.15);
+    background: rgba(255, 160, 0, 0.12);
     color: #ffa000;
 }
 .status.offline {
-    background: rgba(211, 47, 47, 0.15);
+    background: rgba(211, 47, 47, 0.12);
     color: #d32f2f;
 }
 
 .bot-btn {
     display: inline-block;
-    padding: 10px 28px;
-    border-radius: 30px;
+    padding: 8px 24px;
+    border-radius: 25px;
     text-decoration: none;
-    font-weight: 700;
-    font-size: 0.9rem;
+    font-weight: 600;
+    font-size: 0.85rem;
     transition: var(--transition);
     border: none;
     cursor: pointer;
 }
 
 .bot-btn:not(.disabled) {
-    background: var(--gradient-gold);
-    color: #0d0d20;
+    background: var(--gradient-main);
+    color: #fff;
 }
 
 .bot-btn:not(.disabled):hover {
     transform: scale(1.05);
-    box-shadow: var(--shadow-gold);
+    box-shadow: var(--shadow);
 }
 
 .bot-btn.disabled {
     background: var(--bg-card);
     color: var(--text-secondary);
     cursor: not-allowed;
-    border: 1px solid var(--border-gold);
+    border: 1px solid var(--border);
 }
 
-/* ====== المميزات ====== */
+/* ====== الميزات ====== */
 .features-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 25px;
+    gap: 20px;
     max-width: 1200px;
     margin: 0 auto;
 }
@@ -763,25 +796,23 @@ section h2 i {
     background: var(--bg-card);
     padding: 30px 20px;
     border-radius: var(--radius);
-    border: 1px solid var(--border-gold);
+    border: 1px solid var(--border);
     transition: var(--transition);
 }
 
 .feature-card:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--shadow-gold);
-    border-color: var(--gold);
+    transform: translateY(-4px);
+    box-shadow: var(--shadow);
 }
 
 .feature-card i {
-    font-size: 2.8rem;
-    color: var(--gold);
+    font-size: 2.5rem;
+    color: var(--accent-light);
     margin-bottom: 12px;
 }
 
 .feature-card h3 {
-    font-size: 1.2rem;
-    color: var(--gold);
+    font-size: 1.1rem;
 }
 
 .feature-card p {
@@ -789,7 +820,7 @@ section h2 i {
     font-size: 0.9rem;
 }
 
-/* ====== عن الإمبراطورية ====== */
+/* ====== عن المنصة ====== */
 .about-container {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -801,9 +832,9 @@ section h2 i {
 
 .about-text h3,
 .about-mission h3 {
-    font-size: 1.4rem;
+    font-size: 1.3rem;
     margin-bottom: 15px;
-    color: var(--gold);
+    color: var(--accent-light);
 }
 
 .about-text p,
@@ -816,21 +847,21 @@ section h2 i {
 .about-stats {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 12px;
+    gap: 10px;
     margin-top: 20px;
 }
 
 .about-stats div {
     background: var(--bg-card);
     padding: 10px 15px;
-    border-radius: 12px;
-    border: 1px solid var(--border-gold);
-    font-weight: 700;
-    font-size: 0.9rem;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    font-weight: 600;
+    font-size: 0.85rem;
 }
 
 .about-stats i {
-    color: var(--gold);
+    color: var(--accent-light);
     margin-left: 8px;
 }
 
@@ -847,11 +878,11 @@ section h2 i {
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 16px 20px;
-    border-radius: 12px;
+    padding: 14px 20px;
+    border-radius: var(--radius);
     text-decoration: none;
     color: #fff;
-    font-weight: 700;
+    font-weight: 600;
     transition: var(--transition);
     justify-content: center;
 }
@@ -862,7 +893,7 @@ section h2 i {
 }
 
 .support-link i {
-    font-size: 1.6rem;
+    font-size: 1.4rem;
 }
 
 .support-link.whatsapp {
@@ -872,18 +903,17 @@ section h2 i {
     background: #0088cc;
 }
 .support-link.support-group {
-    background: var(--gradient-gold);
-    color: #0d0d20;
+    background: var(--gradient-main);
 }
 .support-link.developer {
-    background: linear-gradient(135deg, #ff6b9d, #c084fc);
+    background: linear-gradient(135deg, #fd79a8, #a29bfe);
 }
 
 /* ====== الفوتر ====== */
 footer {
     background: var(--bg-secondary);
     padding: 50px 50px 20px;
-    border-top: 1px solid var(--border-gold);
+    border-top: 1px solid var(--border);
 }
 
 .footer-content {
@@ -897,7 +927,7 @@ footer {
 .footer-section h3,
 .footer-section h4 {
     margin-bottom: 15px;
-    color: var(--gold);
+    color: var(--text-primary);
 }
 
 .footer-section a {
@@ -909,7 +939,7 @@ footer {
 }
 
 .footer-section a:hover {
-    color: var(--gold);
+    color: var(--accent-light);
 }
 
 .social-icons {
@@ -919,22 +949,22 @@ footer {
 }
 
 .social-icons a {
-    width: 42px;
-    height: 42px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     background: var(--bg-card);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     color: var(--text-primary);
     transition: var(--transition);
-    border: 1px solid var(--border-gold);
+    border: 1px solid var(--border);
 }
 
 .social-icons a:hover {
-    background: var(--gold);
-    color: #0d0d20;
+    background: var(--gradient-main);
+    color: #fff;
     transform: translateY(-3px);
 }
 
@@ -942,28 +972,9 @@ footer {
     text-align: center;
     padding-top: 25px;
     margin-top: 30px;
-    border-top: 1px solid var(--border-gold);
+    border-top: 1px solid var(--border);
     color: var(--text-secondary);
-    font-size: 0.9rem;
-}
-
-/* ====== إخفاء Tawk العائم ====== */
-#tawk-container,
-.tawk-container,
-.tawk-min-container,
-.tawk-widget,
-.tawk-branding,
-.tawk-chat-widget {
-    display: none !important;
-}
-
-#tab-tawk .tawk-container,
-#tab-tawk #tawk-container {
-    display: flex !important;
-}
-
-iframe[src*="tawk.to"]:not(#tab-tawk iframe) {
-    display: none !important;
+    font-size: 0.85rem;
 }
 
 /* ====== استجابة ====== */
@@ -985,7 +996,7 @@ iframe[src*="tawk.to"]:not(#tab-tawk iframe) {
     }
     .chat-container {
         width: 95%;
-        height: 90vh;
+        height: 85vh;
     }
 }
 
@@ -1008,8 +1019,8 @@ iframe[src*="tawk.to"]:not(#tab-tawk iframe) {
     }
     .chat-container {
         width: 98%;
-        height: 95vh;
-        border-radius: 12px;
+        height: 92vh;
+        border-radius: 8px;
     }
     .sidebar {
         width: 280px;
@@ -1017,9 +1028,9 @@ iframe[src*="tawk.to"]:not(#tab-tawk iframe) {
     .theme-btn {
         bottom: 20px;
         left: 20px;
-        width: 48px;
-        height: 48px;
-        font-size: 1.2rem;
+        width: 46px;
+        height: 46px;
+        font-size: 1.1rem;
     }
 }
 
