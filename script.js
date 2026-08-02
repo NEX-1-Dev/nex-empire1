@@ -21,18 +21,28 @@ function updateThemeIcon(theme) {
     icon.className = theme === 'light' ? 'fas fa-sun' : 'fas fa-moon';
 }
 
-// ====== القائمة المتنقلة ======
-const menuToggle = document.getElementById('menuToggle');
-const nav = document.querySelector('nav');
+// ====== القائمة الجانبية ======
+const sidebarToggle = document.getElementById('sidebarToggle');
+const sidebar = document.getElementById('sidebar');
 
-menuToggle.addEventListener('click', () => {
-    nav.classList.toggle('open');
+sidebarToggle.addEventListener('click', () => {
+    sidebar.classList.toggle('open');
 });
 
-document.querySelectorAll('nav a').forEach(link => {
+// إغلاق القائمة عند النقر على رابط
+document.querySelectorAll('.sidebar-nav a').forEach(link => {
     link.addEventListener('click', () => {
-        nav.classList.remove('open');
+        sidebar.classList.remove('open');
     });
+});
+
+// ====== تفعيل الرابط النشط في القائمة ======
+const currentPath = window.location.hash || '#home';
+document.querySelectorAll('.sidebar-nav a').forEach(link => {
+    link.classList.remove('active');
+    if (link.getAttribute('href') === currentPath) {
+        link.classList.add('active');
+    }
 });
 
 // ====== نافذة الشات الموحدة ======
@@ -57,22 +67,12 @@ function closeChat() {
 }
 
 // أزرار فتح الشات
-const chatNexToggle = document.getElementById('chatNexToggle');
-const chatTawkToggle = document.getElementById('chatTawkToggle');
-
-if (chatNexToggle) {
-    chatNexToggle.addEventListener('click', (e) => {
+document.querySelectorAll('#chatNexToggle, .sidebar-nav a[href="#"]').forEach(btn => {
+    btn?.addEventListener('click', (e) => {
         e.preventDefault();
         openChat('nex');
     });
-}
-
-if (chatTawkToggle) {
-    chatTawkToggle.addEventListener('click', (e) => {
-        e.preventDefault();
-        openChat('tawk');
-    });
-}
+});
 
 if (chatClose) {
     chatClose.addEventListener('click', closeChat);
@@ -110,8 +110,8 @@ document.querySelectorAll('.nex-option').forEach(btn => {
             const messages = document.getElementById('chatNexMessages');
             messages.innerHTML = `
                 <div class="message bot">
-                    <div class="msg-avatar">🤖</div>
-                    <div class="msg-bubble">👋 تم بدء محادثة جديدة! كيف يمكنني مساعدتك اليوم؟</div>
+                    <div class="msg-avatar">⚜️</div>
+                    <div class="msg-bubble">👑 بدأت معركة جديدة! كيف يمكنني خدمتك أيها المحارب؟</div>
                 </div>
             `;
             document.getElementById('chatNexInput').focus();
@@ -132,7 +132,7 @@ const chatNexSend = document.getElementById('chatNexSend');
 function addNexMessage(text, type) {
     const div = document.createElement('div');
     div.className = `message ${type}`;
-    const avatar = type === 'bot' ? '🤖' : '👤';
+    const avatar = type === 'bot' ? '⚜️' : '👤';
     const formattedText = text.replace(/\n/g, '<br>');
     div.innerHTML = `
         <div class="msg-avatar">${avatar}</div>
@@ -177,8 +177,8 @@ async function sendNexMessage() {
     loadingMsg.className = 'message bot';
     loadingMsg.id = 'nexLoading';
     loadingMsg.innerHTML = `
-        <div class="msg-avatar">🤖</div>
-        <div class="msg-bubble">⏳ جاري التفكير والبحث... <span class="dot-loader">● ● ●</span></div>
+        <div class="msg-avatar">⚜️</div>
+        <div class="msg-bubble">⏳ جاري استشارة الحكمة... <span class="dot-loader">● ● ●</span></div>
     `;
     chatNexMessages.appendChild(loadingMsg);
     chatNexMessages.scrollTop = chatNexMessages.scrollHeight;
@@ -189,7 +189,7 @@ async function sendNexMessage() {
         addNexMessage(reply, 'bot');
     } catch (error) {
         document.getElementById('nexLoading')?.remove();
-        addNexMessage(`❌ عذراً، حدث خطأ: ${error.message}`, 'bot');
+        addNexMessage(`❌ عذراً أيها المحارب، حدث خلل: ${error.message}`, 'bot');
     }
 
     chatNexInput.disabled = false;
@@ -212,8 +212,8 @@ document.querySelectorAll('.tawk-option').forEach(btn => {
             container.innerHTML = `
                 <div class="message system">
                     <div class="msg-bubble" style="background:var(--input-bg);color:var(--text-secondary);">
-                        <i class="fas fa-circle" style="color:#00c853;"></i> المحادثة المباشرة متاحة الآن!
-                        <br><small>سيظهر شات الدعم هنا تلقائياً</small>
+                        <i class="fas fa-circle" style="color:#00c853;"></i> غرفة القيادة جاهزة!
+                        <br><small>حامية الدعم في انتظارك</small>
                     </div>
                 </div>
             `;
@@ -229,8 +229,8 @@ document.querySelectorAll('.tawk-option').forEach(btn => {
             container.innerHTML = `
                 <div class="message system">
                     <div class="msg-bubble" style="background:var(--input-bg);color:var(--text-secondary);">
-                        <i class="fas fa-history"></i> سجل المحادثات السابقة
-                        <br><small>سيتم عرض تاريخ محادثاتك هنا</small>
+                        <i class="fas fa-history"></i> سجل المعارك السابقة
+                        <br><small>تاريخ محادثاتك مع الحامية</small>
                     </div>
                 </div>
             `;
@@ -238,8 +238,8 @@ document.querySelectorAll('.tawk-option').forEach(btn => {
             container.innerHTML = `
                 <div class="message system">
                     <div class="msg-bubble" style="background:var(--input-bg);color:var(--text-secondary);">
-                        <i class="fas fa-plus"></i> بدء محادثة جديدة مع الدعم
-                        <br><small>جاري الاتصال بأحد ممثلي الدعم...</small>
+                        <i class="fas fa-plus"></i> استدعاء الحامية
+                        <br><small>جاري الاتصال بأحد حراس الدعم...</small>
                     </div>
                 </div>
             `;
@@ -282,13 +282,13 @@ const observer = new IntersectionObserver((entries) => {
 observer.observe(heroSection);
 
 // ====== إشعار ترحيبي ======
-console.log('🚀 ℕ𝔼𝕏 Empire | إمبراطورية البوتات والذكاء الاصطناعي');
-console.log('💻 المطور: 𝑵𝑬𝑿_𝑫𝑬𝑽_𝑽𝟏');
-console.log('🌟 تابعنا على تليغرام وواتساب!');
+console.log('⚜️ ℕ𝔼𝕏 Empire | إمبراطورية الأساطير');
+console.log('⚔️ القائد: 𝑵𝑬𝑿_𝑫𝑬𝑽_𝑽𝟏');
+console.log('🏛️ تابعنا على تليغرام وواتساب!');
 
 // ====== رسالة ترحيب في شات NEX ======
 setTimeout(() => {
-    addNexMessage('👋 مرحباً بك في ℕ𝔼𝕏! أنا شات NEX المدعوم بذكاء DeepSeek. كيف يمكنني مساعدتك اليوم؟', 'bot');
+    addNexMessage('👑 مرحباً أيها المحارب! أنا شات NEX، مستشارك الذكي. كيف يمكنني خدمتك اليوم؟', 'bot');
 }, 500);
 
 // ====== محاولة تحميل Tawk في الخلفية ======
