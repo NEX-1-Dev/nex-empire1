@@ -35,9 +35,9 @@ document.querySelectorAll('nav a').forEach(link => {
     });
 });
 
-// ====== شات NEX مع DeepSeek ======
+// ====== شات NEX ======
 const chatNexToggle = document.getElementById('chatNexToggle');
-const chatNexWindow = document.getElementById('chatNexWindow');
+const chatNexOverlay = document.getElementById('chatNexOverlay');
 const chatNexClose = document.getElementById('chatNexClose');
 const chatNexMessages = document.getElementById('chatNexMessages');
 const chatNexInput = document.getElementById('chatNexInput');
@@ -47,9 +47,10 @@ const chatNexSend = document.getElementById('chatNexSend');
 let currentThinking = true;
 let currentSearch = true;
 
-document.querySelectorAll('.nex-option').forEach(btn => {
+// تحديد الخيار النشط
+document.querySelectorAll('.nex-option-btn').forEach(btn => {
     btn.addEventListener('click', () => {
-        document.querySelectorAll('.nex-option').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.nex-option-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         currentThinking = btn.dataset.thinking === 'true';
         currentSearch = btn.dataset.search === 'true';
@@ -57,12 +58,34 @@ document.querySelectorAll('.nex-option').forEach(btn => {
 });
 
 // فتح/إغلاق الشات
-chatNexToggle.addEventListener('click', () => {
-    chatNexWindow.classList.toggle('open');
+chatNexToggle.addEventListener('click', (e) => {
+    e.preventDefault();
+    chatNexOverlay.classList.toggle('open');
+    document.body.style.overflow = chatNexOverlay.classList.contains('open') ? 'hidden' : '';
+    if (chatNexOverlay.classList.contains('open')) {
+        chatNexInput.focus();
+    }
 });
 
 chatNexClose.addEventListener('click', () => {
-    chatNexWindow.classList.remove('open');
+    chatNexOverlay.classList.remove('open');
+    document.body.style.overflow = '';
+});
+
+// إغلاق الشات بالضغط على الخلفية
+chatNexOverlay.addEventListener('click', (e) => {
+    if (e.target === chatNexOverlay) {
+        chatNexOverlay.classList.remove('open');
+        document.body.style.overflow = '';
+    }
+});
+
+// إغلاق الشات بزر Escape
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && chatNexOverlay.classList.contains('open')) {
+        chatNexOverlay.classList.remove('open');
+        document.body.style.overflow = '';
+    }
 });
 
 // إضافة رسالة
@@ -70,16 +93,18 @@ function addNexMessage(text, type) {
     const div = document.createElement('div');
     div.className = `nex-message ${type}`;
     const avatar = type === 'bot' ? '🤖' : '👤';
+    // تحويل النص إلى HTML مع دعم السطور
+    const formattedText = text.replace(/\n/g, '<br>');
     div.innerHTML = `
         <div class="nex-avatar">${avatar}</div>
-        <div class="nex-bubble">${text}</div>
+        <div class="nex-bubble">${formattedText}</div>
     `;
     chatNexMessages.appendChild(div);
     chatNexMessages.scrollTop = chatNexMessages.scrollHeight;
 }
 
 // ====== الاتصال بـ DeepSeek API ======
-// 🚨 استبدل هذا الرابط برابط API الخاص بك بعد النشر على Vercel
+// 🚨 استبدل هذا الرابط برابط API الخاص بك بعد النشر
 const DEEPSEEK_API_URL = 'https://your-api-url.vercel.app/api/deepseek';
 
 async function callDeepSeek(query, thinking, search) {
@@ -96,10 +121,7 @@ async function callDeepSeek(query, thinking, search) {
             throw new Error(data.error || 'فشل الاتصال بـ DeepSeek');
         }
 
-        // تحويل النص إلى HTML لعرضه بشكل جميل
-        let reply = data.response.reply;
-        reply = reply.replace(/\n/g, '<br>');
-        return reply;
+        return data.response.reply;
     } catch (error) {
         throw new Error(error.message || 'فشل الاتصال بالخادم');
     }
