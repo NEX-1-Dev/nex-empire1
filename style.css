@@ -598,5 +598,331 @@ section h2 i {
     font-size: 0.85rem;
     font-weight: 700;
     margin: 12px 0;
+}
+
+.status i {
+    margin-left: 6px;
+    font-size: 0.6rem;
+}
+
+.status.online {
+    background: rgba(0, 200, 83, 0.15);
+    color: #00c853;
+}
+.status.maintenance {
+    background: rgba(255, 160, 0, 0.15);
+    color: #ffa000;
+}
+.status.offline {
+    background: rgba(211, 47, 47, 0.15);
+    color: #d32f2f;
+}
+
+.bot-btn {
+    display: inline-block;
+    padding: 10px 28px;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.9rem;
+    transition: var(--transition);
+    border: none;
+    cursor: pointer;
+}
+
+.bot-btn:not(.disabled) {
+    background: linear-gradient(45deg, var(--gradient-1), var(--gradient-2));
+    color: #fff;
+}
+
+.bot-btn:not(.disabled):hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 20px var(--shadow-color);
+}
+
+.bot-btn.disabled {
+    background: var(--input-bg);
+    color: var(--text-secondary);
+    cursor: not-allowed;
+}
+
+/* ====== المميزات ====== */
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 25px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.feature-card {
+    background: var(--bg-card);
+    padding: 30px 20px;
+    border-radius: var(--radius);
+    border: 1px solid var(--border-color);
+    transition: var(--transition);
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 40px var(--shadow-color);
+}
+
+.feature-card i {
+    font-size: 2.8rem;
+    background: linear-gradient(45deg, var(--gradient-3), var(--gradient-2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 12px;
+}
+
+.feature-card h3 {
+    font-size: 1.2rem;
+}
+
+.feature-card p {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+/* ====== عن الإمبراطورية ====== */
+.about-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    max-width: 1000px;
+    margin: 0 auto;
+    text-align: right;
+}
+
+.about-text h3,
+.about-mission h3 {
+    font-size: 1.4rem;
+    margin-bottom: 15px;
+    color: var(--gradient-3);
+}
+
+.about-text p,
+.about-mission p {
+    color: var(--text-secondary);
+    margin-bottom: 15px;
+    line-height: 1.8;
+}
+
+.about-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.about-stats div {
+    background: var(--bg-card);
+    padding: 10px 15px;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    font-weight: 700;
+    font-size: 0.9rem;
+}
+
+.about-stats i {
+    color: var(--gradient-3);
+    margin-left: 8px;
+}
+
+/* ====== الدعم ====== */
+.support-links {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.support-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 20px;
+    border-radius: 15px;
+    text-decoration: none;
+    color: #fff;
+    font-weight: 700;
+    transition: var(--transition);
+}
+
+.support-link:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+}
+
+.support-link i {
+    font-size: 1.6rem;
+}
+
+.support-link.whatsapp {
+    background: #25D366;
+}
+.support-link.telegram {
+    background: #0088cc;
+}
+.support-link.support-group {
+    background: linear-gradient(45deg, var(--gradient-1), var(--gradient-2));
+}
+.support-link.developer {
+    background: linear-gradient(45deg, #ff6b9d, #c084fc);
+}
+
+/* ====== الفوتر ====== */
+footer {
+    background: var(--bg-secondary);
+    padding: 50px 50px 20px;
+    border-top: 1px solid var(--border-color);
+}
+
+.footer-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.footer-section h3,
+.footer-section h4 {
+    margin-bottom: 15px;
+}
+
+.footer-section a {
+    display: block;
+    color: var(--text-secondary);
+    text-decoration: none;
+    margin: 5px 0;
+    transition: var(--transition);
+}
+
+.footer-section a:hover {
+    color: var(--gradient-3);
+}
+
+.social-icons {
+    display: flex;
+    gap: 12px;
+    margin-top: 12px;
+}
+
+.social-icons a {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: var(--input-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    color: var(--text-primary);
+    transition: var(--transition);
+}
+
+.social-icons a:hover {
+    background: var(--gradient-2);
+    color: #fff;
+    transform: translateY(-3px);
+}
+
+.footer-bottom {
+    text-align: center;
+    padding-top: 25px;
+    margin-top: 30px;
+    border-top: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+/* ====== استجابة ====== */
+@media (max-width: 992px) {
+    .about-container {
+        grid-template-columns: 1fr;
     }
-        
+    .chat-nex-window {
+        width: 340px;
+        right: 20px;
+        bottom: 150px;
+    }
+}
+
+@media (max-width: 768px) {
+    header {
+        padding: 15px 20px;
+        flex-wrap: wrap;
+    }
+    nav {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        padding-top: 15px;
+    }
+    nav.open {
+        display: flex;
+    }
+    .menu-toggle {
+        display: block;
+    }
+    .hero h1 {
+        font-size: 2.5rem;
+    }
+    .hero-stats {
+        gap: 25px;
+    }
+    section {
+        padding: 50px 20px;
+    }
+    .bots-grid,
+    .features-grid {
+        grid-template-columns: 1fr;
+    }
+    .support-links {
+        grid-template-columns: 1fr;
+    }
+    .chat-nex-window {
+        width: 300px;
+        right: 10px;
+        bottom: 140px;
+        max-height: 420px;
+    }
+    .chat-nex-btn {
+        padding: 10px 16px;
+        font-size: 0.85rem;
+        bottom: 90px;
+        right: 15px;
+    }
+    .theme-btn {
+        width: 48px;
+        height: 48px;
+        font-size: 1.2rem;
+        bottom: 25px;
+        right: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero h1 {
+        font-size: 1.8rem;
+    }
+    .hero p {
+        font-size: 1rem;
+    }
+    .btn {
+        padding: 10px 20px;
+        font-size: 0.85rem;
+    }
+    .stat .number {
+        font-size: 2rem;
+    }
+    .chat-nex-window {
+        width: 280px;
+        right: 10px;
+        bottom: 130px;
+        max-height: 380px;
+    }
+}
