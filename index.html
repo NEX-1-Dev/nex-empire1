@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ℕ𝔼𝕏 Empire | إمبراطورية المستقبل</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" href="assets/favicon.ico" />
+    <!-- Font Awesome للأيقونات -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+    <!-- ====== زر تبديل الوضع ====== -->
+    <button id="themeToggle" class="theme-btn" aria-label="تبديل الوضع">
+        <i class="fas fa-moon"></i>
+    </button>
+
+    <!-- ====== الهيدر ====== -->
+    <header>
+        <div class="logo">
+            <h1>ℕ𝔼𝕏</h1>
+            <p>إمبراطورية البوتات والذكاء الاصطناعي</p>
+        </div>
+        <nav>
+            <a href="#home"><i class="fas fa-home"></i> الرئيسية</a>
+            <a href="#bots"><i class="fas fa-robot"></i> البوتات</a>
+            <a href="#features"><i class="fas fa-star"></i> المميزات</a>
+            <a href="#support"><i class="fas fa-headset"></i> الدعم</a>
+            <a href="#contact"><i class="fas fa-envelope"></i> تواصل</a>
+        </nav>
+        <div class="menu-toggle" id="menuToggle">
+            <i class="fas fa-bars"></i>
+        </div>
+    </header>
+
+    <!-- ====== القسم الرئيسي (Hero) ====== -->
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h1>🚀 المستقبل يبدأ من هنا</h1>
+            <p>إمبراطورية ℕ𝔼𝕏 تقدم لك بوتات ذكية وتجارب رقمية لا تُضاهى</p>
+            <div class="hero-buttons">
+                <a href="#bots" class="btn primary"><i class="fas fa-rocket"></i> اكتشف البوتات</a>
+                <a href="#support" class="btn secondary"><i class="fas fa-headset"></i> الدعم الفني</a>
+            </div>
+        </div>
+        <div class="hero-stats">
+            <div class="stat">
+                <span class="number" data-target="3">0</span>
+                <span class="label">بوتات</span>
+            </div>
+            <div class="stat">
+                <span class="number" data-target="1000">0</span>
+                <span class="label">مستخدم</span>
+            </div>
+            <div class="stat">
+                <span class="number" data-target="24">0</span>
+                <span class="label">ساعة دعم</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== البوتات ====== -->
+    <section id="bots">
+        <h2><i class="fas fa-robot"></i> بوتات الإمبراطورية</h2>
+        <p class="section-desc">تعرف على بوتاتنا المميزة واختر ما يناسبك</p>
+        <div class="bots-grid">
+            <!-- بوت 1 -->
+            <div class="bot-card online">
+                <div class="bot-icon">⚜️</div>
+                <h3>𝕋𝕀𝔾ℝ𝔼𝕏 𝔹𝕆𝕋</h3>
+                <p>بوت التليغرام الشامل للتحميل والذكاء الاصطناعي</p>
+                <div class="bot-features">
+                    <span><i class="fas fa-check"></i> تحميل يوتيوب</span>
+                    <span><i class="fas fa-check"></i> تيك توك</span>
+                    <span><i class="fas fa-check"></i> فيسبوك</span>
+                    <span><i class="fas fa-check"></i> ذكاء اصطناعي</span>
+                </div>
+                <span class="status online"><i class="fas fa-circle"></i> شغال</span>
+                <a href="https://t.me/Tigrex_V1_bot" target="_blank" class="bot-btn">
+                    <i class="fab fa-telegram"></i> جرب الآن
+                </a>
+            </div>
+
+            <!-- بوت 2 -->
+            <div class="bot-card maintenance">
+                <div class="bot-icon">🤍</div>
+                <h3>𝕃𝕌𝔽𝔽𝕐_𝔹𝕆𝕋_𝕍𝟙</h3>
+                <p>بوت واتساب قيد الصيانة والتطوير</p>
+                <div class="bot-features">
+                    <span><i class="fas fa-check"></i> تحميل فيديوهات</span>
+                    <span><i class="fas fa-check"></i> محادثات ذكية</span>
+                    <span><i class="fas fa-check"></i> ألعاب</span>
+                </div>
+                <span class="status maintenance"><i class="fas fa-circle"></i> قيد الصيانة</span>
+                <button class="bot-btn disabled" disabled>
+                    <i class="fas fa-tools"></i> قريباً
+                </button>
+            </div>
+
+            <!-- بوت 3 -->
+            <div class="bot-card offline">
+                <div class="bot-icon">🦅</div>
+                <h3>𝔽𝔸𝕃ℂ𝕆ℕ_𝔹𝕆𝕋_𝕍𝟙</h3>
+                <p>بوت واتساب متوقف حالياً</p>
+                <div class="bot-features">
+                    <span><i class="fas fa-check"></i> تحميل صور</span>
+                    <span><i class="fas fa-check"></i> تحويل مقاطع</span>
+                </div>
+                <span class="status offline"><i class="fas fa-circle"></i> متوقف</span>
+                <button class="bot-btn disabled" disabled>
+                    <i class="fas fa-pause"></i> غير متاح
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== المميزات ====== -->
+    <section id="features">
+        <h2><i class="fas fa-star"></i> ماذا نقدم؟</h2>
+        <p class="section-desc">مميزات تجعل إمبراطورية ℕ𝔼𝕏 الأفضل</p>
+        <div class="features-grid">
+            <div class="feature-card">
+                <i class="fas fa-download"></i>
+                <h3>تحميل غير محدود</h3>
+                <p>فيديوهات من يوتيوب، تيك توك، فيسبوك، تويتر، SoundCloud، Pinterest</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-brain"></i>
+                <h3>ذكاء اصطناعي متقدم</h3>
+                <p>Gemini للمحادثة، DeepSeek مع البحث والتفكير العميق</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-image"></i>
+                <h3>توليد وتحسين الصور</h3>
+                <p>توليد صور، تحسين الجودة، تعديل متقدم بـ نانو بانانا</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-headset"></i>
+                <h3>دعم فني 24/7</h3>
+                <p>فريق دعم متخصص على مدار الساعة لحل مشاكلك</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== الدعم ====== -->
+    <section id="support">
+        <h2><i class="fas fa-headset"></i> NEX_SUPPORT</h2>
+        <p class="section-desc">نحن هنا من أجلك.. على مدار الساعة</p>
+        <div class="support-container">
+            <!-- شات الدعم المدمج -->
+            <div class="chat-box">
+                <div class="chat-header">
+                    <i class="fas fa-comment-dots"></i>
+                    <span>شات الدعم المباشر</span>
+                    <span class="chat-status"><i class="fas fa-circle"></i> متصل</span>
+                </div>
+                <div class="chat-messages" id="chatMessages">
+                    <div class="message system">
+                        <span>👋 مرحباً بك في دعم ℕ𝔼𝕏! كيف يمكننا مساعدتك؟</span>
+                    </div>
+                    <div class="message user">
+                        <span>مرحباً! لدي مشكلة في البوت</span>
+                    </div>
+                    <div class="message bot">
+                        <span>أهلاً بك! من فضلك اشرح المشكلة بالتفصيل وسنساعدك فوراً 💙</span>
+                    </div>
+                </div>
+                <div class="chat-input">
+                    <input type="text" id="chatInput" placeholder="اكتب رسالتك هنا..." />
+                    <button id="chatSend"><i class="fas fa-paper-plane"></i></button>
+                </div>
+            </div>
+
+            <!-- روابط الدعم -->
+            <div class="support-links">
+                <a href="https://whatsapp.com/channel/0029Vb6ABUf7IUYRaBVFPu3f" target="_blank" class="support-link whatsapp">
+                    <i class="fab fa-whatsapp"></i>
+                    <span>قناة واتساب</span>
+                </a>
+                <a href="https://t.me/+dojQs3Dxo-YzMDlk" target="_blank" class="support-link telegram">
+                    <i class="fab fa-telegram"></i>
+                    <span>قناة تليغرام</span>
+                </a>
+                <a href="https://chat.whatsapp.com/DfAefWpYypaInWIqxPFVmW" target="_blank" class="support-link support-group">
+                    <i class="fas fa-users"></i>
+                    <span>غرفة الدعم</span>
+                </a>
+                <a href="https://wa.me/***********" target="_blank" class="support-link developer">
+                    <i class="fas fa-code"></i>
+                    <span>المطور 𝑵𝑬𝑿_𝑫𝑬𝑽_𝑽𝟏</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== تواصل ====== -->
+    <section id="contact">
+        <h2><i class="fas fa-envelope"></i> تواصل معنا</h2>
+        <p class="section-desc">لديك سؤال أو اقتراح؟ تواصل معنا الآن</p>
+        <form id="contactForm" class="contact-form">
+            <div class="form-group">
+                <input type="text" id="name" placeholder="الاسم الكامل" required />
+            </div>
+            <div class="form-group">
+                <input type="email" id="email" placeholder="البريد الإلكتروني" required />
+            </div>
+            <div class="form-group">
+                <textarea id="message" rows="5" placeholder="رسالتك..." required></textarea>
+            </div>
+            <button type="submit" class="btn primary"><i class="fas fa-paper-plane"></i> إرسال</button>
+        </form>
+    </section>
+
+    <!-- ====== الفوتر ====== -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>ℕ𝔼𝕏 Empire</h3>
+                <p>إمبراطورية البوتات والذكاء الاصطناعي</p>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-github"></i></a>
+                    <a href="#"><i class="fab fa-telegram"></i></a>
+                    <a href="#"><i class="fab fa-whatsapp"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h4>روابط سريعة</h4>
+                <a href="#home">الرئيسية</a>
+                <a href="#bots">البوتات</a>
+                <a href="#support">الدعم</a>
+            </div>
+            <div class="footer-section">
+                <h4>المطور</h4>
+                <p>𝑵𝑬𝑿_𝑫𝑬𝑽_𝑽𝟏 🇸🇾</p>
+                <p><i class="fas fa-code"></i> شغوف بعالم البوتات</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2026 ℕ𝔼𝕏 Empire. جميع الحقوق محفوظة</p>
+            <p>✦ #NEX_DEV_V1 🪽</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
