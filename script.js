@@ -93,7 +93,6 @@ if (chatNexToggle) {
 }
 
 // ====== زر شات NEX في الهيدر القديم (إن وجد) ======
-// في حال كان هناك زر آخر في القائمة العلوية
 document.querySelectorAll('a[href="#chat"]').forEach(btn => {
     btn.addEventListener('click', function(e) {
         e.preventDefault();
