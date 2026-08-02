@@ -17,7 +17,7 @@
         <i class="fas fa-moon"></i>
     </button>
 
-    <!-- ====== نافذة الشات الموحدة (NEX + Tawk) ====== -->
+    <!-- ====== نافذة الشات الموحدة ====== -->
     <div id="chatOverlay" class="chat-overlay">
         <div class="chat-container">
             <!-- رأس الشات -->
@@ -120,9 +120,7 @@
             <a href="#features"><i class="fas fa-star"></i> المميزات</a>
             <a href="#about"><i class="fas fa-info-circle"></i> عن الإمبراطورية</a>
             <a href="#support"><i class="fas fa-headset"></i> الدعم</a>
-            <!-- ====== زر شات NEX في القائمة ====== -->
             <a href="#" id="chatNexToggle" class="nav-chat-btn"><i class="fas fa-robot"></i> شات NEX</a>
-            <!-- ====== زر Tawk.to في القائمة ====== -->
             <a href="#" id="chatTawkToggle" class="nav-chat-btn tawk-btn"><i class="fas fa-headset"></i> دعم مباشر</a>
         </nav>
         <div class="menu-toggle" id="menuToggle">
@@ -325,7 +323,7 @@
         </div>
     </footer>
 
-    <!-- ====== شات Tawk.to (يتم تحميله داخل النافذة) ====== -->
+    <!-- ====== شات Tawk.to ====== -->
     <script type="text/javascript">
     var Tawk_API = Tawk_API || {}, Tawk_LoadStart = new Date();
     (function() {
@@ -337,37 +335,8 @@
         s1.setAttribute('crossorigin', '*');
         s0.parentNode.insertBefore(s1, s0);
     })();
-
-    // عند تحميل Tawk.to، نقوم بنقله إلى داخل النافذة
-    document.addEventListener('DOMContentLoaded', function() {
-        // انتظر حتى يتم تحميل Tawk.to
-        setTimeout(function() {
-            const tawkIframe = document.querySelector('#tawk-container iframe');
-            const tawkContainer = document.getElementById('tawkContainer');
-            
-            if (tawkIframe) {
-                // نقل iframe إلى داخل حاوية Tawk
-                tawkContainer.innerHTML = '';
-                tawkContainer.appendChild(tawkIframe);
-                tawkIframe.style.width = '100%';
-                tawkIframe.style.height = '100%';
-                tawkIframe.style.border = 'none';
-                tawkIframe.style.borderRadius = '0';
-            } else {
-                // إذا لم يتم العثور على iframe، عرض رسالة
-                tawkContainer.innerHTML = `
-                    <div class="message system">
-                        <div class="msg-bubble" style="background:var(--input-bg);color:var(--text-secondary);">
-                            <i class="fas fa-headset"></i> شات الدعم المباشر جاهز! 
-                            <br><small>سيظهر هنا عند بدء المحادثة</small>
-                        </div>
-                    </div>
-                `;
-            }
-        }, 3000);
-    });
     </script>
 
     <script src="script.js"></script>
 </body>
-                        </html>
+</html>
