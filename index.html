@@ -17,46 +17,48 @@
         <i class="fas fa-moon"></i>
     </button>
 
-    <!-- ====== زر شات NEX (الذكاء الاصطناعي) ====== -->
-    <button id="chatNexToggle" class="chat-nex-btn" aria-label="فتح شات NEX">
-        <i class="fas fa-robot"></i>
-        <span>شات NEX</span>
-    </button>
+    <!-- ====== زر شات Tawk.to (عائم في الزاوية) ====== -->
+    <!-- يظهر تلقائياً من كود Tawk.to -->
 
-    <!-- ====== نافذة شات NEX ====== -->
-    <div id="chatNexWindow" class="chat-nex-window">
-        <div class="chat-nex-header">
-            <div class="chat-nex-title">
-                <i class="fas fa-robot"></i>
-                <span>🤖 شات NEX</span>
-                <span class="chat-nex-badge">مدعوم بـ DeepSeek</span>
+    <!-- ====== نافذة شات NEX (كبيرة مثل أي شات احترافي) ====== -->
+    <div id="chatNexOverlay" class="chat-nex-overlay">
+        <div class="chat-nex-container">
+            <div class="chat-nex-header">
+                <div class="chat-nex-title">
+                    <i class="fas fa-robot"></i>
+                    <span>🤖 شات NEX</span>
+                    <span class="chat-nex-badge">مدعوم بـ DeepSeek</span>
+                </div>
+                <div class="chat-nex-actions">
+                    <button class="nex-option-btn" data-thinking="true" data-search="true" title="تفكير + بحث">
+                        <i class="fas fa-brain"></i>
+                    </button>
+                    <button class="nex-option-btn" data-thinking="true" data-search="false" title="تفكير فقط">
+                        <i class="fas fa-lightbulb"></i>
+                    </button>
+                    <button class="nex-option-btn" data-thinking="false" data-search="true" title="بحث فقط">
+                        <i class="fas fa-search"></i>
+                    </button>
+                    <button id="chatNexClose" class="chat-nex-close"><i class="fas fa-times"></i></button>
+                </div>
             </div>
-            <button id="chatNexClose" class="chat-nex-close"><i class="fas fa-times"></i></button>
-        </div>
-        <!-- خيارات DeepSeek -->
-        <div class="chat-nex-options">
-            <button class="nex-option active" data-thinking="true" data-search="true">
-                <i class="fas fa-brain"></i> تفكير + بحث
-            </button>
-            <button class="nex-option" data-thinking="true" data-search="false">
-                <i class="fas fa-lightbulb"></i> تفكير فقط
-            </button>
-            <button class="nex-option" data-thinking="false" data-search="true">
-                <i class="fas fa-search"></i> بحث فقط
-            </button>
-        </div>
-        <div class="chat-nex-messages" id="chatNexMessages">
-            <div class="nex-message bot">
-                <div class="nex-avatar">🤖</div>
-                <div class="nex-bubble">👋 مرحباً بك في ℕ𝔼𝕏! أنا شات NEX المدعوم بذكاء DeepSeek. كيف يمكنني مساعدتك اليوم؟</div>
+            <div class="chat-nex-body">
+                <div class="chat-nex-messages" id="chatNexMessages">
+                    <div class="nex-message bot">
+                        <div class="nex-avatar">🤖</div>
+                        <div class="nex-bubble">👋 مرحباً بك في ℕ𝔼𝕏! أنا شات NEX المدعوم بذكاء DeepSeek. كيف يمكنني مساعدتك اليوم؟</div>
+                    </div>
+                </div>
+                <div class="chat-nex-input-area">
+                    <div class="chat-nex-input-wrapper">
+                        <input type="text" id="chatNexInput" placeholder="اسأل شات NEX أي شيء..." />
+                        <button id="chatNexSend"><i class="fas fa-paper-plane"></i></button>
+                    </div>
+                    <div class="chat-nex-footer">
+                        <span>⚡ مدعوم بـ DeepSeek · ℕ𝔼𝕏 Empire</span>
+                    </div>
+                </div>
             </div>
-        </div>
-        <div class="chat-nex-input">
-            <input type="text" id="chatNexInput" placeholder="اسأل شات NEX أي شيء..." />
-            <button id="chatNexSend"><i class="fas fa-paper-plane"></i></button>
-        </div>
-        <div class="chat-nex-footer">
-            <span>⚡ مدعوم بـ DeepSeek · ℕ𝔼𝕏 Empire</span>
         </div>
     </div>
 
@@ -72,6 +74,8 @@
             <a href="#features"><i class="fas fa-star"></i> المميزات</a>
             <a href="#about"><i class="fas fa-info-circle"></i> عن الإمبراطورية</a>
             <a href="#support"><i class="fas fa-headset"></i> الدعم</a>
+            <!-- ====== زر شات NEX في القائمة ====== -->
+            <a href="#" id="chatNexToggle" class="nav-chat-btn"><i class="fas fa-comment-dots"></i> شات NEX</a>
         </nav>
         <div class="menu-toggle" id="menuToggle">
             <i class="fas fa-bars"></i>
@@ -289,4 +293,4 @@
 
     <script src="script.js"></script>
 </body>
-</html>
+                                  </html>
