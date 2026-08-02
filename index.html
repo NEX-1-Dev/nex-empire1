@@ -17,45 +17,91 @@
         <i class="fas fa-moon"></i>
     </button>
 
-    <!-- ====== زر شات Tawk.to (عائم في الزاوية) ====== -->
-    <!-- يظهر تلقائياً من كود Tawk.to -->
-
-    <!-- ====== نافذة شات NEX (كبيرة مثل أي شات احترافي) ====== -->
-    <div id="chatNexOverlay" class="chat-nex-overlay">
-        <div class="chat-nex-container">
-            <div class="chat-nex-header">
-                <div class="chat-nex-title">
-                    <i class="fas fa-robot"></i>
-                    <span>🤖 شات NEX</span>
-                    <span class="chat-nex-badge">مدعوم بـ DeepSeek</span>
+    <!-- ====== نافذة الشات الموحدة (NEX + Tawk) ====== -->
+    <div id="chatOverlay" class="chat-overlay">
+        <div class="chat-container">
+            <!-- رأس الشات -->
+            <div class="chat-header">
+                <div class="chat-title">
+                    <i class="fas fa-comment-dots"></i>
+                    <span>مركز الدعم</span>
+                    <span class="chat-badge">ℕ𝔼𝕏</span>
                 </div>
-                <div class="chat-nex-actions">
-                    <button class="nex-option-btn" data-thinking="true" data-search="true" title="تفكير + بحث">
-                        <i class="fas fa-brain"></i>
-                    </button>
-                    <button class="nex-option-btn" data-thinking="true" data-search="false" title="تفكير فقط">
-                        <i class="fas fa-lightbulb"></i>
-                    </button>
-                    <button class="nex-option-btn" data-thinking="false" data-search="true" title="بحث فقط">
-                        <i class="fas fa-search"></i>
-                    </button>
-                    <button id="chatNexClose" class="chat-nex-close"><i class="fas fa-times"></i></button>
+                <div class="chat-actions">
+                    <button id="chatClose" class="chat-close"><i class="fas fa-times"></i></button>
                 </div>
             </div>
-            <div class="chat-nex-body">
-                <div class="chat-nex-messages" id="chatNexMessages">
-                    <div class="nex-message bot">
-                        <div class="nex-avatar">🤖</div>
-                        <div class="nex-bubble">👋 مرحباً بك في ℕ𝔼𝕏! أنا شات NEX المدعوم بذكاء DeepSeek. كيف يمكنني مساعدتك اليوم؟</div>
+
+            <!-- علامات التبويب -->
+            <div class="chat-tabs">
+                <button class="chat-tab active" data-tab="nex">
+                    <i class="fas fa-robot"></i> شات NEX
+                </button>
+                <button class="chat-tab" data-tab="tawk">
+                    <i class="fas fa-headset"></i> الدعم المباشر
+                </button>
+            </div>
+
+            <!-- محتوى شات NEX -->
+            <div id="tab-nex" class="chat-tab-content active">
+                <div class="chat-nex-options">
+                    <button class="nex-option active" data-thinking="true" data-search="true">
+                        <i class="fas fa-brain"></i> تفكير + بحث
+                    </button>
+                    <button class="nex-option" data-thinking="true" data-search="false">
+                        <i class="fas fa-lightbulb"></i> تفكير فقط
+                    </button>
+                    <button class="nex-option" data-thinking="false" data-search="true">
+                        <i class="fas fa-search"></i> بحث فقط
+                    </button>
+                    <button id="nexNewChat" class="nex-option" title="محادثة جديدة">
+                        <i class="fas fa-plus"></i> جديد
+                    </button>
+                </div>
+                <div class="chat-messages" id="chatNexMessages">
+                    <div class="message bot">
+                        <div class="msg-avatar">🤖</div>
+                        <div class="msg-bubble">👋 مرحباً بك في ℕ𝔼𝕏! أنا شات NEX المدعوم بذكاء DeepSeek. كيف يمكنني مساعدتك اليوم؟</div>
                     </div>
                 </div>
-                <div class="chat-nex-input-area">
-                    <div class="chat-nex-input-wrapper">
+                <div class="chat-input-area">
+                    <div class="chat-input-wrapper">
                         <input type="text" id="chatNexInput" placeholder="اسأل شات NEX أي شيء..." />
                         <button id="chatNexSend"><i class="fas fa-paper-plane"></i></button>
                     </div>
-                    <div class="chat-nex-footer">
+                    <div class="chat-footer">
                         <span>⚡ مدعوم بـ DeepSeek · ℕ𝔼𝕏 Empire</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- محتوى شات Tawk.to -->
+            <div id="tab-tawk" class="chat-tab-content">
+                <div class="chat-tawk-options">
+                    <button class="tawk-option active" id="tawkLive">
+                        <i class="fas fa-circle" style="color:#00c853;"></i> محادثة مباشرة
+                    </button>
+                    <button class="tawk-option" id="tawkHistory">
+                        <i class="fas fa-history"></i> سجل المحادثات
+                    </button>
+                    <button class="tawk-option" id="tawkNew">
+                        <i class="fas fa-plus"></i> محادثة جديدة
+                    </button>
+                </div>
+                <div class="chat-messages tawk-container" id="tawkContainer">
+                    <div class="message system">
+                        <div class="msg-bubble" style="background:var(--input-bg);color:var(--text-secondary);">
+                            <i class="fas fa-headset"></i> جاري تحميل شات الدعم المباشر...
+                        </div>
+                    </div>
+                </div>
+                <div class="chat-input-area">
+                    <div class="chat-input-wrapper">
+                        <input type="text" id="tawkInput" placeholder="اكتب رسالتك للدعم..." disabled />
+                        <button id="tawkSend" disabled><i class="fas fa-paper-plane"></i></button>
+                    </div>
+                    <div class="chat-footer">
+                        <span>🛡️ دعم فني 24/7 · ℕ𝔼𝕏 Empire</span>
                     </div>
                 </div>
             </div>
@@ -75,7 +121,9 @@
             <a href="#about"><i class="fas fa-info-circle"></i> عن الإمبراطورية</a>
             <a href="#support"><i class="fas fa-headset"></i> الدعم</a>
             <!-- ====== زر شات NEX في القائمة ====== -->
-            <a href="#" id="chatNexToggle" class="nav-chat-btn"><i class="fas fa-comment-dots"></i> شات NEX</a>
+            <a href="#" id="chatNexToggle" class="nav-chat-btn"><i class="fas fa-robot"></i> شات NEX</a>
+            <!-- ====== زر Tawk.to في القائمة ====== -->
+            <a href="#" id="chatTawkToggle" class="nav-chat-btn tawk-btn"><i class="fas fa-headset"></i> دعم مباشر</a>
         </nav>
         <div class="menu-toggle" id="menuToggle">
             <i class="fas fa-bars"></i>
@@ -277,7 +325,7 @@
         </div>
     </footer>
 
-    <!-- ====== شات Tawk.to ====== -->
+    <!-- ====== شات Tawk.to (يتم تحميله داخل النافذة) ====== -->
     <script type="text/javascript">
     var Tawk_API = Tawk_API || {}, Tawk_LoadStart = new Date();
     (function() {
@@ -289,8 +337,37 @@
         s1.setAttribute('crossorigin', '*');
         s0.parentNode.insertBefore(s1, s0);
     })();
+
+    // عند تحميل Tawk.to، نقوم بنقله إلى داخل النافذة
+    document.addEventListener('DOMContentLoaded', function() {
+        // انتظر حتى يتم تحميل Tawk.to
+        setTimeout(function() {
+            const tawkIframe = document.querySelector('#tawk-container iframe');
+            const tawkContainer = document.getElementById('tawkContainer');
+            
+            if (tawkIframe) {
+                // نقل iframe إلى داخل حاوية Tawk
+                tawkContainer.innerHTML = '';
+                tawkContainer.appendChild(tawkIframe);
+                tawkIframe.style.width = '100%';
+                tawkIframe.style.height = '100%';
+                tawkIframe.style.border = 'none';
+                tawkIframe.style.borderRadius = '0';
+            } else {
+                // إذا لم يتم العثور على iframe، عرض رسالة
+                tawkContainer.innerHTML = `
+                    <div class="message system">
+                        <div class="msg-bubble" style="background:var(--input-bg);color:var(--text-secondary);">
+                            <i class="fas fa-headset"></i> شات الدعم المباشر جاهز! 
+                            <br><small>سيظهر هنا عند بدء المحادثة</small>
+                        </div>
+                    </div>
+                `;
+            }
+        }, 3000);
+    });
     </script>
 
     <script src="script.js"></script>
 </body>
-                                  </html>
+                        </html>
