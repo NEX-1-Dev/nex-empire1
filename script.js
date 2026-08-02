@@ -25,14 +25,16 @@ function updateThemeIcon(theme) {
 const sidebarToggle = document.getElementById('sidebarToggle');
 const sidebar = document.getElementById('sidebar');
 
-sidebarToggle.addEventListener('click', () => {
-    sidebar.classList.toggle('open');
-});
+if (sidebarToggle) {
+    sidebarToggle.addEventListener('click', () => {
+        sidebar.classList.toggle('open');
+    });
+}
 
 // إغلاق القائمة عند النقر على رابط
 document.querySelectorAll('.sidebar-nav a').forEach(link => {
     link.addEventListener('click', () => {
-        sidebar.classList.remove('open');
+        if (sidebar) sidebar.classList.remove('open');
     });
 });
 
@@ -50,40 +52,68 @@ const chatOverlay = document.getElementById('chatOverlay');
 const chatClose = document.getElementById('chatClose');
 
 function openChat(tab = 'nex') {
+    if (!chatOverlay) return;
     chatOverlay.classList.add('open');
     document.body.style.overflow = 'hidden';
+    
+    // تفعيل التبويب المطلوب
     document.querySelectorAll('.chat-tab').forEach(t => t.classList.remove('active'));
     document.querySelectorAll('.chat-tab-content').forEach(c => c.classList.remove('active'));
-    document.querySelector(`.chat-tab[data-tab="${tab}"]`)?.classList.add('active');
-    document.getElementById(`tab-${tab}`)?.classList.add('active');
+    
+    const tabButton = document.querySelector(`.chat-tab[data-tab="${tab}"]`);
+    const tabContent = document.getElementById(`tab-${tab}`);
+    
+    if (tabButton) tabButton.classList.add('active');
+    if (tabContent) tabContent.classList.add('active');
+    
     if (tab === 'nex') {
-        setTimeout(() => document.getElementById('chatNexInput')?.focus(), 300);
+        setTimeout(() => {
+            const input = document.getElementById('chatNexInput');
+            if (input) input.focus();
+        }, 300);
     }
 }
 
 function closeChat() {
+    if (!chatOverlay) return;
     chatOverlay.classList.remove('open');
     document.body.style.overflow = '';
 }
 
-// أزرار فتح الشات
-document.querySelectorAll('#chatNexToggle, .sidebar-nav a[href="#"]').forEach(btn => {
-    btn?.addEventListener('click', (e) => {
+// ====== زر شات NEX في القائمة الجانبية ======
+const chatNexToggle = document.getElementById('chatNexToggle');
+
+if (chatNexToggle) {
+    chatNexToggle.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log('✅ تم النقر على شات NEX');
+        openChat('nex');
+    });
+}
+
+// ====== زر شات NEX في الهيدر القديم (إن وجد) ======
+// في حال كان هناك زر آخر في القائمة العلوية
+document.querySelectorAll('a[href="#chat"]').forEach(btn => {
+    btn.addEventListener('click', function(e) {
         e.preventDefault();
         openChat('nex');
     });
 });
 
+// ====== إغلاق الشات ======
 if (chatClose) {
     chatClose.addEventListener('click', closeChat);
 }
 
-chatOverlay.addEventListener('click', (e) => {
-    if (e.target === chatOverlay) closeChat();
-});
+if (chatOverlay) {
+    chatOverlay.addEventListener('click', (e) => {
+        if (e.target === chatOverlay) closeChat();
+    });
+}
 
 document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && chatOverlay.classList.contains('open')) closeChat();
+    if (e.key === 'Escape' && chatOverlay?.classList.contains('open')) closeChat();
 });
 
 // ====== تبديل علامات التبويب ======
@@ -93,9 +123,13 @@ document.querySelectorAll('.chat-tab').forEach(tab => {
         document.querySelectorAll('.chat-tab').forEach(t => t.classList.remove('active'));
         document.querySelectorAll('.chat-tab-content').forEach(c => c.classList.remove('active'));
         tab.classList.add('active');
-        document.getElementById(`tab-${target}`).classList.add('active');
+        const content = document.getElementById(`tab-${target}`);
+        if (content) content.classList.add('active');
         if (target === 'nex') {
-            setTimeout(() => document.getElementById('chatNexInput')?.focus(), 300);
+            setTimeout(() => {
+                const input = document.getElementById('chatNexInput');
+                if (input) input.focus();
+            }, 300);
         }
     });
 });
@@ -108,13 +142,16 @@ document.querySelectorAll('.nex-option').forEach(btn => {
     btn.addEventListener('click', () => {
         if (btn.id === 'nexNewChat') {
             const messages = document.getElementById('chatNexMessages');
-            messages.innerHTML = `
-                <div class="message bot">
-                    <div class="msg-avatar">⚜️</div>
-                    <div class="msg-bubble">👑 بدأت معركة جديدة! كيف يمكنني خدمتك أيها المحارب؟</div>
-                </div>
-            `;
-            document.getElementById('chatNexInput').focus();
+            if (messages) {
+                messages.innerHTML = `
+                    <div class="message bot">
+                        <div class="msg-avatar">⚡</div>
+                        <div class="msg-bubble">مرحباً، تم بدء محادثة جديدة. كيف يمكنني مساعدتك؟</div>
+                    </div>
+                `;
+                const input = document.getElementById('chatNexInput');
+                if (input) input.focus();
+            }
             return;
         }
         document.querySelectorAll('.nex-option').forEach(b => b.classList.remove('active'));
@@ -130,9 +167,10 @@ const chatNexInput = document.getElementById('chatNexInput');
 const chatNexSend = document.getElementById('chatNexSend');
 
 function addNexMessage(text, type) {
+    if (!chatNexMessages) return;
     const div = document.createElement('div');
     div.className = `message ${type}`;
-    const avatar = type === 'bot' ? '⚜️' : '👤';
+    const avatar = type === 'bot' ? '⚡' : '👤';
     const formattedText = text.replace(/\n/g, '<br>');
     div.innerHTML = `
         <div class="msg-avatar">${avatar}</div>
@@ -142,6 +180,7 @@ function addNexMessage(text, type) {
     chatNexMessages.scrollTop = chatNexMessages.scrollHeight;
 }
 
+// ====== رابط الـ API ======
 const DEEPSEEK_API_URL = 'https://nex-empire1.vercel.app/api/deepseek';
 
 async function callDeepSeek(query, thinking, search) {
@@ -164,7 +203,10 @@ async function callDeepSeek(query, thinking, search) {
     }
 }
 
+// ====== إرسال رسالة NEX ======
 async function sendNexMessage() {
+    if (!chatNexInput || !chatNexSend) return;
+    
     const text = chatNexInput.value.trim();
     if (!text) return;
 
@@ -177,19 +219,23 @@ async function sendNexMessage() {
     loadingMsg.className = 'message bot';
     loadingMsg.id = 'nexLoading';
     loadingMsg.innerHTML = `
-        <div class="msg-avatar">⚜️</div>
-        <div class="msg-bubble">⏳ جاري استشارة الحكمة... <span class="dot-loader">● ● ●</span></div>
+        <div class="msg-avatar">⚡</div>
+        <div class="msg-bubble">⏳ جاري التفكير... <span class="dot-loader">● ● ●</span></div>
     `;
-    chatNexMessages.appendChild(loadingMsg);
-    chatNexMessages.scrollTop = chatNexMessages.scrollHeight;
+    if (chatNexMessages) {
+        chatNexMessages.appendChild(loadingMsg);
+        chatNexMessages.scrollTop = chatNexMessages.scrollHeight;
+    }
 
     try {
         const reply = await callDeepSeek(text, currentThinking, currentSearch);
-        document.getElementById('nexLoading')?.remove();
+        const loading = document.getElementById('nexLoading');
+        if (loading) loading.remove();
         addNexMessage(reply, 'bot');
     } catch (error) {
-        document.getElementById('nexLoading')?.remove();
-        addNexMessage(`❌ عذراً أيها المحارب، حدث خلل: ${error.message}`, 'bot');
+        const loading = document.getElementById('nexLoading');
+        if (loading) loading.remove();
+        addNexMessage(`❌ عذراً، حدث خطأ: ${error.message}`, 'bot');
     }
 
     chatNexInput.disabled = false;
@@ -197,10 +243,15 @@ async function sendNexMessage() {
     chatNexInput.focus();
 }
 
-chatNexSend.addEventListener('click', sendNexMessage);
-chatNexInput.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') sendNexMessage();
-});
+if (chatNexSend) {
+    chatNexSend.addEventListener('click', sendNexMessage);
+}
+
+if (chatNexInput) {
+    chatNexInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') sendNexMessage();
+    });
+}
 
 // ====== خيارات Tawk.to ======
 document.querySelectorAll('.tawk-option').forEach(btn => {
@@ -208,12 +259,14 @@ document.querySelectorAll('.tawk-option').forEach(btn => {
         document.querySelectorAll('.tawk-option').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         const container = document.getElementById('tawkContainer');
+        if (!container) return;
+        
         if (btn.id === 'tawkLive') {
             container.innerHTML = `
                 <div class="message system">
                     <div class="msg-bubble" style="background:var(--input-bg);color:var(--text-secondary);">
-                        <i class="fas fa-circle" style="color:#00c853;"></i> غرفة القيادة جاهزة!
-                        <br><small>حامية الدعم في انتظارك</small>
+                        <i class="fas fa-circle" style="color:#00c853;"></i> الدعم المباشر جاهز
+                        <br><small>فريق الدعم في انتظارك</small>
                     </div>
                 </div>
             `;
@@ -229,8 +282,8 @@ document.querySelectorAll('.tawk-option').forEach(btn => {
             container.innerHTML = `
                 <div class="message system">
                     <div class="msg-bubble" style="background:var(--input-bg);color:var(--text-secondary);">
-                        <i class="fas fa-history"></i> سجل المعارك السابقة
-                        <br><small>تاريخ محادثاتك مع الحامية</small>
+                        <i class="fas fa-history"></i> سجل المحادثات
+                        <br><small>سيتم عرض تاريخ محادثاتك هنا</small>
                     </div>
                 </div>
             `;
@@ -238,8 +291,8 @@ document.querySelectorAll('.tawk-option').forEach(btn => {
             container.innerHTML = `
                 <div class="message system">
                     <div class="msg-bubble" style="background:var(--input-bg);color:var(--text-secondary);">
-                        <i class="fas fa-plus"></i> استدعاء الحامية
-                        <br><small>جاري الاتصال بأحد حراس الدعم...</small>
+                        <i class="fas fa-plus"></i> بدء محادثة جديدة
+                        <br><small>جاري الاتصال بأحد ممثلي الدعم...</small>
                     </div>
                 </div>
             `;
@@ -271,24 +324,25 @@ const animateNumbers = () => {
 };
 
 const heroSection = document.querySelector('.hero');
-const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            animateNumbers();
-            observer.disconnect();
-        }
+if (heroSection) {
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                animateNumbers();
+                observer.disconnect();
+            }
+        });
     });
-});
-observer.observe(heroSection);
+    observer.observe(heroSection);
+}
 
 // ====== إشعار ترحيبي ======
-console.log('⚜️ ℕ𝔼𝕏 Empire | إمبراطورية الأساطير');
-console.log('⚔️ القائد: 𝑵𝑬𝑿_𝑫𝑬𝑽_𝑽𝟏');
-console.log('🏛️ تابعنا على تليغرام وواتساب!');
+console.log('⚡ ℕ𝔼𝕏 Empire | منصة الذكاء الرقمي');
+console.log('💻 المطور: 𝑵𝑬𝑿_𝑫𝑬𝑽_𝑽𝟏');
 
 // ====== رسالة ترحيب في شات NEX ======
 setTimeout(() => {
-    addNexMessage('👑 مرحباً أيها المحارب! أنا شات NEX، مستشارك الذكي. كيف يمكنني خدمتك اليوم؟', 'bot');
+    addNexMessage('مرحباً، أنا مساعد NEX الذكي. كيف يمكنني مساعدتك اليوم؟', 'bot');
 }, 500);
 
 // ====== محاولة تحميل Tawk في الخلفية ======
