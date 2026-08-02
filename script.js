@@ -1,8 +1,7 @@
-// ====== تبديل الوضع الليلي/النهاري ======
+// ====== تبديل الوضع ======
 const themeToggle = document.getElementById('themeToggle');
 const body = document.body;
 
-// التحقق من الوضع المحفوظ
 const savedTheme = localStorage.getItem('theme');
 if (savedTheme) {
     body.setAttribute('data-theme', savedTheme);
@@ -19,14 +18,10 @@ themeToggle.addEventListener('click', () => {
 
 function updateThemeIcon(theme) {
     const icon = themeToggle.querySelector('i');
-    if (theme === 'light') {
-        icon.className = 'fas fa-sun';
-    } else {
-        icon.className = 'fas fa-moon';
-    }
+    icon.className = theme === 'light' ? 'fas fa-sun' : 'fas fa-moon';
 }
 
-// ====== القائمة المتنقلة (Mobile Menu) ======
+// ====== القائمة المتنقلة ======
 const menuToggle = document.getElementById('menuToggle');
 const nav = document.querySelector('nav');
 
@@ -34,56 +29,120 @@ menuToggle.addEventListener('click', () => {
     nav.classList.toggle('open');
 });
 
-// إغلاق القائمة عند النقر على رابط
 document.querySelectorAll('nav a').forEach(link => {
     link.addEventListener('click', () => {
         nav.classList.remove('open');
     });
 });
 
-// ====== شات الدعم ======
-const chatMessages = document.getElementById('chatMessages');
-const chatInput = document.getElementById('chatInput');
-const chatSend = document.getElementById('chatSend');
+// ====== شات NEX مع DeepSeek ======
+const chatNexToggle = document.getElementById('chatNexToggle');
+const chatNexWindow = document.getElementById('chatNexWindow');
+const chatNexClose = document.getElementById('chatNexClose');
+const chatNexMessages = document.getElementById('chatNexMessages');
+const chatNexInput = document.getElementById('chatNexInput');
+const chatNexSend = document.getElementById('chatNexSend');
 
-// رسائل تلقائية للرد
-const autoReplies = [
-    'شكراً لتواصلك! سنرد عليك قريباً 💙',
-    'أهلاً بك! كيف يمكننا مساعدتك؟ 😊',
-    'تم استلام رسالتك، فريق الدعم يعمل على ذلك 🚀',
-    'مرحباً! هل تحتاج مساعدة في أحد البوتات؟ 🤖',
-    'نحن هنا من أجلك على مدار الساعة 🕐'
-];
+// خيارات DeepSeek
+let currentThinking = true;
+let currentSearch = true;
 
-// إرسال رسالة
-function sendMessage() {
-    const text = chatInput.value.trim();
+document.querySelectorAll('.nex-option').forEach(btn => {
+    btn.addEventListener('click', () => {
+        document.querySelectorAll('.nex-option').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentThinking = btn.dataset.thinking === 'true';
+        currentSearch = btn.dataset.search === 'true';
+    });
+});
+
+// فتح/إغلاق الشات
+chatNexToggle.addEventListener('click', () => {
+    chatNexWindow.classList.toggle('open');
+});
+
+chatNexClose.addEventListener('click', () => {
+    chatNexWindow.classList.remove('open');
+});
+
+// إضافة رسالة
+function addNexMessage(text, type) {
+    const div = document.createElement('div');
+    div.className = `nex-message ${type}`;
+    const avatar = type === 'bot' ? '🤖' : '👤';
+    div.innerHTML = `
+        <div class="nex-avatar">${avatar}</div>
+        <div class="nex-bubble">${text}</div>
+    `;
+    chatNexMessages.appendChild(div);
+    chatNexMessages.scrollTop = chatNexMessages.scrollHeight;
+}
+
+// ====== الاتصال بـ DeepSeek API ======
+// 🚨 استبدل هذا الرابط برابط API الخاص بك بعد النشر على Vercel
+const DEEPSEEK_API_URL = 'https://your-api-url.vercel.app/api/deepseek';
+
+async function callDeepSeek(query, thinking, search) {
+    try {
+        const params = new URLSearchParams();
+        params.append('query', query);
+        params.append('thinking', thinking ? 'true' : 'false');
+        params.append('search', search ? 'true' : 'false');
+
+        const response = await fetch(`${DEEPSEEK_API_URL}?${params.toString()}`);
+        const data = await response.json();
+
+        if (!data.success) {
+            throw new Error(data.error || 'فشل الاتصال بـ DeepSeek');
+        }
+
+        // تحويل النص إلى HTML لعرضه بشكل جميل
+        let reply = data.response.reply;
+        reply = reply.replace(/\n/g, '<br>');
+        return reply;
+    } catch (error) {
+        throw new Error(error.message || 'فشل الاتصال بالخادم');
+    }
+}
+
+// ====== إرسال رسالة ======
+async function sendNexMessage() {
+    const text = chatNexInput.value.trim();
     if (!text) return;
 
-    // إضافة رسالة المستخدم
-    addMessage(text, 'user');
-    chatInput.value = '';
+    addNexMessage(text, 'user');
+    chatNexInput.value = '';
+    chatNexInput.disabled = true;
+    chatNexSend.disabled = true;
 
-    // محاكاة الرد التلقائي
-    setTimeout(() => {
-        const randomReply = autoReplies[Math.floor(Math.random() * autoReplies.length)];
-        addMessage(randomReply, 'bot');
-    }, 1000 + Math.random() * 1500);
+    // عرض رسالة "جاري التفكير..."
+    const loadingMsg = document.createElement('div');
+    loadingMsg.className = 'nex-message bot';
+    loadingMsg.id = 'nexLoading';
+    loadingMsg.innerHTML = `
+        <div class="nex-avatar">🤖</div>
+        <div class="nex-bubble">⏳ جاري التفكير والبحث... <span class="dot-loader">● ● ●</span></div>
+    `;
+    chatNexMessages.appendChild(loadingMsg);
+    chatNexMessages.scrollTop = chatNexMessages.scrollHeight;
+
+    try {
+        const reply = await callDeepSeek(text, currentThinking, currentSearch);
+        document.getElementById('nexLoading')?.remove();
+        addNexMessage(reply, 'bot');
+    } catch (error) {
+        document.getElementById('nexLoading')?.remove();
+        addNexMessage(`❌ عذراً، حدث خطأ: ${error.message}`, 'bot');
+    }
+
+    chatNexInput.disabled = false;
+    chatNexSend.disabled = false;
+    chatNexInput.focus();
 }
 
-// إضافة رسالة للشات
-function addMessage(text, type) {
-    const messageDiv = document.createElement('div');
-    messageDiv.className = `message ${type}`;
-    messageDiv.innerHTML = `<span>${text}</span>`;
-    chatMessages.appendChild(messageDiv);
-    chatMessages.scrollTop = chatMessages.scrollHeight;
-}
-
-// أحداث الشات
-chatSend.addEventListener('click', sendMessage);
-chatInput.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') sendMessage();
+chatNexSend.addEventListener('click', sendNexMessage);
+chatNexInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') sendNexMessage();
 });
 
 // ====== عداد الأرقام المتحرك ======
@@ -109,7 +168,6 @@ const animateNumbers = () => {
     });
 };
 
-// تشغيل العداد عند ظهور القسم
 const heroSection = document.querySelector('.hero');
 const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
@@ -121,46 +179,12 @@ const observer = new IntersectionObserver((entries) => {
 });
 observer.observe(heroSection);
 
-// ====== نموذج التواصل ======
-const contactForm = document.getElementById('contactForm');
-
-contactForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    
-    const name = document.getElementById('name').value;
-    const email = document.getElementById('email').value;
-    const message = document.getElementById('message').value;
-
-    // محاكاة الإرسال
-    const btn = contactForm.querySelector('button');
-    const originalText = btn.innerHTML;
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الإرسال...';
-    btn.disabled = true;
-
-    setTimeout(() => {
-        alert(`✅ شكراً ${name}! تم استلام رسالتك بنجاح. سنرد عليك قريباً 💙`);
-        contactForm.reset();
-        btn.innerHTML = originalText;
-        btn.disabled = false;
-    }, 1500);
-});
-
-// ====== إضافة رسالة ترحيب تلقائية عند تحميل الصفحة ======
-window.addEventListener('load', () => {
-    setTimeout(() => {
-        addMessage('👋 مرحباً بك في دعم ℕ𝔼𝕏! كيف يمكننا مساعدتك؟', 'system');
-    }, 500);
-});
-
-// ====== منع النقر على الأزرار المعطلة ======
-document.querySelectorAll('.bot-btn.disabled').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-        e.preventDefault();
-        alert('⏳ هذا البوت غير متاح حالياً، تابعنا للتعرف على التحديثات!');
-    });
-});
-
-// ====== إظهار رسالة ترحيب عند زيارة الموقع ======
-console.log('🚀 مرحباً بك في ℕ𝔼𝕏 Empire!');
+// ====== إشعار ترحيبي ======
+console.log('🚀 ℕ𝔼𝕏 Empire | إمبراطورية البوتات والذكاء الاصطناعي');
 console.log('💻 المطور: 𝑵𝑬𝑿_𝑫𝑬𝑽_𝑽𝟏');
 console.log('🌟 تابعنا على تليغرام وواتساب!');
+
+// ====== رسالة ترحيب في شات NEX ======
+setTimeout(() => {
+    addNexMessage('👋 مرحباً بك في ℕ𝔼𝕏! أنا شات NEX المدعوم بذكاء DeepSeek. كيف يمكنني مساعدتك اليوم؟', 'bot');
+}, 500);
