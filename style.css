@@ -1,28 +1,29 @@
-/* ====== المتغيرات ====== */
+/* ====== المتغيرات الأسطورية ====== */
 :root {
-    --bg-primary: #0a0a1a;
-    --bg-secondary: #111128;
-    --bg-card: rgba(255, 255, 255, 0.05);
-    --text-primary: #ffffff;
-    --text-secondary: #a0a0c0;
-    --gradient-1: #4a00e0;
-    --gradient-2: #7b2ffc;
-    --gradient-3: #00d4ff;
-    --shadow-color: rgba(123, 47, 252, 0.4);
-    --border-color: rgba(255, 255, 255, 0.08);
-    --input-bg: rgba(255, 255, 255, 0.05);
-    --radius: 20px;
+    --bg-primary: #080812;
+    --bg-secondary: #0d0d20;
+    --bg-card: rgba(255, 215, 0, 0.05);
+    --text-primary: #f0e8d0;
+    --text-secondary: #a09070;
+    --gold: #ffd700;
+    --gold-dark: #b8860b;
+    --gold-glow: rgba(255, 215, 0, 0.3);
+    --gradient-gold: linear-gradient(135deg, #ffd700, #ff8c00);
+    --gradient-dark: linear-gradient(135deg, #1a0a2e, #0d0d20);
+    --shadow-gold: 0 4px 40px rgba(255, 215, 0, 0.15);
+    --border-gold: rgba(255, 215, 0, 0.15);
+    --radius: 16px;
     --transition: 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    --sidebar-width: 280px;
 }
 
 [data-theme="light"] {
-    --bg-primary: #f0f2f8;
+    --bg-primary: #f5f0e8;
     --bg-secondary: #ffffff;
     --bg-card: rgba(0, 0, 0, 0.03);
-    --text-primary: #1a1a2e;
-    --text-secondary: #555577;
-    --border-color: rgba(0, 0, 0, 0.08);
-    --input-bg: rgba(0, 0, 0, 0.04);
+    --text-primary: #1a1a1a;
+    --text-secondary: #555555;
+    --border-gold: rgba(184, 134, 11, 0.2);
 }
 
 /* ====== الأساسيات ====== */
@@ -31,7 +32,6 @@
     padding: 0;
     box-sizing: border-box;
     font-family: 'Cairo', 'Segoe UI', Tahoma, sans-serif;
-    transition: background-color 0.5s, color 0.3s, border-color 0.3s, transform 0.3s;
 }
 
 html {
@@ -44,30 +44,148 @@ body {
     direction: rtl;
     line-height: 1.7;
     min-height: 100vh;
+    display: flex;
+}
+
+/* ====== الشريط الجانبي ====== */
+.sidebar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: var(--sidebar-width);
+    height: 100vh;
+    background: var(--bg-secondary);
+    border-left: 2px solid var(--gold);
+    padding: 30px 20px;
+    display: flex;
+    flex-direction: column;
+    z-index: 1000;
+    transition: transform 0.4s ease;
+    box-shadow: -10px 0 60px rgba(0, 0, 0, 0.5);
+}
+
+.sidebar-brand {
+    text-align: center;
+    padding-bottom: 30px;
+    border-bottom: 1px solid var(--border-gold);
+    margin-bottom: 30px;
+}
+
+.sidebar-brand h1 {
+    font-size: 2.2rem;
+    background: var(--gradient-gold);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 900;
+}
+
+.sidebar-brand p {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    letter-spacing: 2px;
+}
+
+.sidebar-nav {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.sidebar-nav a {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 12px 18px;
+    border-radius: 12px;
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: all 0.3s;
+    font-weight: 700;
+    font-size: 0.95rem;
+    border: 1px solid transparent;
+}
+
+.sidebar-nav a i {
+    width: 24px;
+    text-align: center;
+    font-size: 1.1rem;
+}
+
+.sidebar-nav a:hover {
+    background: var(--bg-card);
+    color: var(--gold);
+    border-color: var(--border-gold);
+    transform: translateX(-5px);
+}
+
+.sidebar-nav a.active {
+    background: var(--gradient-gold);
+    color: #0d0d20;
+    border-color: var(--gold);
+    box-shadow: var(--shadow-gold);
+}
+
+.sidebar-footer {
+    padding-top: 20px;
+    border-top: 1px solid var(--border-gold);
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+}
+
+.sidebar-footer p {
+    font-weight: 700;
+    color: var(--gold);
+}
+
+/* ====== زر فتح القائمة الجانبية ====== */
+.sidebar-toggle {
+    display: none;
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1001;
+    background: var(--gradient-gold);
+    color: #0d0d20;
+    border: none;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    font-size: 1.4rem;
+    cursor: pointer;
+    box-shadow: var(--shadow-gold);
+}
+
+/* ====== المحتوى الرئيسي ====== */
+.main-content {
+    flex: 1;
+    margin-right: var(--sidebar-width);
+    min-height: 100vh;
 }
 
 /* ====== زر تبديل الوضع ====== */
 .theme-btn {
     position: fixed;
     bottom: 30px;
-    right: 30px;
+    left: 30px;
     z-index: 9999;
-    background: linear-gradient(135deg, var(--gradient-1), var(--gradient-2));
-    color: #fff;
+    background: var(--gradient-gold);
+    color: #0d0d20;
     border: none;
     width: 55px;
     height: 55px;
     border-radius: 50%;
     font-size: 1.4rem;
     cursor: pointer;
-    box-shadow: 0 4px 25px var(--shadow-color);
+    box-shadow: var(--shadow-gold);
 }
 
 .theme-btn:hover {
     transform: scale(1.1) rotate(20deg);
 }
 
-/* ====== نافذة الشات الموحدة ====== */
+/* ====== نافذة الشات ====== */
 .chat-overlay {
     display: none;
     position: fixed;
@@ -75,25 +193,15 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.7);
-    backdrop-filter: blur(10px);
-    z-index: 10000;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(15px);
+    z-index: 2000;
     justify-content: center;
     align-items: center;
-    animation: overlayFadeIn 0.3s ease;
 }
 
 .chat-overlay.open {
     display: flex;
-}
-
-@keyframes overlayFadeIn {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
 }
 
 .chat-container {
@@ -103,12 +211,12 @@ body {
     max-height: 750px;
     background: var(--bg-secondary);
     border-radius: var(--radius);
-    box-shadow: 0 25px 80px rgba(0, 0, 0, 0.8);
+    border: 2px solid var(--gold);
+    box-shadow: 0 25px 80px rgba(255, 215, 0, 0.1);
     display: flex;
     flex-direction: column;
     overflow: hidden;
     animation: slideUp 0.4s ease;
-    border: 1px solid var(--border-color);
 }
 
 @keyframes slideUp {
@@ -122,14 +230,13 @@ body {
     }
 }
 
-/* ====== رأس الشات ====== */
 .chat-header {
-    background: linear-gradient(135deg, var(--gradient-1), var(--gradient-2));
+    background: var(--gradient-gold);
     padding: 16px 24px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    color: #fff;
+    color: #0d0d20;
     flex-shrink: 0;
 }
 
@@ -137,39 +244,37 @@ body {
     display: flex;
     align-items: center;
     gap: 12px;
-    font-weight: 700;
+    font-weight: 900;
     font-size: 1.1rem;
 }
 
 .chat-badge {
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(0, 0, 0, 0.15);
     padding: 2px 14px;
     border-radius: 30px;
     font-size: 0.6rem;
-    font-weight: 400;
+    font-weight: 700;
 }
 
 .chat-close {
-    background: rgba(255, 255, 255, 0.15);
+    background: rgba(0, 0, 0, 0.15);
     border: none;
-    color: #fff;
+    color: #0d0d20;
     width: 36px;
     height: 36px;
     border-radius: 50%;
     cursor: pointer;
     font-size: 1.1rem;
-    transition: var(--transition);
 }
 
 .chat-close:hover {
-    background: rgba(255, 0, 0, 0.4);
+    background: rgba(0, 0, 0, 0.3);
 }
 
-/* ====== علامات التبويب ====== */
 .chat-tabs {
     display: flex;
     background: var(--bg-primary);
-    border-bottom: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-gold);
     flex-shrink: 0;
 }
 
@@ -192,15 +297,13 @@ body {
 
 .chat-tab:hover {
     color: var(--text-primary);
-    background: var(--input-bg);
 }
 
 .chat-tab.active {
-    color: var(--gradient-3);
-    border-bottom-color: var(--gradient-3);
+    color: var(--gold);
+    border-bottom-color: var(--gold);
 }
 
-/* ====== محتوى التبويب ====== */
 .chat-tab-content {
     display: none;
     flex: 1;
@@ -212,58 +315,23 @@ body {
     display: flex;
 }
 
-/* ====== خيارات شات NEX ====== */
-.chat-nex-options {
-    display: flex;
-    gap: 6px;
-    padding: 8px 12px;
-    background: var(--input-bg);
-    border-bottom: 1px solid var(--border-color);
-    flex-wrap: wrap;
-    flex-shrink: 0;
-}
-
-.nex-option {
-    padding: 6px 14px;
-    border-radius: 30px;
-    border: 1px solid var(--border-color);
-    background: transparent;
-    color: var(--text-secondary);
-    font-size: 0.75rem;
-    cursor: pointer;
-    transition: var(--transition);
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
-
-.nex-option:hover {
-    background: var(--gradient-1);
-    color: #fff;
-    border-color: var(--gradient-1);
-}
-
-.nex-option.active {
-    background: linear-gradient(45deg, var(--gradient-1), var(--gradient-2));
-    color: #fff;
-    border-color: transparent;
-}
-
-/* ====== خيارات شات Tawk ====== */
+/* ====== خيارات الشات ====== */
+.chat-nex-options,
 .chat-tawk-options {
     display: flex;
     gap: 6px;
     padding: 8px 12px;
     background: var(--input-bg);
-    border-bottom: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-gold);
     flex-wrap: wrap;
     flex-shrink: 0;
 }
 
+.nex-option,
 .tawk-option {
     padding: 6px 14px;
     border-radius: 30px;
-    border: 1px solid var(--border-color);
+    border: 1px solid var(--border-gold);
     background: transparent;
     color: var(--text-secondary);
     font-size: 0.75rem;
@@ -274,16 +342,18 @@ body {
     gap: 6px;
 }
 
+.nex-option:hover,
 .tawk-option:hover {
-    background: #25D366;
-    color: #fff;
-    border-color: #25D366;
+    background: var(--gold);
+    color: #0d0d20;
+    border-color: var(--gold);
 }
 
+.nex-option.active,
 .tawk-option.active {
-    background: #25D366;
-    color: #fff;
-    border-color: transparent;
+    background: var(--gradient-gold);
+    color: #0d0d20;
+    border-color: var(--gold);
 }
 
 /* ====== الرسائل ====== */
@@ -299,14 +369,12 @@ body {
 
 .tawk-container {
     padding: 0 !important;
-    position: relative;
 }
 
 .tawk-container iframe {
     width: 100% !important;
     height: 100% !important;
     border: none !important;
-    border-radius: 0 !important;
     min-height: 400px;
 }
 
@@ -325,23 +393,17 @@ body {
     justify-content: center;
 }
 
-.message.system .msg-bubble {
-    background: var(--input-bg);
-    color: var(--text-secondary);
-    max-width: 90%;
-    text-align: center;
-}
-
 .msg-avatar {
     width: 38px;
     height: 38px;
     border-radius: 50%;
-    background: var(--input-bg);
+    background: var(--bg-card);
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 1.2rem;
     flex-shrink: 0;
+    border: 1px solid var(--border-gold);
 }
 
 .msg-bubble {
@@ -352,18 +414,13 @@ body {
     line-height: 1.7;
     background: var(--bg-card);
     color: var(--text-primary);
-    border: 1px solid var(--border-color);
+    border: 1px solid var(--border-gold);
     word-wrap: break-word;
 }
 
-.msg-bubble br {
-    display: block;
-    margin: 4px 0;
-}
-
 .message.bot .msg-bubble {
-    background: linear-gradient(135deg, var(--gradient-1), var(--gradient-2));
-    color: #fff;
+    background: var(--gradient-gold);
+    color: #0d0d20;
     border: none;
 }
 
@@ -380,7 +437,7 @@ body {
 
 /* ====== منطقة الإدخال ====== */
 .chat-input-area {
-    border-top: 1px solid var(--border-color);
+    border-top: 1px solid var(--border-gold);
     background: var(--bg-secondary);
     flex-shrink: 0;
 }
@@ -395,7 +452,7 @@ body {
     flex: 1;
     padding: 10px 16px;
     border-radius: 30px;
-    border: 1px solid var(--border-color);
+    border: 1px solid var(--border-gold);
     background: var(--input-bg);
     color: var(--text-primary);
     font-size: 0.95rem;
@@ -403,12 +460,7 @@ body {
 
 .chat-input-wrapper input:focus {
     outline: none;
-    border-color: var(--gradient-2);
-}
-
-.chat-input-wrapper input:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
+    border-color: var(--gold);
 }
 
 .chat-input-wrapper button {
@@ -416,8 +468,8 @@ body {
     height: 46px;
     border-radius: 50%;
     border: none;
-    background: linear-gradient(135deg, var(--gradient-1), var(--gradient-2));
-    color: #fff;
+    background: var(--gradient-gold);
+    color: #0d0d20;
     font-size: 1.1rem;
     cursor: pointer;
     transition: var(--transition);
@@ -427,116 +479,15 @@ body {
     transform: scale(1.05);
 }
 
-.chat-input-wrapper button:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-}
-
 .chat-footer {
     text-align: center;
     padding: 6px;
     font-size: 0.7rem;
     color: var(--text-secondary);
-    border-top: 1px solid var(--border-color);
+    border-top: 1px solid var(--border-gold);
 }
 
-/* ====== إخفاء زر Tawk.to العائم ====== */
-#tawk-container,
-.tawk-container,
-.tawk-min-container,
-.tawk-widget,
-.tawk-branding,
-.tawk-chat-widget,
-.tawk-iframe-container {
-    display: none !important;
-}
-
-#tab-tawk .tawk-container,
-#tab-tawk #tawk-container {
-    display: flex !important;
-}
-
-iframe[src*="tawk.to"]:not(#tab-tawk iframe) {
-    display: none !important;
-}
-
-/* ====== الهيدر ====== */
-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 18px 50px;
-    background: var(--bg-secondary);
-    border-bottom: 2px solid var(--gradient-1);
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    backdrop-filter: blur(10px);
-}
-
-.logo h1 {
-    font-size: 2.2rem;
-    background: linear-gradient(45deg, var(--gradient-3), var(--gradient-2));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
-.logo p {
-    font-size: 0.8rem;
-    color: var(--text-secondary);
-}
-
-nav {
-    display: flex;
-    gap: 20px;
-    align-items: center;
-    flex-wrap: wrap;
-}
-
-nav a {
-    color: var(--text-secondary);
-    text-decoration: none;
-    font-size: 0.95rem;
-    padding: 8px 16px;
-    border-radius: 30px;
-    transition: var(--transition);
-}
-
-nav a:hover {
-    background: linear-gradient(45deg, var(--gradient-1), var(--gradient-2));
-    color: #fff;
-}
-
-.nav-chat-btn {
-    background: linear-gradient(45deg, var(--gradient-2), var(--gradient-3));
-    color: #fff !important;
-    font-weight: 700;
-    box-shadow: 0 4px 20px rgba(0, 212, 255, 0.3);
-}
-
-.nav-chat-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 30px rgba(0, 212, 255, 0.5);
-    background: linear-gradient(45deg, var(--gradient-1), var(--gradient-2)) !important;
-}
-
-.nav-chat-btn.tawk-btn {
-    background: linear-gradient(45deg, #25D366, #128C7E);
-    box-shadow: 0 4px 20px rgba(37, 211, 102, 0.3);
-}
-
-.nav-chat-btn.tawk-btn:hover {
-    box-shadow: 0 8px 30px rgba(37, 211, 102, 0.5);
-    background: linear-gradient(45deg, #128C7E, #25D366) !important;
-}
-
-.menu-toggle {
-    display: none;
-    font-size: 1.6rem;
-    cursor: pointer;
-}
-
-/* ====== القسم الرئيسي (Hero) مع الخلفية الجديدة ====== */
+/* ====== القسم الرئيسي (Hero) ====== */
 .hero {
     min-height: 90vh;
     display: flex;
@@ -547,15 +498,12 @@ nav a:hover {
     padding: 80px 20px;
     position: relative;
     overflow: hidden;
-    /* الخلفية الجديدة */
     background-image: url('https://files.catbox.moe/ik6ddc.png');
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
-    background-repeat: no-repeat;
 }
 
-/* طبقة شفافة فوق الخلفية */
 .hero::before {
     content: '';
     position: absolute;
@@ -563,50 +511,44 @@ nav a:hover {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.6);
+    background: rgba(0, 0, 0, 0.65);
     z-index: 0;
 }
 
-/* التأكد من أن المحتوى فوق الطبقة */
 .hero-content,
 .hero-stats {
     position: relative;
     z-index: 1;
 }
 
-/* إزالة الحركة القديمة */
-.hero::after {
-    display: none;
-}
-
 .hero-badge {
     display: inline-block;
-    background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(10px);
-    color: var(--gradient-3);
-    padding: 5px 20px;
+    background: rgba(255, 215, 0, 0.15);
+    color: var(--gold);
+    padding: 5px 25px;
     border-radius: 30px;
     font-size: 0.85rem;
     font-weight: 700;
     margin-bottom: 15px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 215, 0, 0.2);
+    backdrop-filter: blur(10px);
 }
 
 .hero h1 {
-    font-size: 4.5rem;
+    font-size: 5rem;
     font-weight: 900;
-    text-shadow: 0 4px 30px rgba(0, 0, 0, 0.8);
+    text-shadow: 0 4px 40px rgba(0, 0, 0, 0.8);
 }
 
 .hero h1 span {
-    background: linear-gradient(45deg, var(--gradient-3), var(--gradient-2));
+    background: var(--gradient-gold);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
 .hero p {
     font-size: 1.3rem;
-    color: #ffffff;
+    color: rgba(255, 255, 255, 0.85);
     text-shadow: 0 2px 20px rgba(0, 0, 0, 0.7);
     margin: 20px 0 30px;
     max-width: 600px;
@@ -631,53 +573,48 @@ nav a:hover {
 }
 
 .btn.primary {
-    background: linear-gradient(45deg, var(--gradient-1), var(--gradient-2));
-    color: #fff;
-    box-shadow: 0 4px 25px var(--shadow-color);
+    background: var(--gradient-gold);
+    color: #0d0d20;
+    box-shadow: var(--shadow-gold);
 }
 
 .btn.primary:hover {
     transform: translateY(-3px);
-    box-shadow: 0 8px 40px var(--shadow-color);
+    box-shadow: 0 8px 50px rgba(255, 215, 0, 0.3);
 }
 
 .btn.secondary {
     background: rgba(0, 0, 0, 0.4);
     backdrop-filter: blur(5px);
     color: #fff;
-    border: 2px solid rgba(255, 255, 255, 0.3);
+    border: 2px solid var(--gold);
 }
 
 .btn.secondary:hover {
-    background: var(--gradient-2);
-    color: #fff;
-    border-color: var(--gradient-2);
+    background: var(--gold);
+    color: #0d0d20;
 }
 
 .hero-stats {
     display: flex;
     gap: 50px;
     margin-top: 60px;
-    position: relative;
-    z-index: 1;
     flex-wrap: wrap;
     justify-content: center;
 }
 
 .stat .number {
-    font-size: 2.8rem;
+    font-size: 3rem;
     font-weight: 900;
-    background: linear-gradient(45deg, var(--gradient-3), var(--gradient-2));
+    background: var(--gradient-gold);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    text-shadow: 0 0 40px rgba(0, 212, 255, 0.3);
 }
 
 .stat .label {
     display: block;
-    color: rgba(255, 255, 255, 0.9);
+    color: rgba(255, 255, 255, 0.8);
     font-size: 0.9rem;
-    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
 }
 
 /* ====== الأقسام ====== */
@@ -692,9 +629,7 @@ section h2 {
 }
 
 section h2 i {
-    background: linear-gradient(45deg, var(--gradient-3), var(--gradient-2));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: var(--gold);
 }
 
 .section-desc {
@@ -716,13 +651,14 @@ section h2 i {
     background: var(--bg-card);
     padding: 30px 25px;
     border-radius: var(--radius);
-    border: 1px solid var(--border-color);
+    border: 1px solid var(--border-gold);
     transition: var(--transition);
 }
 
 .bot-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 10px 50px var(--shadow-color);
+    transform: translateY(-10px);
+    box-shadow: var(--shadow-gold);
+    border-color: var(--gold);
 }
 
 .bot-icon {
@@ -732,6 +668,7 @@ section h2 i {
 
 .bot-card h3 {
     font-size: 1.3rem;
+    color: var(--gold);
 }
 
 .bot-card p {
@@ -749,15 +686,16 @@ section h2 i {
 }
 
 .bot-features span {
-    background: var(--input-bg);
+    background: var(--bg-card);
     padding: 4px 12px;
     border-radius: 20px;
     font-size: 0.75rem;
     color: var(--text-secondary);
+    border: 1px solid var(--border-gold);
 }
 
 .bot-features span i {
-    color: #00c853;
+    color: var(--gold);
     margin-left: 5px;
 }
 
@@ -768,11 +706,6 @@ section h2 i {
     font-size: 0.85rem;
     font-weight: 700;
     margin: 12px 0;
-}
-
-.status i {
-    margin-left: 6px;
-    font-size: 0.6rem;
 }
 
 .status.online {
@@ -801,19 +734,20 @@ section h2 i {
 }
 
 .bot-btn:not(.disabled) {
-    background: linear-gradient(45deg, var(--gradient-1), var(--gradient-2));
-    color: #fff;
+    background: var(--gradient-gold);
+    color: #0d0d20;
 }
 
 .bot-btn:not(.disabled):hover {
     transform: scale(1.05);
-    box-shadow: 0 4px 20px var(--shadow-color);
+    box-shadow: var(--shadow-gold);
 }
 
 .bot-btn.disabled {
-    background: var(--input-bg);
+    background: var(--bg-card);
     color: var(--text-secondary);
     cursor: not-allowed;
+    border: 1px solid var(--border-gold);
 }
 
 /* ====== المميزات ====== */
@@ -829,25 +763,25 @@ section h2 i {
     background: var(--bg-card);
     padding: 30px 20px;
     border-radius: var(--radius);
-    border: 1px solid var(--border-color);
+    border: 1px solid var(--border-gold);
     transition: var(--transition);
 }
 
 .feature-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 10px 40px var(--shadow-color);
+    box-shadow: var(--shadow-gold);
+    border-color: var(--gold);
 }
 
 .feature-card i {
     font-size: 2.8rem;
-    background: linear-gradient(45deg, var(--gradient-3), var(--gradient-2));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: var(--gold);
     margin-bottom: 12px;
 }
 
 .feature-card h3 {
     font-size: 1.2rem;
+    color: var(--gold);
 }
 
 .feature-card p {
@@ -869,7 +803,7 @@ section h2 i {
 .about-mission h3 {
     font-size: 1.4rem;
     margin-bottom: 15px;
-    color: var(--gradient-3);
+    color: var(--gold);
 }
 
 .about-text p,
@@ -890,13 +824,13 @@ section h2 i {
     background: var(--bg-card);
     padding: 10px 15px;
     border-radius: 12px;
-    border: 1px solid var(--border-color);
+    border: 1px solid var(--border-gold);
     font-weight: 700;
     font-size: 0.9rem;
 }
 
 .about-stats i {
-    color: var(--gradient-3);
+    color: var(--gold);
     margin-left: 8px;
 }
 
@@ -914,11 +848,12 @@ section h2 i {
     align-items: center;
     gap: 12px;
     padding: 16px 20px;
-    border-radius: 15px;
+    border-radius: 12px;
     text-decoration: none;
     color: #fff;
     font-weight: 700;
     transition: var(--transition);
+    justify-content: center;
 }
 
 .support-link:hover {
@@ -937,17 +872,18 @@ section h2 i {
     background: #0088cc;
 }
 .support-link.support-group {
-    background: linear-gradient(45deg, var(--gradient-1), var(--gradient-2));
+    background: var(--gradient-gold);
+    color: #0d0d20;
 }
 .support-link.developer {
-    background: linear-gradient(45deg, #ff6b9d, #c084fc);
+    background: linear-gradient(135deg, #ff6b9d, #c084fc);
 }
 
 /* ====== الفوتر ====== */
 footer {
     background: var(--bg-secondary);
     padding: 50px 50px 20px;
-    border-top: 1px solid var(--border-color);
+    border-top: 1px solid var(--border-gold);
 }
 
 .footer-content {
@@ -961,6 +897,7 @@ footer {
 .footer-section h3,
 .footer-section h4 {
     margin-bottom: 15px;
+    color: var(--gold);
 }
 
 .footer-section a {
@@ -972,7 +909,7 @@ footer {
 }
 
 .footer-section a:hover {
-    color: var(--gradient-3);
+    color: var(--gold);
 }
 
 .social-icons {
@@ -985,18 +922,19 @@ footer {
     width: 42px;
     height: 42px;
     border-radius: 50%;
-    background: var(--input-bg);
+    background: var(--bg-card);
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 1.2rem;
     color: var(--text-primary);
     transition: var(--transition);
+    border: 1px solid var(--border-gold);
 }
 
 .social-icons a:hover {
-    background: var(--gradient-2);
-    color: #fff;
+    background: var(--gold);
+    color: #0d0d20;
     transform: translateY(-3px);
 }
 
@@ -1004,42 +942,56 @@ footer {
     text-align: center;
     padding-top: 25px;
     margin-top: 30px;
-    border-top: 1px solid var(--border-color);
+    border-top: 1px solid var(--border-gold);
     color: var(--text-secondary);
     font-size: 0.9rem;
 }
 
-/* ====== استجابة للشاشات الصغيرة ====== */
+/* ====== إخفاء Tawk العائم ====== */
+#tawk-container,
+.tawk-container,
+.tawk-min-container,
+.tawk-widget,
+.tawk-branding,
+.tawk-chat-widget {
+    display: none !important;
+}
+
+#tab-tawk .tawk-container,
+#tab-tawk #tawk-container {
+    display: flex !important;
+}
+
+iframe[src*="tawk.to"]:not(#tab-tawk iframe) {
+    display: none !important;
+}
+
+/* ====== استجابة ====== */
 @media (max-width: 992px) {
+    .sidebar {
+        transform: translateX(100%);
+    }
+    .sidebar.open {
+        transform: translateX(0);
+    }
+    .sidebar-toggle {
+        display: block;
+    }
+    .main-content {
+        margin-right: 0;
+    }
     .about-container {
         grid-template-columns: 1fr;
     }
     .chat-container {
         width: 95%;
         height: 90vh;
-        max-height: 90vh;
     }
 }
 
 @media (max-width: 768px) {
-    header {
-        padding: 15px 20px;
-        flex-wrap: wrap;
-    }
-    nav {
-        display: none;
-        flex-direction: column;
-        width: 100%;
-        padding-top: 15px;
-    }
-    nav.open {
-        display: flex;
-    }
-    .menu-toggle {
-        display: block;
-    }
     .hero h1 {
-        font-size: 2.5rem;
+        font-size: 2.8rem;
     }
     .hero-stats {
         gap: 25px;
@@ -1057,68 +1009,23 @@ footer {
     .chat-container {
         width: 98%;
         height: 95vh;
-        max-height: 95vh;
         border-radius: 12px;
     }
-    .chat-header {
-        padding: 12px 16px;
-    }
-    .chat-title {
-        font-size: 0.9rem;
-    }
-    .chat-tabs {
-        flex-wrap: wrap;
-    }
-    .chat-tab {
-        padding: 10px 12px;
-        font-size: 0.8rem;
-        flex: 0 0 50%;
-    }
-    .chat-nex-options,
-    .chat-tawk-options {
-        gap: 4px;
-        padding: 6px 8px;
-    }
-    .nex-option,
-    .tawk-option {
-        font-size: 0.65rem;
-        padding: 4px 10px;
-    }
-    .chat-messages {
-        padding: 12px;
-    }
-    .msg-bubble {
-        max-width: 85%;
-        font-size: 0.85rem;
-        padding: 8px 12px;
-    }
-    .chat-input-wrapper {
-        padding: 8px 12px;
-    }
-    .chat-input-wrapper input {
-        font-size: 0.85rem;
-        padding: 8px 12px;
-    }
-    .chat-input-wrapper button {
-        width: 40px;
-        height: 40px;
-        font-size: 0.9rem;
+    .sidebar {
+        width: 280px;
     }
     .theme-btn {
+        bottom: 20px;
+        left: 20px;
         width: 48px;
         height: 48px;
         font-size: 1.2rem;
-        bottom: 20px;
-        right: 20px;
-    }
-    .hero {
-        background-attachment: scroll; /* إلغاء التأثير الثابت على الجوال */
     }
 }
 
 @media (max-width: 480px) {
     .hero h1 {
-        font-size: 1.8rem;
+        font-size: 2rem;
     }
     .hero p {
         font-size: 1rem;
@@ -1132,27 +1039,6 @@ footer {
     }
     .chat-container {
         height: 100vh;
-        max-height: 100vh;
         border-radius: 0;
-    }
-    .chat-tab {
-        font-size: 0.7rem;
-        padding: 8px 10px;
-    }
-    .chat-tab i {
-        font-size: 0.8rem;
-    }
-    .chat-messages {
-        padding: 10px;
-    }
-    .msg-bubble {
-        max-width: 90%;
-        font-size: 0.8rem;
-        padding: 6px 10px;
-    }
-    .nex-option,
-    .tawk-option {
-        font-size: 0.6rem;
-        padding: 3px 8px;
     }
 }
