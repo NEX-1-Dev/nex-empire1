@@ -1,6 +1,6 @@
 {
   "functions": {
-    "api/deepseek.js": {
+    "api/*.js": {
       "runtime": "nodejs18.x"
     }
   },
