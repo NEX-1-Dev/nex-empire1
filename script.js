@@ -39,46 +39,49 @@ document.querySelectorAll('nav a').forEach(link => {
 const chatOverlay = document.getElementById('chatOverlay');
 const chatClose = document.getElementById('chatClose');
 
-// فتح الشات من أي زر
 function openChat(tab = 'nex') {
     chatOverlay.classList.add('open');
     document.body.style.overflow = 'hidden';
-    // تفعيل التبويب المطلوب
     document.querySelectorAll('.chat-tab').forEach(t => t.classList.remove('active'));
     document.querySelectorAll('.chat-tab-content').forEach(c => c.classList.remove('active'));
     document.querySelector(`.chat-tab[data-tab="${tab}"]`)?.classList.add('active');
     document.getElementById(`tab-${tab}`)?.classList.add('active');
     if (tab === 'nex') {
-        document.getElementById('chatNexInput')?.focus();
+        setTimeout(() => document.getElementById('chatNexInput')?.focus(), 300);
     }
 }
 
-// إغلاق الشات
 function closeChat() {
     chatOverlay.classList.remove('open');
     document.body.style.overflow = '';
 }
 
 // أزرار فتح الشات
-document.getElementById('chatNexToggle').addEventListener('click', (e) => {
-    e.preventDefault();
-    openChat('nex');
-});
+const chatNexToggle = document.getElementById('chatNexToggle');
+const chatTawkToggle = document.getElementById('chatTawkToggle');
 
-document.getElementById('chatTawkToggle').addEventListener('click', (e) => {
-    e.preventDefault();
-    openChat('tawk');
-});
+if (chatNexToggle) {
+    chatNexToggle.addEventListener('click', (e) => {
+        e.preventDefault();
+        openChat('nex');
+    });
+}
 
-// إغلاق الشات
-chatClose.addEventListener('click', closeChat);
+if (chatTawkToggle) {
+    chatTawkToggle.addEventListener('click', (e) => {
+        e.preventDefault();
+        openChat('tawk');
+    });
+}
 
-// إغلاق بالضغط على الخلفية
+if (chatClose) {
+    chatClose.addEventListener('click', closeChat);
+}
+
 chatOverlay.addEventListener('click', (e) => {
     if (e.target === chatOverlay) closeChat();
 });
 
-// إغلاق بزر Escape
 document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && chatOverlay.classList.contains('open')) closeChat();
 });
@@ -92,7 +95,7 @@ document.querySelectorAll('.chat-tab').forEach(tab => {
         tab.classList.add('active');
         document.getElementById(`tab-${target}`).classList.add('active');
         if (target === 'nex') {
-            document.getElementById('chatNexInput')?.focus();
+            setTimeout(() => document.getElementById('chatNexInput')?.focus(), 300);
         }
     });
 });
@@ -104,7 +107,6 @@ let currentSearch = true;
 document.querySelectorAll('.nex-option').forEach(btn => {
     btn.addEventListener('click', () => {
         if (btn.id === 'nexNewChat') {
-            // بدء محادثة جديدة
             const messages = document.getElementById('chatNexMessages');
             messages.innerHTML = `
                 <div class="message bot">
@@ -140,8 +142,6 @@ function addNexMessage(text, type) {
     chatNexMessages.scrollTop = chatNexMessages.scrollHeight;
 }
 
-// ====== الاتصال بـ DeepSeek API ======
-// 🚨 استبدل هذا الرابط برابط API الخاص بك
 const DEEPSEEK_API_URL = 'https://your-api-url.vercel.app/api/deepseek';
 
 async function callDeepSeek(query, thinking, search) {
@@ -164,7 +164,6 @@ async function callDeepSeek(query, thinking, search) {
     }
 }
 
-// ====== إرسال رسالة NEX ======
 async function sendNexMessage() {
     const text = chatNexInput.value.trim();
     if (!text) return;
@@ -208,7 +207,6 @@ document.querySelectorAll('.tawk-option').forEach(btn => {
     btn.addEventListener('click', () => {
         document.querySelectorAll('.tawk-option').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-        // محاكاة تغيير الحالة
         const container = document.getElementById('tawkContainer');
         if (btn.id === 'tawkLive') {
             container.innerHTML = `
@@ -219,7 +217,6 @@ document.querySelectorAll('.tawk-option').forEach(btn => {
                     </div>
                 </div>
             `;
-            // محاولة إظهار iframe مرة أخرى
             const tawkIframe = document.querySelector('#tawk-container iframe');
             if (tawkIframe) {
                 container.innerHTML = '';
