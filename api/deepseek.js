@@ -1,11 +1,15 @@
+// ============================================================
 // api/deepseek.js
 // واجهة API لـ DeepSeek – تعمل كوسيط بين الموقع و DeepSeek
+// ============================================================
 
 import axios from 'axios';
 import FormData from 'form-data';
 import { fileTypeFromBuffer } from 'file-type';
 
-const API_BASE = 'https://engez.a7a.online/api/v1/ai/deepseek';
+// ====== رابط الـ Proxy (يمكن تغييره لاحقاً) ======
+// يمكنك استبدال هذا الرابط برابط DeepSeek الرسمي إذا كان لديك مفتاح API
+const API_BASE = process.env.DEEPSEEK_API_URL || 'https://engez.a7a.online/api/v1/ai/deepseek';
 
 // ====== رفع الملف إلى Uguu ======
 async function uploadToUguu(buffer, ext) {
@@ -70,15 +74,17 @@ function buildReply(reply, thinkText) {
 
 // ====== الدالة الرئيسية لـ Vercel ======
 export default async function handler(req, res) {
-    // السماح بالطلبات من أي مصدر (CORS)
+    // ====== إعدادات CORS ======
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
+    // ====== معالجة طلب OPTIONS (preflight) ======
     if (req.method === 'OPTIONS') {
         return res.status(200).end();
     }
 
+    // ====== استخراج المعاملات من الطلب ======
     const { 
         query, 
         search = 'false', 
@@ -86,7 +92,7 @@ export default async function handler(req, res) {
         fileUrl = null 
     } = req.query;
 
-    // التحقق من وجود سؤال
+    // ====== التحقق من وجود سؤال ======
     if (!query || query.trim() === '') {
         return res.status(400).json({ 
             success: false, 
@@ -94,6 +100,7 @@ export default async function handler(req, res) {
         });
     }
 
+    // ====== تنفيذ الطلب ======
     try {
         const result = await callDeepSeekAPI({
             query: query.trim(),
@@ -120,9 +127,10 @@ export default async function handler(req, res) {
         });
 
     } catch (error) {
+        console.error('❌ خطأ في الـ API:', error.message);
         return res.status(500).json({
             success: false,
             error: `❌ خطأ: ${error.message}`
         });
     }
-          }
+}
