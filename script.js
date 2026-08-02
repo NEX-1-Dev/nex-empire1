@@ -142,7 +142,7 @@ function addNexMessage(text, type) {
     chatNexMessages.scrollTop = chatNexMessages.scrollHeight;
 }
 
-const DEEPSEEK_API_URL = 'https://your-api-url.vercel.app/api/deepseek';
+const DEEPSEEK_API_URL = 'https://nex-empire1.vercel.app/api/deepseek';
 
 async function callDeepSeek(query, thinking, search) {
     try {
