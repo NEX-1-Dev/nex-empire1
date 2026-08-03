@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>ℕ𝔼𝕏 Empire | عصر الذكاء الرقمي</title>
     <meta name="description" content="إمبراطورية ℕ𝔼𝕏 - منصة متكاملة للبوتات والذكاء الاصطناعي" />
     <link rel="stylesheet" href="style.css" />
@@ -12,72 +12,128 @@
 </head>
 <body>
 
-    <!-- ====== زر تبديل الوضع ====== -->
-    <button id="themeToggle" class="theme-btn" aria-label="تبديل الوضع">
-        <i class="fas fa-moon"></i>
-    </button>
+    <!-- ====== شريط المطور العلوي ====== -->
+    <div class="dev-bar" id="devBar">
+        <div class="dev-bar-content">
+            <div class="dev-info">
+                <img src="https://files.catbox.moe/ik6ddc.png" alt="ℕ𝔼𝕏" class="dev-logo" />
+                <span class="dev-name">𝑵𝑬𝑿_𝑫𝑬𝑽_𝑽𝟏</span>
+            </div>
+            <div class="dev-actions">
+                <button id="devChatNex" class="dev-btn primary"><i class="fas fa-robot"></i> شات NEX</button>
+                <a href="https://wa.me/0998251277" target="_blank" class="dev-btn whatsapp"><i class="fab fa-whatsapp"></i> المطور</a>
+                <button id="devIdeasToggle" class="dev-btn ideas"><i class="fas fa-lightbulb"></i> شات الأفكار</button>
+            </div>
+        </div>
+    </div>
 
-    <!-- ====== نافذة الشات الموحدة ====== -->
-    <div id="chatOverlay" class="chat-overlay">
-        <div class="chat-container">
-            <div class="chat-header">
-                <div class="chat-title">
-                    <i class="fas fa-comment-dots"></i>
-                    <span>مركز الدعم</span>
-                    <span class="chat-badge">ℕ𝔼𝕏</span>
-                </div>
-                <button id="chatClose" class="chat-close"><i class="fas fa-times"></i></button>
+    <!-- ====== نافذة شات الأفكار ====== -->
+    <div id="ideasOverlay" class="ideas-overlay">
+        <div class="ideas-container">
+            <div class="ideas-header">
+                <span><i class="fas fa-lightbulb"></i> شات الأفكار</span>
+                <button id="ideasClose" class="ideas-close"><i class="fas fa-times"></i></button>
             </div>
-            <div class="chat-tabs">
-                <button class="chat-tab active" data-tab="nex"><i class="fas fa-robot"></i> شات NEX</button>
-                <button class="chat-tab" data-tab="tawk"><i class="fas fa-headset"></i> دعم مباشر</button>
-            </div>
-            <div id="tab-nex" class="chat-tab-content active">
-                <div class="chat-nex-options">
-                    <button class="nex-option active" data-thinking="true" data-search="true"><i class="fas fa-brain"></i> تفكير + بحث</button>
-                    <button class="nex-option" data-thinking="true" data-search="false"><i class="fas fa-lightbulb"></i> تفكير</button>
-                    <button class="nex-option" data-thinking="false" data-search="true"><i class="fas fa-search"></i> بحث</button>
-                    <button id="nexNewChat" class="nex-option"><i class="fas fa-plus"></i> جديد</button>
-                </div>
-                <div class="chat-messages" id="chatNexMessages">
-                    <div class="message bot">
-                        <div class="msg-avatar">⚡</div>
-                        <div class="msg-bubble">مرحباً، أنا مساعد NEX الذكي. كيف يمكنني مساعدتك اليوم؟</div>
-                    </div>
-                </div>
-                <div class="chat-input-area">
-                    <div class="chat-input-wrapper">
-                        <input type="text" id="chatNexInput" placeholder="اكتب سؤالك هنا..." />
-                        <button id="chatNexSend"><i class="fas fa-paper-plane"></i></button>
-                    </div>
-                    <div class="chat-footer">⚡ مدعوم بـ DeepSeek · ℕ𝔼𝕏</div>
+            <div class="ideas-messages" id="ideasMessages">
+                <div class="idea-message system">
+                    💡 أهلاً بك في شات أفكار ℕ𝔼𝕏! شاركنا اقتراحاتك لتطوير الإمبراطورية.
                 </div>
             </div>
-            <div id="tab-tawk" class="chat-tab-content">
-                <div class="chat-tawk-options">
-                    <button class="tawk-option active" id="tawkLive"><i class="fas fa-circle" style="color:#00c853;"></i> مباشر</button>
-                    <button class="tawk-option" id="tawkHistory"><i class="fas fa-history"></i> السجل</button>
-                    <button class="tawk-option" id="tawkNew"><i class="fas fa-plus"></i> جديد</button>
+            <div class="ideas-input-area">
+                <div class="ideas-input-wrapper">
+                    <input type="text" id="ideasInput" placeholder="اكتب فكرتك..." />
+                    <button id="ideasSend"><i class="fas fa-paper-plane"></i></button>
                 </div>
-                <div class="chat-messages tawk-container" id="tawkContainer">
-                    <div class="message system">
-                        <div class="msg-bubble" style="background:var(--input-bg);color:var(--text-secondary);">
-                            <i class="fas fa-headset"></i> جاري تحميل الدعم المباشر...
-                        </div>
-                    </div>
-                </div>
-                <div class="chat-input-area">
-                    <div class="chat-input-wrapper">
-                        <input type="text" id="tawkInput" placeholder="راسل فريق الدعم..." disabled />
-                        <button id="tawkSend" disabled><i class="fas fa-paper-plane"></i></button>
-                    </div>
-                    <div class="chat-footer">🛡️ دعم فني 24/7</div>
+                <div class="ideas-footer">
+                    <span>🔒 للمطور: أدخل كلمة السر في الشات للوصول للوحة التحكم</span>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- ====== الشريط الجانبي ====== -->
+    <!-- ====== نافذة شات NEX ====== -->
+    <div id="chatOverlay" class="chat-overlay">
+        <div class="chat-container">
+            <div class="chat-header">
+                <div class="chat-title"><i class="fas fa-robot"></i> شات NEX</div>
+                <button id="chatClose" class="chat-close"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="chat-options">
+                <button class="chat-opt active" data-thinking="true" data-search="true"><i class="fas fa-brain"></i> تفكير+بحث</button>
+                <button class="chat-opt" data-thinking="true" data-search="false"><i class="fas fa-lightbulb"></i> تفكير</button>
+                <button class="chat-opt" data-thinking="false" data-search="true"><i class="fas fa-search"></i> بحث</button>
+                <button id="nexNewChat" class="chat-opt"><i class="fas fa-plus"></i> جديد</button>
+            </div>
+            <div class="chat-messages" id="chatNexMessages">
+                <div class="msg bot">
+                    <div class="msg-avatar">⚡</div>
+                    <div class="msg-bubble">مرحباً، أنا مساعد NEX الذكي. كيف يمكنني مساعدتك اليوم؟</div>
+                </div>
+            </div>
+            <div class="chat-input-area">
+                <div class="chat-input-wrapper">
+                    <input type="text" id="chatNexInput" placeholder="اكتب سؤالك..." />
+                    <button id="chatNexSend"><i class="fas fa-paper-plane"></i></button>
+                </div>
+                <div class="chat-footer">⚡ مدعوم بـ DeepSeek</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ====== نافذة تسجيل الدخول ====== -->
+    <div id="authOverlay" class="auth-overlay">
+        <div class="auth-container">
+            <div class="auth-header">
+                <h2>مرحباً بك في ℕ𝔼𝕏</h2>
+                <p>سجل دخولك للوصول لميزات متقدمة</p>
+            </div>
+            <div class="auth-tabs">
+                <button class="auth-tab active" data-tab="login">تسجيل دخول</button>
+                <button class="auth-tab" data-tab="register">إنشاء حساب</button>
+            </div>
+            <div id="auth-login" class="auth-form active">
+                <input type="email" id="loginEmail" placeholder="البريد الإلكتروني" />
+                <input type="password" id="loginPassword" placeholder="كلمة السر" />
+                <button id="loginBtn" class="auth-btn">تسجيل الدخول</button>
+                <div class="auth-or"><span>أو</span></div>
+                <button id="googleLogin" class="auth-btn google"><i class="fab fa-google"></i> تسجيل بجوجل</button>
+            </div>
+            <div id="auth-register" class="auth-form">
+                <input type="text" id="regName" placeholder="الاسم الكامل" />
+                <input type="email" id="regEmail" placeholder="البريد الإلكتروني" />
+                <input type="password" id="regPassword" placeholder="كلمة السر" />
+                <input type="password" id="regConfirm" placeholder="تأكيد كلمة السر" />
+                <button id="registerBtn" class="auth-btn">إنشاء حساب</button>
+            </div>
+            <div class="auth-close"><button id="authClose"><i class="fas fa-times"></i></button></div>
+        </div>
+    </div>
+
+    <!-- ====== لوحة تحكم المطور ====== -->
+    <div id="devPanel" class="dev-panel">
+        <div class="dev-panel-content">
+            <div class="dev-panel-header">
+                <h2>👑 لوحة تحكم المطور</h2>
+                <button id="devPanelClose"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="dev-panel-body">
+                <div class="dev-stats">
+                    <div class="dev-stat"><i class="fas fa-users"></i> المستخدمين: <span id="userCount">0</span></div>
+                    <div class="dev-stat"><i class="fas fa-lightbulb"></i> الأفكار: <span id="ideasCount">0</span></div>
+                </div>
+                <div class="dev-section">
+                    <h3>💡 أفكار المستخدمين</h3>
+                    <div id="devIdeasList" class="dev-ideas-list"></div>
+                </div>
+                <div class="dev-section">
+                    <h3>👤 المستخدمين المسجلين</h3>
+                    <div id="devUsersList" class="dev-users-list"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ====== القائمة الجانبية ====== -->
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-brand">
             <h1>ℕ𝔼𝕏</h1>
@@ -89,8 +145,7 @@
             <a href="#features"><i class="fas fa-cogs"></i> <span>الميزات</span></a>
             <a href="#about"><i class="fas fa-info-circle"></i> <span>عن المنصة</span></a>
             <a href="#support"><i class="fas fa-headset"></i> <span>الدعم</span></a>
-            <!-- ====== زر شات NEX في القائمة الجانبية ====== -->
-            <a href="#" id="chatNexToggle"><i class="fas fa-comment-dots"></i> <span>شات NEX</span></a>
+            <a href="#" id="authToggle"><i class="fas fa-user"></i> <span>تسجيل الدخول</span></a>
         </nav>
         <div class="sidebar-footer">
             <p>𝑵𝑬𝑿_𝑫𝑬𝑽_𝑽𝟏</p>
@@ -98,13 +153,24 @@
         </div>
     </aside>
 
-    <!-- ====== زر فتح القائمة الجانبية (للجوال) ====== -->
+    <!-- ====== زر فتح القائمة الجانبية ====== -->
     <button id="sidebarToggle" class="sidebar-toggle">
         <i class="fas fa-bars"></i>
     </button>
 
+    <!-- ====== زر شات الأفكار العائم ====== -->
+    <button id="ideasFloat" class="float-btn ideas-float">
+        <i class="fas fa-lightbulb"></i>
+    </button>
+
     <!-- ====== المحتوى الرئيسي ====== -->
     <main class="main-content" id="mainContent">
+
+        <!-- ====== قسم التطوير ====== -->
+        <div class="dev-notice">
+            <i class="fas fa-code"></i>
+            <span>⚠️ هذه المنظمة/الإمبراطورية قيد التطوير وبداية الطريق، نرجو دعمكم بأي أفكار لتطويرها 💡</span>
+        </div>
 
         <!-- ====== القسم الرئيسي ====== -->
         <section id="home" class="hero">
@@ -131,8 +197,8 @@
             <p class="section-desc">بوتات متطورة لتلبية احتياجاتك الرقمية</p>
             <div class="bots-grid">
                 <div class="bot-card online">
-                    <div class="bot-icon">⚜️</div>
-                    <h3> 𝕋𝕚𝕘𝕣𝕖𝕩_𝕍𝟙_𝕓𝕠𝕥 </h3>
+                    <div class="bot-icon">⚡</div>
+                    <h3>𝕋𝕀𝔾ℝ𝔼𝕏</h3>
                     <p>بوت تليغرام شامل للتحميل والذكاء الاصطناعي</p>
                     <div class="bot-features">
                         <span><i class="fas fa-check"></i> يوتيوب</span>
@@ -144,8 +210,8 @@
                     <a href="https://t.me/Tigrex_V1_bot" target="_blank" class="bot-btn"><i class="fab fa-telegram"></i> تجربة البوت</a>
                 </div>
                 <div class="bot-card maintenance">
-                    <div class="bot-icon">⚡️</div>
-                    <h3>𝕃𝕌𝔽𝔽𝕐_𝔹𝕆𝕋_𝕍𝟙</h3>
+                    <div class="bot-icon">🔄</div>
+                    <h3>𝕃𝕌𝔽𝔽𝕐</h3>
                     <p>بوت واتساب قيد التطوير</p>
                     <div class="bot-features">
                         <span><i class="fas fa-check"></i> تحميل</span>
@@ -156,8 +222,8 @@
                     <button class="bot-btn disabled" disabled><i class="fas fa-tools"></i> قريباً</button>
                 </div>
                 <div class="bot-card offline">
-                    <div class="bot-icon">🦅</div>
-                    <h3> 𝔽𝔸𝕃ℂ𝕆ℕ_𝔹𝕆𝕋_𝕍𝟙</h3>
+                    <div class="bot-icon">⏸️</div>
+                    <h3>𝔽𝔸𝕃ℂ𝕆ℕ</h3>
                     <p>بوت واتساب متوقف حالياً</p>
                     <div class="bot-features">
                         <span><i class="fas fa-check"></i> صور</span>
@@ -236,7 +302,7 @@
                 <a href="https://chat.whatsapp.com/DfAefWpYypaInWIqxPFVmW" target="_blank" class="support-link support-group">
                     <i class="fas fa-users"></i> مجموعة الدعم
                 </a>
-                <a href="https://wa.me/***********" target="_blank" class="support-link developer">
+                <a href="https://wa.me/0998251277" target="_blank" class="support-link developer">
                     <i class="fas fa-code"></i> المطور
                 </a>
             </div>
