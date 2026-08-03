@@ -31,47 +31,36 @@ if (sidebarToggle) {
     });
 }
 
-// إغلاق القائمة عند النقر على رابط
 document.querySelectorAll('.sidebar-nav a').forEach(link => {
     link.addEventListener('click', () => {
         if (sidebar) sidebar.classList.remove('open');
     });
 });
 
-// ====== تفعيل الرابط النشط في القائمة ======
-const currentPath = window.location.hash || '#home';
-document.querySelectorAll('.sidebar-nav a').forEach(link => {
-    link.classList.remove('active');
-    if (link.getAttribute('href') === currentPath) {
-        link.classList.add('active');
-    }
-});
-
-// ====== نافذة الشات الموحدة ======
+// ====== شات NEX ======
 const chatOverlay = document.getElementById('chatOverlay');
 const chatClose = document.getElementById('chatClose');
+const chatNexMessages = document.getElementById('chatNexMessages');
+const chatNexInput = document.getElementById('chatNexInput');
+const chatNexSend = document.getElementById('chatNexSend');
+
+// أزرار فتح شات NEX
+document.querySelectorAll('#devChatNex, .sidebar-nav a[href="#"]').forEach(btn => {
+    if (btn) {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            openChat('nex');
+        });
+    }
+});
 
 function openChat(tab = 'nex') {
     if (!chatOverlay) return;
     chatOverlay.classList.add('open');
     document.body.style.overflow = 'hidden';
-    
-    // تفعيل التبويب المطلوب
-    document.querySelectorAll('.chat-tab').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('.chat-tab-content').forEach(c => c.classList.remove('active'));
-    
-    const tabButton = document.querySelector(`.chat-tab[data-tab="${tab}"]`);
-    const tabContent = document.getElementById(`tab-${tab}`);
-    
-    if (tabButton) tabButton.classList.add('active');
-    if (tabContent) tabContent.classList.add('active');
-    
-    if (tab === 'nex') {
-        setTimeout(() => {
-            const input = document.getElementById('chatNexInput');
-            if (input) input.focus();
-        }, 300);
-    }
+    setTimeout(() => {
+        if (chatNexInput) chatNexInput.focus();
+    }, 300);
 }
 
 function closeChat() {
@@ -80,27 +69,6 @@ function closeChat() {
     document.body.style.overflow = '';
 }
 
-// ====== زر شات NEX في القائمة الجانبية ======
-const chatNexToggle = document.getElementById('chatNexToggle');
-
-if (chatNexToggle) {
-    chatNexToggle.addEventListener('click', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        console.log('✅ تم النقر على شات NEX');
-        openChat('nex');
-    });
-}
-
-// ====== زر شات NEX في الهيدر القديم (إن وجد) ======
-document.querySelectorAll('a[href="#chat"]').forEach(btn => {
-    btn.addEventListener('click', function(e) {
-        e.preventDefault();
-        openChat('nex');
-    });
-});
-
-// ====== إغلاق الشات ======
 if (chatClose) {
     chatClose.addEventListener('click', closeChat);
 }
@@ -115,60 +83,35 @@ document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && chatOverlay?.classList.contains('open')) closeChat();
 });
 
-// ====== تبديل علامات التبويب ======
-document.querySelectorAll('.chat-tab').forEach(tab => {
-    tab.addEventListener('click', () => {
-        const target = tab.dataset.tab;
-        document.querySelectorAll('.chat-tab').forEach(t => t.classList.remove('active'));
-        document.querySelectorAll('.chat-tab-content').forEach(c => c.classList.remove('active'));
-        tab.classList.add('active');
-        const content = document.getElementById(`tab-${target}`);
-        if (content) content.classList.add('active');
-        if (target === 'nex') {
-            setTimeout(() => {
-                const input = document.getElementById('chatNexInput');
-                if (input) input.focus();
-            }, 300);
-        }
-    });
-});
-
-// ====== خيارات شات NEX ======
+// خيارات شات NEX
 let currentThinking = true;
 let currentSearch = true;
 
-document.querySelectorAll('.nex-option').forEach(btn => {
+document.querySelectorAll('.chat-opt').forEach(btn => {
     btn.addEventListener('click', () => {
         if (btn.id === 'nexNewChat') {
-            const messages = document.getElementById('chatNexMessages');
-            if (messages) {
-                messages.innerHTML = `
-                    <div class="message bot">
+            if (chatNexMessages) {
+                chatNexMessages.innerHTML = `
+                    <div class="msg bot">
                         <div class="msg-avatar">⚡</div>
                         <div class="msg-bubble">مرحباً، تم بدء محادثة جديدة. كيف يمكنني مساعدتك؟</div>
                     </div>
                 `;
-                const input = document.getElementById('chatNexInput');
-                if (input) input.focus();
+                if (chatNexInput) chatNexInput.focus();
             }
             return;
         }
-        document.querySelectorAll('.nex-option').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.chat-opt').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         currentThinking = btn.dataset.thinking === 'true';
         currentSearch = btn.dataset.search === 'true';
     });
 });
 
-// ====== شات NEX ======
-const chatNexMessages = document.getElementById('chatNexMessages');
-const chatNexInput = document.getElementById('chatNexInput');
-const chatNexSend = document.getElementById('chatNexSend');
-
 function addNexMessage(text, type) {
     if (!chatNexMessages) return;
     const div = document.createElement('div');
-    div.className = `message ${type}`;
+    div.className = `msg ${type}`;
     const avatar = type === 'bot' ? '⚡' : '👤';
     const formattedText = text.replace(/\n/g, '<br>');
     div.innerHTML = `
@@ -179,7 +122,6 @@ function addNexMessage(text, type) {
     chatNexMessages.scrollTop = chatNexMessages.scrollHeight;
 }
 
-// ====== رابط الـ API ======
 const DEEPSEEK_API_URL = 'https://nex-empire1.vercel.app/api/deepseek';
 
 async function callDeepSeek(query, thinking, search) {
@@ -202,7 +144,6 @@ async function callDeepSeek(query, thinking, search) {
     }
 }
 
-// ====== إرسال رسالة NEX ======
 async function sendNexMessage() {
     if (!chatNexInput || !chatNexSend) return;
     
@@ -215,7 +156,7 @@ async function sendNexMessage() {
     chatNexSend.disabled = true;
 
     const loadingMsg = document.createElement('div');
-    loadingMsg.className = 'message bot';
+    loadingMsg.className = 'msg bot';
     loadingMsg.id = 'nexLoading';
     loadingMsg.innerHTML = `
         <div class="msg-avatar">⚡</div>
@@ -252,52 +193,329 @@ if (chatNexInput) {
     });
 }
 
-// ====== خيارات Tawk.to ======
-document.querySelectorAll('.tawk-option').forEach(btn => {
-    btn.addEventListener('click', () => {
-        document.querySelectorAll('.tawk-option').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        const container = document.getElementById('tawkContainer');
-        if (!container) return;
-        
-        if (btn.id === 'tawkLive') {
-            container.innerHTML = `
-                <div class="message system">
-                    <div class="msg-bubble" style="background:var(--input-bg);color:var(--text-secondary);">
-                        <i class="fas fa-circle" style="color:#00c853;"></i> الدعم المباشر جاهز
-                        <br><small>فريق الدعم في انتظارك</small>
-                    </div>
+// ====== شات الأفكار ======
+const ideasOverlay = document.getElementById('ideasOverlay');
+const ideasClose = document.getElementById('ideasClose');
+const ideasMessages = document.getElementById('ideasMessages');
+const ideasInput = document.getElementById('ideasInput');
+const ideasSend = document.getElementById('ideasSend');
+
+// كلمة السر للمطور
+const DEV_PASSWORD = '8520261962026';
+let isDevMode = false;
+
+// فتح شات الأفكار
+document.querySelectorAll('#devIdeasToggle, #ideasFloat').forEach(btn => {
+    if (btn) {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            openIdeasChat();
+        });
+    }
+});
+
+function openIdeasChat() {
+    if (!ideasOverlay) return;
+    ideasOverlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    setTimeout(() => {
+        if (ideasInput) ideasInput.focus();
+    }, 300);
+}
+
+function closeIdeasChat() {
+    if (!ideasOverlay) return;
+    ideasOverlay.classList.remove('open');
+    document.body.style.overflow = '';
+}
+
+if (ideasClose) {
+    ideasClose.addEventListener('click', closeIdeasChat);
+}
+
+if (ideasOverlay) {
+    ideasOverlay.addEventListener('click', (e) => {
+        if (e.target === ideasOverlay) closeIdeasChat();
+    });
+}
+
+function addIdeaMessage(text, type) {
+    if (!ideasMessages) return;
+    const div = document.createElement('div');
+    div.className = `idea-message ${type}`;
+    div.textContent = text;
+    ideasMessages.appendChild(div);
+    ideasMessages.scrollTop = ideasMessages.scrollHeight;
+}
+
+// حفظ الأفكار في localStorage
+function saveIdea(text) {
+    let ideas = JSON.parse(localStorage.getItem('nex_ideas') || '[]');
+    ideas.push({ text, date: new Date().toISOString(), user: 'مستخدم' });
+    localStorage.setItem('nex_ideas', JSON.stringify(ideas));
+}
+
+function getIdeas() {
+    return JSON.parse(localStorage.getItem('nex_ideas') || '[]');
+}
+
+// إرسال فكرة
+async function sendIdea() {
+    if (!ideasInput) return;
+    const text = ideasInput.value.trim();
+    if (!text) return;
+
+    // التحقق من كلمة السر للمطور
+    if (text === DEV_PASSWORD) {
+        isDevMode = true;
+        addIdeaMessage('🔓 تم التحقق من هوية المطور! مرحباً بك في لوحة التحكم.', 'system');
+        ideasInput.value = '';
+        openDevPanel();
+        return;
+    }
+
+    addIdeaMessage(text, 'user');
+    saveIdea(text);
+    ideasInput.value = '';
+
+    // رد تلقائي
+    setTimeout(() => {
+        const replies = [
+            '💡 شكراً لفكرتك! سنقوم بدراستها',
+            '✨ فكرة رائعة! تم تسجيلها',
+            '🚀 نشكرك على مساهمتك في تطوير الإمبراطورية',
+            '📝 تم حفظ فكرتك، سنعمل عليها قريباً'
+        ];
+        const reply = replies[Math.floor(Math.random() * replies.length)];
+        addIdeaMessage(reply, 'system');
+    }, 1000);
+}
+
+if (ideasSend) {
+    ideasSend.addEventListener('click', sendIdea);
+}
+
+if (ideasInput) {
+    ideasInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') sendIdea();
+    });
+}
+
+// ====== لوحة تحكم المطور ======
+const devPanel = document.getElementById('devPanel');
+const devPanelClose = document.getElementById('devPanelClose');
+
+function openDevPanel() {
+    if (!devPanel) return;
+    devPanel.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    updateDevPanel();
+}
+
+function closeDevPanel() {
+    if (!devPanel) return;
+    devPanel.classList.remove('open');
+    document.body.style.overflow = '';
+}
+
+if (devPanelClose) {
+    devPanelClose.addEventListener('click', closeDevPanel);
+}
+
+if (devPanel) {
+    devPanel.addEventListener('click', (e) => {
+        if (e.target === devPanel) closeDevPanel();
+    });
+}
+
+function updateDevPanel() {
+    // تحديث عدد المستخدمين
+    const users = JSON.parse(localStorage.getItem('nex_users') || '[]');
+    document.getElementById('userCount').textContent = users.length;
+
+    // تحديث عدد الأفكار
+    const ideas = getIdeas();
+    document.getElementById('ideasCount').textContent = ideas.length;
+
+    // عرض الأفكار
+    const ideasList = document.getElementById('devIdeasList');
+    if (ideasList) {
+        ideasList.innerHTML = ideas.length === 0 ? 
+            '<div class="dev-idea-item">لا توجد أفكار حالياً</div>' :
+            ideas.map((idea, index) => `
+                <div class="dev-idea-item">
+                    <span>${idea.text}</span>
+                    <span class="date">${new Date(idea.date).toLocaleDateString('ar')}</span>
                 </div>
-            `;
-            const tawkIframe = document.querySelector('#tawk-container iframe');
-            if (tawkIframe) {
-                container.innerHTML = '';
-                container.appendChild(tawkIframe);
-                tawkIframe.style.width = '100%';
-                tawkIframe.style.height = '100%';
-                tawkIframe.style.border = 'none';
-            }
-        } else if (btn.id === 'tawkHistory') {
-            container.innerHTML = `
-                <div class="message system">
-                    <div class="msg-bubble" style="background:var(--input-bg);color:var(--text-secondary);">
-                        <i class="fas fa-history"></i> سجل المحادثات
-                        <br><small>سيتم عرض تاريخ محادثاتك هنا</small>
-                    </div>
+            `).join('');
+    }
+
+    // عرض المستخدمين
+    const usersList = document.getElementById('devUsersList');
+    if (usersList) {
+        usersList.innerHTML = users.length === 0 ?
+            '<div class="dev-user-item">لا يوجد مستخدمين مسجلين</div>' :
+            users.map(user => `
+                <div class="dev-user-item">
+                    <span>${user.name} (${user.email})</span>
+                    <span class="date">${new Date(user.date).toLocaleDateString('ar')}</span>
                 </div>
-            `;
-        } else if (btn.id === 'tawkNew') {
-            container.innerHTML = `
-                <div class="message system">
-                    <div class="msg-bubble" style="background:var(--input-bg);color:var(--text-secondary);">
-                        <i class="fas fa-plus"></i> بدء محادثة جديدة
-                        <br><small>جاري الاتصال بأحد ممثلي الدعم...</small>
-                    </div>
-                </div>
-            `;
-        }
+            `).join('');
+    }
+}
+
+// ====== نظام تسجيل الدخول ======
+const authOverlay = document.getElementById('authOverlay');
+const authClose = document.getElementById('authClose');
+const authToggle = document.getElementById('authToggle');
+
+// فتح نافذة تسجيل الدخول
+if (authToggle) {
+    authToggle.addEventListener('click', function(e) {
+        e.preventDefault();
+        if (authOverlay) authOverlay.classList.add('open');
+    });
+}
+
+if (authClose) {
+    authClose.addEventListener('click', () => {
+        if (authOverlay) authOverlay.classList.remove('open');
+    });
+}
+
+if (authOverlay) {
+    authOverlay.addEventListener('click', (e) => {
+        if (e.target === authOverlay) authOverlay.classList.remove('open');
+    });
+}
+
+// تبديل بين تسجيل الدخول وإنشاء حساب
+document.querySelectorAll('.auth-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+        const target = tab.dataset.tab;
+        document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        document.querySelectorAll('.auth-form').forEach(f => f.classList.remove('active'));
+        document.getElementById(`auth-${target}`).classList.add('active');
     });
 });
+
+// تسجيل دخول
+document.getElementById('loginBtn').addEventListener('click', () => {
+    const email = document.getElementById('loginEmail').value.trim();
+    const password = document.getElementById('loginPassword').value.trim();
+    
+    if (!email || !password) {
+        alert('الرجاء إدخال البريد الإلكتروني وكلمة السر');
+        return;
+    }
+
+    const users = JSON.parse(localStorage.getItem('nex_users') || '[]');
+    const user = users.find(u => u.email === email && u.password === password);
+    
+    if (user) {
+        localStorage.setItem('nex_current_user', JSON.stringify(user));
+        alert(`مرحباً ${user.name}! تم تسجيل الدخول بنجاح`);
+        authOverlay.classList.remove('open');
+        updateUserUI(user);
+    } else {
+        alert('البريد الإلكتروني أو كلمة السر غير صحيحة');
+    }
+});
+
+// إنشاء حساب
+document.getElementById('registerBtn').addEventListener('click', () => {
+    const name = document.getElementById('regName').value.trim();
+    const email = document.getElementById('regEmail').value.trim();
+    const password = document.getElementById('regPassword').value.trim();
+    const confirm = document.getElementById('regConfirm').value.trim();
+
+    if (!name || !email || !password || !confirm) {
+        alert('الرجاء ملء جميع الحقول');
+        return;
+    }
+
+    if (password !== confirm) {
+        alert('كلمة السر غير متطابقة');
+        return;
+    }
+
+    if (password.length < 6) {
+        alert('كلمة السر يجب أن تكون 6 أحرف على الأقل');
+        return;
+    }
+
+    let users = JSON.parse(localStorage.getItem('nex_users') || '[]');
+    
+    if (users.find(u => u.email === email)) {
+        alert('هذا البريد الإلكتروني مسجل بالفعل');
+        return;
+    }
+
+    const newUser = { name, email, password, date: new Date().toISOString() };
+    users.push(newUser);
+    localStorage.setItem('nex_users', JSON.stringify(users));
+    localStorage.setItem('nex_current_user', JSON.stringify(newUser));
+
+    alert(`مرحباً ${name}! تم إنشاء حسابك بنجاح`);
+    authOverlay.classList.remove('open');
+    updateUserUI(newUser);
+});
+
+// تسجيل الدخول بجوجل (محاكاة)
+document.getElementById('googleLogin').addEventListener('click', () => {
+    const email = prompt('الرجاء إدخال بريدك الإلكتروني على جوجل:');
+    if (email) {
+        const name = email.split('@')[0];
+        const users = JSON.parse(localStorage.getItem('nex_users') || '[]');
+        let user = users.find(u => u.email === email);
+        
+        if (!user) {
+            user = { name, email, password: 'google_auth', date: new Date().toISOString() };
+            users.push(user);
+            localStorage.setItem('nex_users', JSON.stringify(users));
+        }
+        
+        localStorage.setItem('nex_current_user', JSON.stringify(user));
+        alert(`مرحباً ${user.name}! تم تسجيل الدخول بجوجل بنجاح`);
+        authOverlay.classList.remove('open');
+        updateUserUI(user);
+    }
+});
+
+function updateUserUI(user) {
+    // تحديث واجهة المستخدم بعد تسجيل الدخول
+    const authLink = document.querySelector('.sidebar-nav a[href="#"]');
+    if (authLink) {
+        authLink.innerHTML = `<i class="fas fa-user-check"></i> <span>مرحباً ${user.name}</span>`;
+        authLink.style.color = '#6c5ce7';
+    }
+    
+    // إظهار زر الخروج
+    const sidebarNav = document.querySelector('.sidebar-nav');
+    if (sidebarNav) {
+        const logoutBtn = document.createElement('a');
+        logoutBtn.href = '#';
+        logoutBtn.innerHTML = `<i class="fas fa-sign-out-alt"></i> <span>تسجيل الخروج</span>`;
+        logoutBtn.style.color = '#e74c3c';
+        logoutBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            localStorage.removeItem('nex_current_user');
+            location.reload();
+        });
+        // إزالة زر الخروج القديم إن وجد
+        const oldLogout = sidebarNav.querySelector('.logout-btn');
+        if (oldLogout) oldLogout.remove();
+        logoutBtn.className = 'logout-btn';
+        sidebarNav.appendChild(logoutBtn);
+    }
+}
+
+// التحقق من وجود مستخدم مسجل
+const currentUser = JSON.parse(localStorage.getItem('nex_current_user') || 'null');
+if (currentUser) {
+    updateUserUI(currentUser);
+}
 
 // ====== عداد الأرقام المتحرك ======
 const numbers = document.querySelectorAll('.number');
