@@ -1,6 +1,5 @@
 // ============================================================
-// ملف script.js الكامل - بدون أي كلمة سر مكتوبة فيه
-// يتم جلب كلمة السر حصراً من Vercel Environment Variables
+// ملف script.js الكامل والمتكامل - مع إصلاح جميع الأزرار
 // ============================================================
 
 // ====== تبديل الوضع (ليلي/نهاري) ======
@@ -40,6 +39,7 @@ if (sidebarToggle) {
     sidebarToggle.addEventListener('click', function(e) {
         e.stopPropagation();
         sidebar.classList.toggle('open');
+        console.log('✅ القائمة الجانبية: تم النقر');
     });
 }
 
@@ -95,6 +95,9 @@ function openOverlay(overlayId) {
     if (overlay) {
         overlay.classList.add('open');
         document.body.style.overflow = 'hidden';
+        console.log(`✅ تم فتح: ${overlayId}`);
+    } else {
+        console.error(`❌ العنصر غير موجود: ${overlayId}`);
     }
 }
 
@@ -103,12 +106,7 @@ function closeOverlay(overlayId) {
     if (overlay) {
         overlay.classList.remove('open');
         document.body.style.overflow = '';
-    }
-}
-
-function closeOverlayByClick(e, overlayId) {
-    if (e.target === e.currentTarget) {
-        closeOverlay(overlayId);
+        console.log(`✅ تم إغلاق: ${overlayId}`);
     }
 }
 
@@ -121,42 +119,71 @@ const chatNexMessages = document.getElementById('chatNexMessages');
 const chatNexInput = document.getElementById('chatNexInput');
 const chatNexSend = document.getElementById('chatNexSend');
 
+console.log('🔍 شات NEX - العناصر:', {
+    chatOverlay: !!chatOverlay,
+    chatClose: !!chatClose,
+    chatNexMessages: !!chatNexMessages,
+    chatNexInput: !!chatNexInput,
+    chatNexSend: !!chatNexSend
+});
+
 // --- أزرار فتح شات NEX ---
 const devChatNex = document.getElementById('devChatNex');
 const chatNexToggle = document.getElementById('chatNexToggle');
 
+console.log('🔍 أزرار شات NEX:', {
+    devChatNex: !!devChatNex,
+    chatNexToggle: !!chatNexToggle
+});
+
 if (devChatNex) {
     devChatNex.addEventListener('click', function(e) {
         e.preventDefault();
+        e.stopPropagation();
+        console.log('✅ زر شات NEX (الشريط العلوي): تم النقر');
         openOverlay('chatOverlay');
         setTimeout(() => { if (chatNexInput) chatNexInput.focus(); }, 300);
     });
+} else {
+    console.warn('⚠️ زر devChatNex غير موجود');
 }
 
 if (chatNexToggle) {
     chatNexToggle.addEventListener('click', function(e) {
         e.preventDefault();
+        e.stopPropagation();
+        console.log('✅ زر شات NEX (القائمة الجانبية): تم النقر');
         openOverlay('chatOverlay');
         setTimeout(() => { if (chatNexInput) chatNexInput.focus(); }, 300);
     });
+} else {
+    console.warn('⚠️ زر chatNexToggle غير موجود');
 }
 
 // --- إغلاق شات NEX ---
 if (chatClose) {
     chatClose.addEventListener('click', function(e) {
         e.preventDefault();
+        e.stopPropagation();
+        console.log('✅ إغلاق شات NEX');
         closeOverlay('chatOverlay');
     });
 }
 
 if (chatOverlay) {
     chatOverlay.addEventListener('click', function(e) {
-        if (e.target === chatOverlay) closeOverlay('chatOverlay');
+        if (e.target === chatOverlay) {
+            console.log('✅ إغلاق شات NEX (خلفية)');
+            closeOverlay('chatOverlay');
+        }
     });
 }
 
 document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape' && chatOverlay?.classList.contains('open')) closeOverlay('chatOverlay');
+    if (e.key === 'Escape' && chatOverlay?.classList.contains('open')) {
+        console.log('✅ إغلاق شات NEX (Escape)');
+        closeOverlay('chatOverlay');
+    }
 });
 
 // --- خيارات شات NEX ---
@@ -286,44 +313,69 @@ const ideasMessages = document.getElementById('ideasMessages');
 const ideasInput = document.getElementById('ideasInput');
 const ideasSend = document.getElementById('ideasSend');
 
-// ============================================================
-// ====== جلب كلمة السر من Vercel Environment Variables ======
-// ============================================================
-// ملاحظة: في Vercel، أضف متغيراً باسم 'dev_password' بقيمة كلمة السر
-// هذا المتغير غير موجود في الملف، يتم جلبها من البيئة
-const DEV_PASSWORD = process.env.dev_password;
+console.log('🔍 شات الأفكار - العناصر:', {
+    ideasOverlay: !!ideasOverlay,
+    ideasClose: !!ideasClose,
+    ideasMessages: !!ideasMessages,
+    ideasInput: !!ideasInput,
+    ideasSend: !!ideasSend
+});
+
+// ====== كلمة السر للمطور ======
+// يتم جلب كلمة السر من Vercel Environment Variables
+// إذا لم تكن موجودة، سيتم تعطيل ميزة المطور
+const DEV_PASSWORD = process.env.dev_password || null;
+console.log('🔑 كلمة السر:', DEV_PASSWORD ? '✅ موجودة (مخزنة في Vercel)' : '❌ غير موجودة');
 
 // --- أزرار فتح شات الأفكار ---
 const devIdeasToggle = document.getElementById('devIdeasToggle');
 const ideasFloat = document.getElementById('ideasFloat');
 
+console.log('🔍 أزرار شات الأفكار:', {
+    devIdeasToggle: !!devIdeasToggle,
+    ideasFloat: !!ideasFloat
+});
+
 if (devIdeasToggle) {
     devIdeasToggle.addEventListener('click', function(e) {
         e.preventDefault();
+        e.stopPropagation();
+        console.log('✅ زر شات الأفكار (الشريط العلوي): تم النقر');
         openOverlay('ideasOverlay');
         setTimeout(() => { if (ideasInput) ideasInput.focus(); }, 300);
     });
+} else {
+    console.warn('⚠️ زر devIdeasToggle غير موجود');
 }
 
 if (ideasFloat) {
     ideasFloat.addEventListener('click', function(e) {
         e.preventDefault();
+        e.stopPropagation();
+        console.log('✅ زر شات الأفكار (العائم): تم النقر');
         openOverlay('ideasOverlay');
         setTimeout(() => { if (ideasInput) ideasInput.focus(); }, 300);
     });
+} else {
+    console.warn('⚠️ زر ideasFloat غير موجود');
 }
 
 // --- إغلاق شات الأفكار ---
 if (ideasClose) {
     ideasClose.addEventListener('click', function(e) {
         e.preventDefault();
+        e.stopPropagation();
+        console.log('✅ إغلاق شات الأفكار');
         closeOverlay('ideasOverlay');
     });
 }
 
 if (ideasOverlay) {
     ideasOverlay.addEventListener('click', function(e) {
-        if (e.target === ideasOverlay) closeOverlay('ideasOverlay');
+        if (e.target === ideasOverlay) {
+            console.log('✅ إغلاق شات الأفكار (خلفية)');
+            closeOverlay('ideasOverlay');
+        }
     });
 }
 
@@ -352,9 +404,11 @@ async function sendIdea() {
     const text = ideasInput.value.trim();
     if (!text) return;
 
-    // ====== التحقق من كلمة السر للمطور (من Vercel) ======
-    // إذا لم يتم تعيين كلمة السر في Vercel، سيتم تعطيل هذه الميزة
+    console.log('📝 جاري إرسال الفكرة:', text);
+
+    // ====== التحقق من كلمة السر للمطور ======
     if (DEV_PASSWORD && text === DEV_PASSWORD) {
+        console.log('🔓 تم التحقق من هوية المطور!');
         addIdeaMessage('🔓 تم التحقق من هوية المطور! مرحباً بك في لوحة التحكم.', 'system');
         ideasInput.value = '';
         openDevPanel();
@@ -362,6 +416,7 @@ async function sendIdea() {
     }
 
     // ====== إرسال الفكرة كـ مستخدم عادي ======
+    console.log('💡 فكرة جديدة من مستخدم');
     addIdeaMessage(text, 'user');
     saveIdea(text);
     ideasInput.value = '';
@@ -380,12 +435,20 @@ async function sendIdea() {
 }
 
 if (ideasSend) {
-    ideasSend.addEventListener('click', sendIdea);
+    ideasSend.addEventListener('click', function(e) {
+        e.preventDefault();
+        console.log('✅ زر إرسال الفكرة: تم النقر');
+        sendIdea();
+    });
 }
 
 if (ideasInput) {
     ideasInput.addEventListener('keydown', function(e) {
-        if (e.key === 'Enter') sendIdea();
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            console.log('✅ Enter في شات الأفكار');
+            sendIdea();
+        }
     });
 }
 
@@ -395,10 +458,19 @@ if (ideasInput) {
 const devPanel = document.getElementById('devPanel');
 const devPanelClose = document.getElementById('devPanelClose');
 
+console.log('🔍 لوحة المطور:', {
+    devPanel: !!devPanel,
+    devPanelClose: !!devPanelClose
+});
+
 function openDevPanel() {
-    if (!devPanel) return;
+    if (!devPanel) {
+        console.error('❌ devPanel غير موجود');
+        return;
+    }
     devPanel.classList.add('open');
     document.body.style.overflow = 'hidden';
+    console.log('✅ لوحة المطور: تم الفتح');
     updateDevPanel();
 }
 
@@ -406,22 +478,30 @@ function closeDevPanel() {
     if (!devPanel) return;
     devPanel.classList.remove('open');
     document.body.style.overflow = '';
+    console.log('✅ لوحة المطور: تم الإغلاق');
 }
 
 if (devPanelClose) {
     devPanelClose.addEventListener('click', function(e) {
         e.preventDefault();
+        e.stopPropagation();
+        console.log('✅ إغلاق لوحة المطور');
         closeDevPanel();
     });
 }
 
 if (devPanel) {
     devPanel.addEventListener('click', function(e) {
-        if (e.target === devPanel) closeDevPanel();
+        if (e.target === devPanel) {
+            console.log('✅ إغلاق لوحة المطور (خلفية)');
+            closeDevPanel();
+        }
     });
 }
 
 function updateDevPanel() {
+    console.log('📊 تحديث لوحة المطور');
+    
     // تحديث عدد المستخدمين
     const users = JSON.parse(localStorage.getItem('nex_users') || '[]');
     const userCount = document.getElementById('userCount');
@@ -466,25 +546,40 @@ const authOverlay = document.getElementById('authOverlay');
 const authClose = document.getElementById('authClose');
 const authToggle = document.getElementById('authToggle');
 
+console.log('🔍 تسجيل الدخول - العناصر:', {
+    authOverlay: !!authOverlay,
+    authClose: !!authClose,
+    authToggle: !!authToggle
+});
+
 // --- زر فتح تسجيل الدخول ---
 if (authToggle) {
     authToggle.addEventListener('click', function(e) {
         e.preventDefault();
+        e.stopPropagation();
+        console.log('✅ زر تسجيل الدخول (القائمة الجانبية): تم النقر');
         openOverlay('authOverlay');
     });
+} else {
+    console.warn('⚠️ زر authToggle غير موجود');
 }
 
 // --- إغلاق تسجيل الدخول ---
 if (authClose) {
     authClose.addEventListener('click', function(e) {
         e.preventDefault();
+        e.stopPropagation();
+        console.log('✅ إغلاق تسجيل الدخول');
         closeOverlay('authOverlay');
     });
 }
 
 if (authOverlay) {
     authOverlay.addEventListener('click', function(e) {
-        if (e.target === authOverlay) closeOverlay('authOverlay');
+        if (e.target === authOverlay) {
+            console.log('✅ إغلاق تسجيل الدخول (خلفية)');
+            closeOverlay('authOverlay');
+        }
     });
 }
 
@@ -496,13 +591,17 @@ document.querySelectorAll('.auth-tab').forEach(tab => {
         this.classList.add('active');
         document.querySelectorAll('.auth-form').forEach(f => f.classList.remove('active'));
         document.getElementById(`auth-${target}`).classList.add('active');
+        console.log(`✅ تبديل علامة التبويب إلى: ${target}`);
     });
 });
 
 // --- تسجيل دخول ---
 const loginBtn = document.getElementById('loginBtn');
 if (loginBtn) {
-    loginBtn.addEventListener('click', function() {
+    loginBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        console.log('✅ زر تسجيل الدخول: تم النقر');
+        
         const email = document.getElementById('loginEmail').value.trim();
         const password = document.getElementById('loginPassword').value.trim();
         
@@ -528,7 +627,10 @@ if (loginBtn) {
 // --- إنشاء حساب ---
 const registerBtn = document.getElementById('registerBtn');
 if (registerBtn) {
-    registerBtn.addEventListener('click', function() {
+    registerBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        console.log('✅ زر إنشاء حساب: تم النقر');
+        
         const name = document.getElementById('regName').value.trim();
         const email = document.getElementById('regEmail').value.trim();
         const password = document.getElementById('regPassword').value.trim();
@@ -570,7 +672,10 @@ if (registerBtn) {
 // --- تسجيل الدخول بجوجل (محاكاة) ---
 const googleLogin = document.getElementById('googleLogin');
 if (googleLogin) {
-    googleLogin.addEventListener('click', function() {
+    googleLogin.addEventListener('click', function(e) {
+        e.preventDefault();
+        console.log('✅ زر تسجيل الدخول بجوجل: تم النقر');
+        
         const email = prompt('الرجاء إدخال بريدك الإلكتروني على جوجل:');
         if (email) {
             const name = email.split('@')[0];
@@ -593,6 +698,8 @@ if (googleLogin) {
 
 // --- تحديث واجهة المستخدم بعد تسجيل الدخول ---
 function updateUserUI(user) {
+    console.log('👤 تحديث واجهة المستخدم:', user.name);
+    
     const authLink = document.querySelector('.sidebar-nav a[href="#"]');
     if (authLink) {
         authLink.innerHTML = `<i class="fas fa-user-check"></i> <span>مرحباً ${user.name}</span>`;
@@ -622,6 +729,7 @@ function updateUserUI(user) {
 // --- التحقق من وجود مستخدم مسجل ---
 const currentUser = JSON.parse(localStorage.getItem('nex_current_user') || 'null');
 if (currentUser) {
+    console.log('👤 مستخدم مسجل:', currentUser.name);
     updateUserUI(currentUser);
 }
 
@@ -647,5 +755,6 @@ setTimeout(() => {
         tawkIframe.style.border = 'none';
         tawkIframe.style.borderRadius = '0';
         tawkIframe.style.minHeight = '400px';
+        console.log('✅ Tawk.to: تم تحميله في الخلفية');
     }
 }, 3000);
