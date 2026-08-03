@@ -21,75 +21,102 @@ function updateThemeIcon(theme) {
     icon.className = theme === 'light' ? 'fas fa-sun' : 'fas fa-moon';
 }
 
+// ============================================================
 // ====== القائمة الجانبية ======
+// ============================================================
 const sidebarToggle = document.getElementById('sidebarToggle');
 const sidebar = document.getElementById('sidebar');
 
 if (sidebarToggle) {
-    sidebarToggle.addEventListener('click', () => {
+    sidebarToggle.addEventListener('click', function(e) {
+        e.stopPropagation();
         sidebar.classList.toggle('open');
+        console.log('✅ القائمة الجانبية: تم النقر');
     });
 }
 
+// إغلاق القائمة عند النقر على رابط
 document.querySelectorAll('.sidebar-nav a').forEach(link => {
-    link.addEventListener('click', () => {
+    link.addEventListener('click', function() {
         if (sidebar) sidebar.classList.remove('open');
     });
 });
 
+// ============================================================
 // ====== شات NEX ======
+// ============================================================
 const chatOverlay = document.getElementById('chatOverlay');
 const chatClose = document.getElementById('chatClose');
 const chatNexMessages = document.getElementById('chatNexMessages');
 const chatNexInput = document.getElementById('chatNexInput');
 const chatNexSend = document.getElementById('chatNexSend');
 
-// أزرار فتح شات NEX
-document.querySelectorAll('#devChatNex, .sidebar-nav a[href="#"]').forEach(btn => {
-    if (btn) {
-        btn.addEventListener('click', function(e) {
-            e.preventDefault();
-            openChat('nex');
-        });
-    }
-});
-
-function openChat(tab = 'nex') {
+// دالة فتح شات NEX
+function openChatNex() {
     if (!chatOverlay) return;
     chatOverlay.classList.add('open');
     document.body.style.overflow = 'hidden';
+    console.log('✅ شات NEX: تم الفتح');
     setTimeout(() => {
         if (chatNexInput) chatNexInput.focus();
     }, 300);
 }
 
-function closeChat() {
+// دالة إغلاق شات NEX
+function closeChatNex() {
     if (!chatOverlay) return;
     chatOverlay.classList.remove('open');
     document.body.style.overflow = '';
+    console.log('✅ شات NEX: تم الإغلاق');
 }
 
-if (chatClose) {
-    chatClose.addEventListener('click', closeChat);
-}
-
-if (chatOverlay) {
-    chatOverlay.addEventListener('click', (e) => {
-        if (e.target === chatOverlay) closeChat();
+// ====== ربط زر شات NEX من الشريط العلوي ======
+const devChatNex = document.getElementById('devChatNex');
+if (devChatNex) {
+    devChatNex.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log('✅ زر شات NEX (الشريط العلوي): تم النقر');
+        openChatNex();
     });
 }
 
-document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && chatOverlay?.classList.contains('open')) closeChat();
+// ====== ربط زر شات NEX من القائمة الجانبية ======
+const chatNexToggle = document.getElementById('chatNexToggle');
+if (chatNexToggle) {
+    chatNexToggle.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log('✅ زر شات NEX (القائمة الجانبية): تم النقر');
+        openChatNex();
+    });
+}
+
+// ====== إغلاق شات NEX ======
+if (chatClose) {
+    chatClose.addEventListener('click', function(e) {
+        e.stopPropagation();
+        closeChatNex();
+    });
+}
+
+if (chatOverlay) {
+    chatOverlay.addEventListener('click', function(e) {
+        if (e.target === chatOverlay) closeChatNex();
+    });
+}
+
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && chatOverlay?.classList.contains('open')) closeChatNex();
 });
 
-// خيارات شات NEX
+// ====== خيارات شات NEX ======
 let currentThinking = true;
 let currentSearch = true;
 
 document.querySelectorAll('.chat-opt').forEach(btn => {
-    btn.addEventListener('click', () => {
-        if (btn.id === 'nexNewChat') {
+    btn.addEventListener('click', function() {
+        if (this.id === 'nexNewChat') {
             if (chatNexMessages) {
                 chatNexMessages.innerHTML = `
                     <div class="msg bot">
@@ -102,12 +129,13 @@ document.querySelectorAll('.chat-opt').forEach(btn => {
             return;
         }
         document.querySelectorAll('.chat-opt').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        currentThinking = btn.dataset.thinking === 'true';
-        currentSearch = btn.dataset.search === 'true';
+        this.classList.add('active');
+        currentThinking = this.dataset.thinking === 'true';
+        currentSearch = this.dataset.search === 'true';
     });
 });
 
+// ====== وظائف شات NEX ======
 function addNexMessage(text, type) {
     if (!chatNexMessages) return;
     const div = document.createElement('div');
@@ -188,12 +216,14 @@ if (chatNexSend) {
 }
 
 if (chatNexInput) {
-    chatNexInput.addEventListener('keydown', (e) => {
+    chatNexInput.addEventListener('keydown', function(e) {
         if (e.key === 'Enter') sendNexMessage();
     });
 }
 
+// ============================================================
 // ====== شات الأفكار ======
+// ============================================================
 const ideasOverlay = document.getElementById('ideasOverlay');
 const ideasClose = document.getElementById('ideasClose');
 const ideasMessages = document.getElementById('ideasMessages');
@@ -204,41 +234,62 @@ const ideasSend = document.getElementById('ideasSend');
 const DEV_PASSWORD = '8520261962026';
 let isDevMode = false;
 
-// فتح شات الأفكار
-document.querySelectorAll('#devIdeasToggle, #ideasFloat').forEach(btn => {
-    if (btn) {
-        btn.addEventListener('click', function(e) {
-            e.preventDefault();
-            openIdeasChat();
-        });
-    }
-});
-
+// دالة فتح شات الأفكار
 function openIdeasChat() {
     if (!ideasOverlay) return;
     ideasOverlay.classList.add('open');
     document.body.style.overflow = 'hidden';
+    console.log('✅ شات الأفكار: تم الفتح');
     setTimeout(() => {
         if (ideasInput) ideasInput.focus();
     }, 300);
 }
 
+// دالة إغلاق شات الأفكار
 function closeIdeasChat() {
     if (!ideasOverlay) return;
     ideasOverlay.classList.remove('open');
     document.body.style.overflow = '';
+    console.log('✅ شات الأفكار: تم الإغلاق');
 }
 
+// ====== ربط زر شات الأفكار من الشريط العلوي ======
+const devIdeasToggle = document.getElementById('devIdeasToggle');
+if (devIdeasToggle) {
+    devIdeasToggle.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log('✅ زر شات الأفكار (الشريط العلوي): تم النقر');
+        openIdeasChat();
+    });
+}
+
+// ====== ربط زر شات الأفكار العائم ======
+const ideasFloat = document.getElementById('ideasFloat');
+if (ideasFloat) {
+    ideasFloat.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log('✅ زر شات الأفكار (العائم): تم النقر');
+        openIdeasChat();
+    });
+}
+
+// ====== إغلاق شات الأفكار ======
 if (ideasClose) {
-    ideasClose.addEventListener('click', closeIdeasChat);
+    ideasClose.addEventListener('click', function(e) {
+        e.stopPropagation();
+        closeIdeasChat();
+    });
 }
 
 if (ideasOverlay) {
-    ideasOverlay.addEventListener('click', (e) => {
+    ideasOverlay.addEventListener('click', function(e) {
         if (e.target === ideasOverlay) closeIdeasChat();
     });
 }
 
+// ====== وظائف شات الأفكار ======
 function addIdeaMessage(text, type) {
     if (!ideasMessages) return;
     const div = document.createElement('div');
@@ -248,7 +299,6 @@ function addIdeaMessage(text, type) {
     ideasMessages.scrollTop = ideasMessages.scrollHeight;
 }
 
-// حفظ الأفكار في localStorage
 function saveIdea(text) {
     let ideas = JSON.parse(localStorage.getItem('nex_ideas') || '[]');
     ideas.push({ text, date: new Date().toISOString(), user: 'مستخدم' });
@@ -259,7 +309,7 @@ function getIdeas() {
     return JSON.parse(localStorage.getItem('nex_ideas') || '[]');
 }
 
-// إرسال فكرة
+// ====== إرسال فكرة ======
 async function sendIdea() {
     if (!ideasInput) return;
     const text = ideasInput.value.trim();
@@ -283,7 +333,7 @@ async function sendIdea() {
         const replies = [
             '💡 شكراً لفكرتك! سنقوم بدراستها',
             '✨ فكرة رائعة! تم تسجيلها',
-            '🚀 نشكرك على مساهمتك في تطوير الإمبراطورية',
+            '🚀 نشكرك على مساهميتك في تطوير الإمبراطورية',
             '📝 تم حفظ فكرتك، سنعمل عليها قريباً'
         ];
         const reply = replies[Math.floor(Math.random() * replies.length)];
@@ -296,12 +346,14 @@ if (ideasSend) {
 }
 
 if (ideasInput) {
-    ideasInput.addEventListener('keydown', (e) => {
+    ideasInput.addEventListener('keydown', function(e) {
         if (e.key === 'Enter') sendIdea();
     });
 }
 
+// ============================================================
 // ====== لوحة تحكم المطور ======
+// ============================================================
 const devPanel = document.getElementById('devPanel');
 const devPanelClose = document.getElementById('devPanelClose');
 
@@ -309,6 +361,7 @@ function openDevPanel() {
     if (!devPanel) return;
     devPanel.classList.add('open');
     document.body.style.overflow = 'hidden';
+    console.log('✅ لوحة المطور: تم الفتح');
     updateDevPanel();
 }
 
@@ -316,28 +369,29 @@ function closeDevPanel() {
     if (!devPanel) return;
     devPanel.classList.remove('open');
     document.body.style.overflow = '';
+    console.log('✅ لوحة المطور: تم الإغلاق');
 }
 
 if (devPanelClose) {
-    devPanelClose.addEventListener('click', closeDevPanel);
+    devPanelClose.addEventListener('click', function(e) {
+        e.stopPropagation();
+        closeDevPanel();
+    });
 }
 
 if (devPanel) {
-    devPanel.addEventListener('click', (e) => {
+    devPanel.addEventListener('click', function(e) {
         if (e.target === devPanel) closeDevPanel();
     });
 }
 
 function updateDevPanel() {
-    // تحديث عدد المستخدمين
     const users = JSON.parse(localStorage.getItem('nex_users') || '[]');
     document.getElementById('userCount').textContent = users.length;
 
-    // تحديث عدد الأفكار
     const ideas = getIdeas();
     document.getElementById('ideasCount').textContent = ideas.length;
 
-    // عرض الأفكار
     const ideasList = document.getElementById('devIdeasList');
     if (ideasList) {
         ideasList.innerHTML = ideas.length === 0 ? 
@@ -350,7 +404,6 @@ function updateDevPanel() {
             `).join('');
     }
 
-    // عرض المستخدمين
     const usersList = document.getElementById('devUsersList');
     if (usersList) {
         usersList.innerHTML = users.length === 0 ?
@@ -364,44 +417,65 @@ function updateDevPanel() {
     }
 }
 
+// ============================================================
 // ====== نظام تسجيل الدخول ======
+// ============================================================
 const authOverlay = document.getElementById('authOverlay');
 const authClose = document.getElementById('authClose');
 const authToggle = document.getElementById('authToggle');
 
-// فتح نافذة تسجيل الدخول
+// دالة فتح تسجيل الدخول
+function openAuth() {
+    if (!authOverlay) return;
+    authOverlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    console.log('✅ تسجيل الدخول: تم الفتح');
+}
+
+// دالة إغلاق تسجيل الدخول
+function closeAuth() {
+    if (!authOverlay) return;
+    authOverlay.classList.remove('open');
+    document.body.style.overflow = '';
+    console.log('✅ تسجيل الدخول: تم الإغلاق');
+}
+
+// ====== ربط زر تسجيل الدخول ======
 if (authToggle) {
     authToggle.addEventListener('click', function(e) {
         e.preventDefault();
-        if (authOverlay) authOverlay.classList.add('open');
+        e.stopPropagation();
+        console.log('✅ زر تسجيل الدخول (القائمة الجانبية): تم النقر');
+        openAuth();
     });
 }
 
 if (authClose) {
-    authClose.addEventListener('click', () => {
-        if (authOverlay) authOverlay.classList.remove('open');
+    authClose.addEventListener('click', function(e) {
+        e.stopPropagation();
+        closeAuth();
     });
 }
 
 if (authOverlay) {
-    authOverlay.addEventListener('click', (e) => {
-        if (e.target === authOverlay) authOverlay.classList.remove('open');
+    authOverlay.addEventListener('click', function(e) {
+        if (e.target === authOverlay) closeAuth();
     });
 }
 
-// تبديل بين تسجيل الدخول وإنشاء حساب
+// ====== تبديل علامات التبويب في تسجيل الدخول ======
 document.querySelectorAll('.auth-tab').forEach(tab => {
-    tab.addEventListener('click', () => {
-        const target = tab.dataset.tab;
+    tab.addEventListener('click', function() {
+        const target = this.dataset.tab;
         document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
-        tab.classList.add('active');
+        this.classList.add('active');
         document.querySelectorAll('.auth-form').forEach(f => f.classList.remove('active'));
         document.getElementById(`auth-${target}`).classList.add('active');
     });
 });
 
-// تسجيل دخول
-document.getElementById('loginBtn').addEventListener('click', () => {
+// ====== تسجيل دخول ======
+document.getElementById('loginBtn').addEventListener('click', function() {
     const email = document.getElementById('loginEmail').value.trim();
     const password = document.getElementById('loginPassword').value.trim();
     
@@ -416,15 +490,15 @@ document.getElementById('loginBtn').addEventListener('click', () => {
     if (user) {
         localStorage.setItem('nex_current_user', JSON.stringify(user));
         alert(`مرحباً ${user.name}! تم تسجيل الدخول بنجاح`);
-        authOverlay.classList.remove('open');
+        closeAuth();
         updateUserUI(user);
     } else {
         alert('البريد الإلكتروني أو كلمة السر غير صحيحة');
     }
 });
 
-// إنشاء حساب
-document.getElementById('registerBtn').addEventListener('click', () => {
+// ====== إنشاء حساب ======
+document.getElementById('registerBtn').addEventListener('click', function() {
     const name = document.getElementById('regName').value.trim();
     const email = document.getElementById('regEmail').value.trim();
     const password = document.getElementById('regPassword').value.trim();
@@ -458,12 +532,12 @@ document.getElementById('registerBtn').addEventListener('click', () => {
     localStorage.setItem('nex_current_user', JSON.stringify(newUser));
 
     alert(`مرحباً ${name}! تم إنشاء حسابك بنجاح`);
-    authOverlay.classList.remove('open');
+    closeAuth();
     updateUserUI(newUser);
 });
 
-// تسجيل الدخول بجوجل (محاكاة)
-document.getElementById('googleLogin').addEventListener('click', () => {
+// ====== تسجيل الدخول بجوجل (محاكاة) ======
+document.getElementById('googleLogin').addEventListener('click', function() {
     const email = prompt('الرجاء إدخال بريدك الإلكتروني على جوجل:');
     if (email) {
         const name = email.split('@')[0];
@@ -478,46 +552,48 @@ document.getElementById('googleLogin').addEventListener('click', () => {
         
         localStorage.setItem('nex_current_user', JSON.stringify(user));
         alert(`مرحباً ${user.name}! تم تسجيل الدخول بجوجل بنجاح`);
-        authOverlay.classList.remove('open');
+        closeAuth();
         updateUserUI(user);
     }
 });
 
+// ====== تحديث واجهة المستخدم بعد تسجيل الدخول ======
 function updateUserUI(user) {
-    // تحديث واجهة المستخدم بعد تسجيل الدخول
     const authLink = document.querySelector('.sidebar-nav a[href="#"]');
     if (authLink) {
         authLink.innerHTML = `<i class="fas fa-user-check"></i> <span>مرحباً ${user.name}</span>`;
         authLink.style.color = '#6c5ce7';
+        authLink.id = 'userLoggedIn';
     }
     
-    // إظهار زر الخروج
     const sidebarNav = document.querySelector('.sidebar-nav');
     if (sidebarNav) {
+        const oldLogout = sidebarNav.querySelector('.logout-btn');
+        if (oldLogout) oldLogout.remove();
+        
         const logoutBtn = document.createElement('a');
         logoutBtn.href = '#';
+        logoutBtn.className = 'logout-btn';
         logoutBtn.innerHTML = `<i class="fas fa-sign-out-alt"></i> <span>تسجيل الخروج</span>`;
         logoutBtn.style.color = '#e74c3c';
-        logoutBtn.addEventListener('click', (e) => {
+        logoutBtn.addEventListener('click', function(e) {
             e.preventDefault();
             localStorage.removeItem('nex_current_user');
             location.reload();
         });
-        // إزالة زر الخروج القديم إن وجد
-        const oldLogout = sidebarNav.querySelector('.logout-btn');
-        if (oldLogout) oldLogout.remove();
-        logoutBtn.className = 'logout-btn';
         sidebarNav.appendChild(logoutBtn);
     }
 }
 
-// التحقق من وجود مستخدم مسجل
+// ====== التحقق من وجود مستخدم مسجل ======
 const currentUser = JSON.parse(localStorage.getItem('nex_current_user') || 'null');
 if (currentUser) {
     updateUserUI(currentUser);
 }
 
+// ============================================================
 // ====== عداد الأرقام المتحرك ======
+// ============================================================
 const numbers = document.querySelectorAll('.number');
 
 const animateNumbers = () => {
@@ -553,16 +629,19 @@ if (heroSection) {
     observer.observe(heroSection);
 }
 
-// ====== إشعار ترحيبي ======
+// ============================================================
+// ====== رسائل ترحيبية ======
+// ============================================================
 console.log('⚡ ℕ𝔼𝕏 Empire | منصة الذكاء الرقمي');
 console.log('💻 المطور: 𝑵𝑬𝑿_𝑫𝑬𝑽_𝑽𝟏');
+console.log('📌 جميع الأزرار تعمل!');
 
-// ====== رسالة ترحيب في شات NEX ======
+// رسالة ترحيب في شات NEX
 setTimeout(() => {
     addNexMessage('مرحباً، أنا مساعد NEX الذكي. كيف يمكنني مساعدتك اليوم؟', 'bot');
 }, 500);
 
-// ====== محاولة تحميل Tawk في الخلفية ======
+// محاولة تحميل Tawk في الخلفية
 setTimeout(() => {
     const tawkContainer = document.getElementById('tawkContainer');
     const tawkIframe = document.querySelector('#tawk-container iframe');
@@ -576,3 +655,16 @@ setTimeout(() => {
         tawkIframe.style.minHeight = '400px';
     }
 }, 3000);
+
+// ============================================================
+// ====== التنبيه عند تحميل الصفحة ======
+// ============================================================
+window.addEventListener('load', function() {
+    console.log('✅ تم تحميل الصفحة بالكامل');
+    console.log('🔍 تحقق من الأزرار:');
+    console.log('   - شات NEX (الشريط العلوي):', document.getElementById('devChatNex') ? '✅ موجود' : '❌ غير موجود');
+    console.log('   - شات الأفكار (الشريط العلوي):', document.getElementById('devIdeasToggle') ? '✅ موجود' : '❌ غير موجود');
+    console.log('   - شات الأفكار (العائم):', document.getElementById('ideasFloat') ? '✅ موجود' : '❌ غير موجود');
+    console.log('   - تسجيل الدخول (القائمة):', document.getElementById('authToggle') ? '✅ موجود' : '❌ غير موجود');
+    console.log('   - شات NEX (القائمة):', document.getElementById('chatNexToggle') ? '✅ موجود' : '❌ غير موجود');
+});
