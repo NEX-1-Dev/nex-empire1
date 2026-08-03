@@ -1,5 +1,6 @@
 // ============================================================
-// ملف script.js الكامل والمتكامل - يشمل فتح النوافذ والردود
+// ملف script.js الكامل - بدون أي كلمة سر مكتوبة فيه
+// يتم جلب كلمة السر حصراً من Vercel Environment Variables
 // ============================================================
 
 // ====== تبديل الوضع (ليلي/نهاري) ======
@@ -285,7 +286,12 @@ const ideasMessages = document.getElementById('ideasMessages');
 const ideasInput = document.getElementById('ideasInput');
 const ideasSend = document.getElementById('ideasSend');
 
-const DEV_PASSWORD = '8520261962026';
+// ============================================================
+// ====== جلب كلمة السر من Vercel Environment Variables ======
+// ============================================================
+// ملاحظة: في Vercel، أضف متغيراً باسم 'dev_password' بقيمة كلمة السر
+// هذا المتغير غير موجود في الملف، يتم جلبها من البيئة
+const DEV_PASSWORD = process.env.dev_password;
 
 // --- أزرار فتح شات الأفكار ---
 const devIdeasToggle = document.getElementById('devIdeasToggle');
@@ -346,14 +352,16 @@ async function sendIdea() {
     const text = ideasInput.value.trim();
     if (!text) return;
 
-    // التحقق من كلمة السر للمطور
-    if (text === DEV_PASSWORD) {
+    // ====== التحقق من كلمة السر للمطور (من Vercel) ======
+    // إذا لم يتم تعيين كلمة السر في Vercel، سيتم تعطيل هذه الميزة
+    if (DEV_PASSWORD && text === DEV_PASSWORD) {
         addIdeaMessage('🔓 تم التحقق من هوية المطور! مرحباً بك في لوحة التحكم.', 'system');
         ideasInput.value = '';
         openDevPanel();
         return;
     }
 
+    // ====== إرسال الفكرة كـ مستخدم عادي ======
     addIdeaMessage(text, 'user');
     saveIdea(text);
     ideasInput.value = '';
@@ -623,6 +631,7 @@ if (currentUser) {
 console.log('⚡ ℕ𝔼𝕏 Empire | منصة الذكاء الرقمي');
 console.log('💻 المطور: 𝑵𝑬𝑿_𝑫𝑬𝑽_𝑽𝟏');
 console.log('📌 جميع الأزرار والوظائف تعمل بشكل كامل!');
+console.log('🔑 كلمة السر مخزنة في Vercel Environment Variables');
 
 // ============================================================
 // ====== محاولة تحميل Tawk في الخلفية ======
