@@ -1,5 +1,5 @@
 // ============================================================
-// الحل النهائي - جميع الوظائف تعمل بما فيها شات NEX
+// ℕ𝔼𝕏 Empire - الملف الكامل مع جميع الميزات
 // ============================================================
 
 // ====== 1. تبديل الوضع ======
@@ -44,7 +44,7 @@ function closeOverlay(id) {
 }
 
 // ============================================================
-// ====== 4. شات NEX (مع الإرسال والرد) ======
+// ====== 4. شات NEX ======
 // ============================================================
 const chatOverlay = document.getElementById('chatOverlay');
 const chatClose = document.getElementById('chatClose');
@@ -54,7 +54,6 @@ const chatNexInput = document.getElementById('chatNexInput');
 const chatNexSend = document.getElementById('chatNexSend');
 const chatNexMessages = document.getElementById('chatNexMessages');
 
-// فتح شات NEX
 function openChatNex() {
     openOverlay('chatOverlay');
     setTimeout(function() { if (chatNexInput) chatNexInput.focus(); }, 300);
@@ -84,7 +83,6 @@ if (chatOverlay) {
     });
 }
 
-// إضافة رسالة في شات NEX
 function addNexMessage(text, type) {
     if (!chatNexMessages) return;
     var div = document.createElement('div');
@@ -95,7 +93,6 @@ function addNexMessage(text, type) {
     chatNexMessages.scrollTop = chatNexMessages.scrollHeight;
 }
 
-// الاتصال بـ DeepSeek API
 const DEEPSEEK_API_URL = 'https://nex-empire1.vercel.app/api/deepseek';
 
 async function callDeepSeek(query, thinking, search) {
@@ -113,7 +110,6 @@ async function callDeepSeek(query, thinking, search) {
     }
 }
 
-// إرسال رسالة شات NEX
 async function sendNexMessage() {
     if (!chatNexInput || !chatNexSend) return;
     var text = chatNexInput.value.trim();
@@ -155,11 +151,15 @@ if (chatNexInput) {
 }
 
 // ============================================================
-// ====== 5. شات الأفكار ======
+// ====== 5. شات الأفكار (مع كلمة السر والتصويت) ======
 // ============================================================
 const ideasInput = document.getElementById('ideasInput');
 const ideasSend = document.getElementById('ideasSend');
 const ideasMessages = document.getElementById('ideasMessages');
+
+// كلمة السر للمطور (احتياطي)
+const DEV_PASSWORD = process.env.dev_password || '8520261962026';
+let isDeveloper = false;
 
 function addIdeaMessage(text, type) {
     if (!ideasMessages) return;
@@ -172,8 +172,12 @@ function addIdeaMessage(text, type) {
 
 function saveIdea(text) {
     var ideas = JSON.parse(localStorage.getItem('nex_ideas') || '[]');
-    ideas.push({ text: text, date: new Date().toISOString() });
+    ideas.push({ text: text, date: new Date().toISOString(), votes: 0 });
     localStorage.setItem('nex_ideas', JSON.stringify(ideas));
+}
+
+function getIdeas() {
+    return JSON.parse(localStorage.getItem('nex_ideas') || '[]');
 }
 
 function sendIdea() {
@@ -181,7 +185,9 @@ function sendIdea() {
     var text = ideasInput.value.trim();
     if (!text) return;
 
-    if (text === '8520261962026') {
+    // التحقق من كلمة السر للمطور
+    if (text === DEV_PASSWORD) {
+        isDeveloper = true;
         addIdeaMessage('🔓 تم التحقق من هوية المطور! مرحباً بك في لوحة التحكم.', 'system');
         ideasInput.value = '';
         document.getElementById('devPanel')?.classList.add('open');
@@ -225,18 +231,132 @@ if (ideasInput) {
 }
 
 // ============================================================
-// ====== 6. لوحة تحكم المطور ======
+// ====== 6. المجتمع (الأفكار العامة والشات) ======
+// ============================================================
+// عرض الأفكار في المجتمع
+function renderCommunityIdeas() {
+    var list = document.getElementById('communityIdeasList');
+    if (!list) return;
+    var ideas = getIdeas();
+    if (ideas.length === 0) {
+        list.innerHTML = '<div class="idea-item" style="text-align:center;color:var(--text-secondary);">لا توجد أفكار حالياً، كن أول من يشارك!</div>';
+        return;
+    }
+    list.innerHTML = ideas.map(function(idea, index) {
+        return '<div class="idea-item">' +
+            '<span class="idea-text">' + idea.text + '</span>' +
+            '<div class="idea-votes">' +
+            '<button onclick="voteIdea(' + index + ', -1)"><i class="fas fa-thumbs-down"></i></button>' +
+            '<span class="count" id="voteCount' + index + '">' + (idea.votes || 0) + '</span>' +
+            '<button onclick="voteIdea(' + index + ', 1)"><i class="fas fa-thumbs-up"></i></button>' +
+            '<span class="idea-date">' + new Date(idea.date).toLocaleDateString('ar') + '</span>' +
+            '</div></div>';
+    }).join('');
+}
+
+// التصويت على الأفكار
+window.voteIdea = function(index, value) {
+    var ideas = getIdeas();
+    if (!ideas[index]) return;
+    ideas[index].votes = (ideas[index].votes || 0) + value;
+    localStorage.setItem('nex_ideas', JSON.stringify(ideas));
+    renderCommunityIdeas();
+};
+
+// إضافة فكرة من المجتمع
+document.getElementById('communityIdeaSend')?.addEventListener('click', function() {
+    var input = document.getElementById('communityIdeaInput');
+    if (!input) return;
+    var text = input.value.trim();
+    if (!text) return;
+    saveIdea(text);
+    input.value = '';
+    renderCommunityIdeas();
+    // إشعار في شات المجتمع
+    addCommunityMessage('💡 تم إضافة فكرة جديدة: "' + text + '"', 'system');
+});
+
+document.getElementById('communityIdeaInput')?.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+        e.preventDefault();
+        document.getElementById('communityIdeaSend')?.click();
+    }
+});
+
+// ====== شات المجتمع ======
+var communityMessages = [];
+var communityUsers = ['NEX_DEV 👑', 'المستخدم_1', 'المستخدم_2'];
+
+function renderCommunityChat() {
+    var container = document.getElementById('communityChatMessages');
+    if (!container) return;
+    container.innerHTML = communityMessages.map(function(msg) {
+        return '<div class="chat-message ' + msg.type + '"><span class="username">' + msg.user + ':</span> ' + msg.text + '</div>';
+    }).join('');
+    container.scrollTop = container.scrollHeight;
+}
+
+function addCommunityMessage(text, type, user) {
+    if (!user) user = 'نظام';
+    if (type === 'user') {
+        var currentUser = JSON.parse(localStorage.getItem('nex_current_user') || 'null');
+        user = currentUser ? currentUser.name : 'مستخدم';
+    }
+    communityMessages.push({ text: text, type: type, user: user });
+    renderCommunityChat();
+    // حفظ في localStorage
+    localStorage.setItem('nex_community_messages', JSON.stringify(communityMessages));
+}
+
+// تحميل رسائل المجتمع المحفوظة
+var savedMessages = JSON.parse(localStorage.getItem('nex_community_messages') || '[]');
+if (savedMessages.length > 0) {
+    communityMessages = savedMessages;
+    setTimeout(renderCommunityChat, 100);
+}
+
+// إرسال رسالة في شات المجتمع
+document.getElementById('communityChatSend')?.addEventListener('click', function() {
+    var input = document.getElementById('communityChatInput');
+    if (!input) return;
+    var text = input.value.trim();
+    if (!text) return;
+    addCommunityMessage(text, 'user');
+    input.value = '';
+});
+
+document.getElementById('communityChatInput')?.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+        e.preventDefault();
+        document.getElementById('communityChatSend')?.click();
+    }
+});
+
+// عرض المستخدمين المتصلين
+function renderCommunityUsers() {
+    var container = document.getElementById('communityChatUsers');
+    if (!container) return;
+    var usersHtml = communityUsers.map(function(user) {
+        var isOnline = user.includes('👑') || Math.random() > 0.3;
+        return '<span><i class="fas fa-circle ' + (isOnline ? 'online' : 'offline') + '"></i> ' + user + '</span>';
+    }).join('');
+    container.innerHTML = usersHtml;
+}
+renderCommunityUsers();
+
+// ============================================================
+// ====== 7. لوحة تحكم المطور ======
 // ============================================================
 function updateDevPanel() {
     var users = JSON.parse(localStorage.getItem('nex_users') || '[]');
-    var ideas = JSON.parse(localStorage.getItem('nex_ideas') || '[]');
+    var ideas = getIdeas();
     document.getElementById('userCount').textContent = users.length;
     document.getElementById('ideasCount').textContent = ideas.length;
 
     var ideasList = document.getElementById('devIdeasList');
     if (ideasList) {
         ideasList.innerHTML = ideas.length ? ideas.map(function(i) {
-            return '<div class="dev-idea-item"><span>' + i.text + '</span><span class="date">' + new Date(i.date).toLocaleDateString('ar') + '</span></div>';
+            return '<div class="dev-idea-item"><span>' + i.text + '</span><span class="date">' + new Date(i.date).toLocaleDateString('ar') + ' | 👍 ' + (i.votes || 0) + '</span></div>';
         }).join('') : '<div class="dev-idea-item">لا توجد أفكار حالياً</div>';
     }
 
@@ -257,8 +377,10 @@ document.getElementById('devPanel')?.addEventListener('click', function(e) {
 });
 
 // ============================================================
-// ====== 7. تسجيل الدخول ======
+// ====== 8. تسجيل الدخول (مع دعم المطور) ======
 // ============================================================
+const DEVELOPER_EMAIL = 'nexbev111@gmail.com';
+
 document.getElementById('authToggle')?.addEventListener('click', function(e) {
     e.preventDefault();
     openOverlay('authOverlay');
@@ -281,6 +403,7 @@ document.querySelectorAll('.auth-tab').forEach(function(tab) {
     };
 });
 
+// تسجيل الدخول
 document.getElementById('loginBtn')?.addEventListener('click', function(e) {
     e.preventDefault();
     var email = document.getElementById('loginEmail').value.trim();
@@ -289,6 +412,32 @@ document.getElementById('loginBtn')?.addEventListener('click', function(e) {
 
     var users = JSON.parse(localStorage.getItem('nex_users') || '[]');
     var user = users.find(function(u) { return u.email === email && u.password === password; });
+    
+    // التحقق من المطور
+    if (email === DEVELOPER_EMAIL) {
+        user = { name: 'المطور NEX', email: email, password: password, date: new Date().toISOString(), isDeveloper: true };
+        // حفظ المطور في localStorage
+        var existing = users.find(function(u) { return u.email === email; });
+        if (!existing) {
+            users.push(user);
+            localStorage.setItem('nex_users', JSON.stringify(users));
+        } else {
+            user = existing;
+            user.isDeveloper = true;
+        }
+        localStorage.setItem('nex_current_user', JSON.stringify(user));
+        alert('👑 مرحباً أيها المطور! تم تسجيل الدخول بنجاح');
+        closeOverlay('authOverlay');
+        updateUserUI(user);
+        isDeveloper = true;
+        // فتح لوحة المطور تلقائياً
+        setTimeout(function() {
+            document.getElementById('devPanel')?.classList.add('open');
+            updateDevPanel();
+        }, 500);
+        return;
+    }
+
     if (user) {
         localStorage.setItem('nex_current_user', JSON.stringify(user));
         alert('مرحباً ' + user.name + '! تم تسجيل الدخول بنجاح');
@@ -299,6 +448,7 @@ document.getElementById('loginBtn')?.addEventListener('click', function(e) {
     }
 });
 
+// إنشاء حساب
 document.getElementById('registerBtn')?.addEventListener('click', function(e) {
     e.preventDefault();
     var name = document.getElementById('regName').value.trim();
@@ -316,7 +466,7 @@ document.getElementById('registerBtn')?.addEventListener('click', function(e) {
         return;
     }
 
-    var newUser = { name: name, email: email, password: password, date: new Date().toISOString() };
+    var newUser = { name: name, email: email, password: password, date: new Date().toISOString(), isDeveloper: false };
     users.push(newUser);
     localStorage.setItem('nex_users', JSON.stringify(users));
     localStorage.setItem('nex_current_user', JSON.stringify(newUser));
@@ -325,6 +475,7 @@ document.getElementById('registerBtn')?.addEventListener('click', function(e) {
     updateUserUI(newUser);
 });
 
+// جوجل
 document.getElementById('googleLogin')?.addEventListener('click', function(e) {
     e.preventDefault();
     var email = prompt('الرجاء إدخال بريدك الإلكتروني على جوجل:');
@@ -333,7 +484,7 @@ document.getElementById('googleLogin')?.addEventListener('click', function(e) {
     var users = JSON.parse(localStorage.getItem('nex_users') || '[]');
     var user = users.find(function(u) { return u.email === email; });
     if (!user) {
-        user = { name: name, email: email, password: 'google_auth', date: new Date().toISOString() };
+        user = { name: name, email: email, password: 'google_auth', date: new Date().toISOString(), isDeveloper: false };
         users.push(user);
         localStorage.setItem('nex_users', JSON.stringify(users));
     }
@@ -346,8 +497,9 @@ document.getElementById('googleLogin')?.addEventListener('click', function(e) {
 function updateUserUI(user) {
     var authLink = document.querySelector('.sidebar-nav a[href="#"]');
     if (authLink) {
-        authLink.innerHTML = '<i class="fas fa-user-check"></i> <span>مرحباً ' + user.name + '</span>';
-        authLink.style.color = '#6c5ce7';
+        var isDev = user.email === DEVELOPER_EMAIL;
+        authLink.innerHTML = '<i class="fas fa-user-check"></i> <span>مرحباً ' + user.name + (isDev ? ' 👑' : '') + '</span>';
+        authLink.style.color = isDev ? '#ffd700' : '#6c5ce7';
     }
     var sidebarNav = document.querySelector('.sidebar-nav');
     if (sidebarNav) {
@@ -368,10 +520,19 @@ function updateUserUI(user) {
 }
 
 var currentUser = JSON.parse(localStorage.getItem('nex_current_user') || 'null');
-if (currentUser) updateUserUI(currentUser);
+if (currentUser) {
+    updateUserUI(currentUser);
+    if (currentUser.email === DEVELOPER_EMAIL) {
+        isDeveloper = true;
+        setTimeout(function() {
+            document.getElementById('devPanel')?.classList.add('open');
+            updateDevPanel();
+        }, 500);
+    }
+}
 
 // ============================================================
-// ====== 8. إغلاق النوافذ بـ Escape ======
+// ====== 9. إغلاق النوافذ بـ Escape ======
 // ============================================================
 document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') {
@@ -383,7 +544,7 @@ document.addEventListener('keydown', function(e) {
 });
 
 // ============================================================
-// ====== 9. عداد الأرقام ======
+// ====== 10. عداد الأرقام ======
 // ============================================================
 var numbers = document.querySelectorAll('.number');
 if (numbers.length) {
@@ -414,7 +575,7 @@ if (numbers.length) {
 }
 
 // ============================================================
-// ====== 10. رسالة ترحيب في شات NEX ======
+// ====== 11. رسالة ترحيب في شات NEX ======
 // ============================================================
 setTimeout(function() {
     if (chatNexMessages && !chatNexMessages.children.length) {
@@ -426,7 +587,7 @@ setTimeout(function() {
 }, 500);
 
 // ============================================================
-// ====== 11. تحميل Tawk.to ======
+// ====== 12. تحميل Tawk.to ======
 // ============================================================
 setTimeout(function() {
     var container = document.getElementById('tawkContainer');
@@ -438,4 +599,13 @@ setTimeout(function() {
     }
 }, 3000);
 
+// ============================================================
+// ====== 13. عرض الأفكار في المجتمع عند التحميل ======
+// ============================================================
+setTimeout(function() {
+    renderCommunityIdeas();
+    renderCommunityChat();
+}, 300);
+
 console.log('✅ ℕ𝔼𝕏 Empire - جميع الوظائف تعمل!');
+console.log('👑 المطور: nexbev111@gmail.com');
