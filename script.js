@@ -1,14 +1,12 @@
 // ============================================================
-// ℕ𝔼𝕏 Empire - الملف النهائي مع OTP وتحقق تسجيل الدخول
-// جميع الأزرار تفاعلية
+// ℕ𝔼𝕏 Empire - بدون تسجيل دخول
+// شات NEX + شات الأفكار المطور
 // ============================================================
 
 document.addEventListener('DOMContentLoaded', function() {
     console.log('🚀 ℕ𝔼𝕏 Empire - تم تحميل الصفحة');
 
-    // ============================================================
-    // 1. تبديل الوضع
-    // ============================================================
+    // ====== 1. تبديل الوضع ======
     const themeToggle = document.getElementById('themeToggle');
     const body = document.body;
 
@@ -25,9 +23,7 @@ document.addEventListener('DOMContentLoaded', function() {
         };
     }
 
-    // ============================================================
-    // 2. القائمة الجانبية
-    // ============================================================
+    // ====== 2. القائمة الجانبية ======
     const sidebarToggle = document.getElementById('sidebarToggle');
     const sidebar = document.getElementById('sidebar');
 
@@ -41,9 +37,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // ============================================================
-    // 3. دوال فتح وإغلاق النوافذ
-    // ============================================================
+    // ====== 3. دوال فتح وإغلاق النوافذ ======
     function openOverlay(id) {
         const el = document.getElementById(id);
         if (el) { el.classList.add('open'); document.body.style.overflow = 'hidden'; }
@@ -53,263 +47,10 @@ document.addEventListener('DOMContentLoaded', function() {
         if (el) { el.classList.remove('open'); document.body.style.overflow = ''; }
     }
 
-    // إعادة ضبط واجهة OTP عند الإغلاق
-    const originalCloseOverlay = closeOverlay;
-    closeOverlay = function(id) {
-        if (id === 'authOverlay') {
-            resetAuthUI();
-        }
-        originalCloseOverlay(id);
-    };
-
-    function resetAuthUI() {
-        document.getElementById('loginBtn').style.display = 'block';
-        document.getElementById('loginVerifyBtn').style.display = 'none';
-        document.getElementById('loginOtpContainer').style.display = 'none';
-        document.getElementById('loginOtp').value = '';
-        loginPendingUser = null;
-
-        document.getElementById('registerBtn').style.display = 'block';
-        document.getElementById('registerVerifyBtn').style.display = 'none';
-        document.getElementById('registerOtpContainer').style.display = 'none';
-        document.getElementById('registerOtp').value = '';
-        registerPendingUser = null;
-    }
-
-    // ============================================================
-    // 4. نظام OTP (كود التحقق)
-    // ============================================================
-    const otpStorage = {};
-
-    function generateOTP() {
-        return String(Math.floor(100000 + Math.random() * 900000));
-    }
-
-    function sendOTP(email, otp) {
-        otpStorage[email] = { code: otp, expires: Date.now() + 5 * 60 * 1000 };
-        console.log('📧 كود التحقق لـ ' + email + ': ' + otp);
-        alert('📧 تم إرسال كود التحقق إلى بريدك الإلكتروني.\nكود التحقق: ' + otp + '\n(صلاحية 5 دقائق)');
-        return true;
-    }
-
-    function verifyOTP(email, otp) {
-        const stored = otpStorage[email];
-        if (!stored) return { valid: false, message: 'لم يتم إرسال كود تحقق' };
-        if (Date.now() > stored.expires) {
-            delete otpStorage[email];
-            return { valid: false, message: 'انتهت صلاحية الكود، يرجى طلب كود جديد' };
-        }
-        if (stored.code !== otp) return { valid: false, message: 'كود التحقق غير صحيح' };
-        delete otpStorage[email];
-        return { valid: true, message: 'تم التحقق بنجاح' };
-    }
-
-    // ============================================================
-    // 5. تسجيل الدخول
-    // ============================================================
-    let loginPendingUser = null;
-
-    document.getElementById('loginBtn').onclick = function(e) {
-        e.preventDefault();
-        const email = document.getElementById('loginEmail').value.trim();
-        const password = document.getElementById('loginPassword').value.trim();
-
-        if (!email || !password) { alert('الرجاء إدخال البريد وكلمة السر'); return; }
-
-        const users = JSON.parse(localStorage.getItem('nex_users') || '[]');
-        const user = users.find(u => u.email === email && u.password === password);
-
-        if (!user) { alert('البريد أو كلمة السر غير صحيحة'); return; }
-
-        loginPendingUser = user;
-        document.getElementById('loginBtn').style.display = 'none';
-        document.getElementById('loginVerifyBtn').style.display = 'block';
-        document.getElementById('loginOtpContainer').style.display = 'block';
-        document.getElementById('loginOtp').value = '';
-        document.getElementById('loginOtp').focus();
-
-        const otp = generateOTP();
-        sendOTP(email, otp);
-    };
-
-    document.getElementById('loginVerifyBtn').onclick = function(e) {
-        e.preventDefault();
-        const email = document.getElementById('loginEmail').value.trim();
-        const otp = document.getElementById('loginOtp').value.trim();
-
-        if (!otp) { alert('الرجاء إدخال كود التحقق'); return; }
-
-        const result = verifyOTP(email, otp);
-        if (result.valid) {
-            localStorage.setItem('nex_current_user', JSON.stringify(loginPendingUser));
-            alert('✅ تم تسجيل الدخول بنجاح');
-            closeOverlay('authOverlay');
-            updateUserUI(loginPendingUser);
-            loginPendingUser = null;
-            resetAuthUI();
-        } else {
-            alert('❌ ' + result.message);
-        }
-    };
-
-    document.getElementById('loginResendOtp').onclick = function(e) {
-        e.preventDefault();
-        const email = document.getElementById('loginEmail').value.trim();
-        if (!email) { alert('الرجاء إدخال البريد الإلكتروني'); return; }
-        const otp = generateOTP();
-        sendOTP(email, otp);
-    };
-
-    // ============================================================
-    // 6. إنشاء حساب
-    // ============================================================
-    let registerPendingUser = null;
-
-    document.getElementById('registerBtn').onclick = function(e) {
-        e.preventDefault();
-        const name = document.getElementById('regName').value.trim();
-        const email = document.getElementById('regEmail').value.trim();
-        const password = document.getElementById('regPassword').value.trim();
-        const confirm = document.getElementById('regConfirm').value.trim();
-
-        if (!name || !email || !password || !confirm) { alert('الرجاء ملء جميع الحقول'); return; }
-        if (password !== confirm) { alert('كلمة السر غير متطابقة'); return; }
-        if (password.length < 6) { alert('كلمة السر يجب أن تكون 6 أحرف على الأقل'); return; }
-
-        const users = JSON.parse(localStorage.getItem('nex_users') || '[]');
-        if (users.find(u => u.email === email)) { alert('هذا البريد مسجل بالفعل'); return; }
-
-        registerPendingUser = { name, email, password, date: new Date().toISOString(), isDeveloper: false };
-
-        document.getElementById('registerBtn').style.display = 'none';
-        document.getElementById('registerVerifyBtn').style.display = 'block';
-        document.getElementById('registerOtpContainer').style.display = 'block';
-        document.getElementById('registerOtp').value = '';
-        document.getElementById('registerOtp').focus();
-
-        const otp = generateOTP();
-        sendOTP(email, otp);
-    };
-
-    document.getElementById('registerVerifyBtn').onclick = function(e) {
-        e.preventDefault();
-        const email = document.getElementById('regEmail').value.trim();
-        const otp = document.getElementById('registerOtp').value.trim();
-
-        if (!otp) { alert('الرجاء إدخال كود التحقق'); return; }
-
-        const result = verifyOTP(email, otp);
-        if (result.valid) {
-            const users = JSON.parse(localStorage.getItem('nex_users') || '[]');
-            users.push(registerPendingUser);
-            localStorage.setItem('nex_users', JSON.stringify(users));
-            localStorage.setItem('nex_current_user', JSON.stringify(registerPendingUser));
-            alert('✅ تم إنشاء حسابك بنجاح');
-            closeOverlay('authOverlay');
-            updateUserUI(registerPendingUser);
-            registerPendingUser = null;
-            resetAuthUI();
-        } else {
-            alert('❌ ' + result.message);
-        }
-    };
-
-    document.getElementById('registerResendOtp').onclick = function(e) {
-        e.preventDefault();
-        const email = document.getElementById('regEmail').value.trim();
-        if (!email) { alert('الرجاء إدخال البريد الإلكتروني'); return; }
-        const otp = generateOTP();
-        sendOTP(email, otp);
-    };
-
-    // ============================================================
-    // 7. جوجل تسجيل الدخول
-    // ============================================================
-    document.getElementById('googleLogin').onclick = function(e) {
-        e.preventDefault();
-        const email = prompt('الرجاء إدخال بريدك الإلكتروني على جوجل:');
-        if (!email) return;
-        const name = email.split('@')[0];
-        const users = JSON.parse(localStorage.getItem('nex_users') || '[]');
-        let user = users.find(u => u.email === email);
-        if (!user) {
-            user = { name, email, password: 'google_auth', date: new Date().toISOString(), isDeveloper: false };
-            users.push(user);
-            localStorage.setItem('nex_users', JSON.stringify(users));
-        }
-        localStorage.setItem('nex_current_user', JSON.stringify(user));
-        alert('مرحباً ' + user.name + '! تم تسجيل الدخول بجوجل');
-        closeOverlay('authOverlay');
-        updateUserUI(user);
-    };
-
-    // ============================================================
-    // 8. تسجيل الدخول / إنشاء حساب - علامات التبويب
-    // ============================================================
-    document.querySelectorAll('.auth-tab').forEach(function(tab) {
-        tab.onclick = function() {
-            const target = this.dataset.tab;
-            document.querySelectorAll('.auth-tab').forEach(function(t) { t.classList.remove('active'); });
-            this.classList.add('active');
-            document.querySelectorAll('.auth-form').forEach(function(f) { f.classList.remove('active'); });
-            document.getElementById('auth-' + target).classList.add('active');
-            resetAuthUI();
-        };
-    });
-
-    // ============================================================
-    // 9. أزرار فتح/إغلاق تسجيل الدخول
-    // ============================================================
-    document.getElementById('authToggle').onclick = function(e) {
-        e.preventDefault();
-        openOverlay('authOverlay');
-        resetAuthUI();
-    };
-    document.getElementById('authClose').onclick = function(e) {
-        e.preventDefault();
-        closeOverlay('authOverlay');
-    };
-    document.getElementById('authOverlay').onclick = function(e) {
-        if (e.target === this) closeOverlay('authOverlay');
-    };
-
-    // ============================================================
-    // 10. تحديث واجهة المستخدم
-    // ============================================================
-    function updateUserUI(user) {
-        const authLink = document.querySelector('.sidebar-nav a[href="#"]');
-        if (authLink) {
-            authLink.innerHTML = '<i class="fas fa-user-check"></i> <span>مرحباً ' + user.name + '</span>';
-            authLink.style.color = '#1a73e8';
-        }
-        const sidebarNav = document.querySelector('.sidebar-nav');
-        if (sidebarNav) {
-            const old = sidebarNav.querySelector('.logout-btn');
-            if (old) old.remove();
-            const logout = document.createElement('a');
-            logout.href = '#';
-            logout.className = 'logout-btn';
-            logout.innerHTML = '<i class="fas fa-sign-out-alt"></i> <span>تسجيل الخروج</span>';
-            logout.style.color = '#e74c3c';
-            logout.onclick = function(e) {
-                e.preventDefault();
-                localStorage.removeItem('nex_current_user');
-                location.reload();
-            };
-            sidebarNav.appendChild(logout);
-        }
-    }
-
-    const currentUser = JSON.parse(localStorage.getItem('nex_current_user') || 'null');
-    if (currentUser) updateUserUI(currentUser);
-
-    // ============================================================
-    // 11. شات NEX
-    // ============================================================
+    // ====== 4. شات NEX ======
     const chatOverlay = document.getElementById('chatOverlay');
     const chatClose = document.getElementById('chatClose');
     const devChatNex = document.getElementById('devChatNex');
-    const chatNexToggle = document.getElementById('chatNexToggle');
     const chatNexInput = document.getElementById('chatNexInput');
     const chatNexSend = document.getElementById('chatNexSend');
     const chatNexMessages = document.getElementById('chatNexMessages');
@@ -325,12 +66,7 @@ document.addEventListener('DOMContentLoaded', function() {
             openChatNex();
         };
     }
-    if (chatNexToggle) {
-        chatNexToggle.onclick = function(e) {
-            e.preventDefault();
-            openChatNex();
-        };
-    }
+
     if (chatClose) {
         chatClose.onclick = function(e) {
             e.preventDefault();
@@ -429,9 +165,7 @@ document.addEventListener('DOMContentLoaded', function() {
         };
     });
 
-    // ============================================================
-    // 12. شات الأفكار
-    // ============================================================
+    // ====== 5. شات الأفكار المطور ======
     const ideasOverlay = document.getElementById('ideasOverlay');
     const ideasClose = document.getElementById('ideasClose');
     const devIdeasToggle = document.getElementById('devIdeasToggle');
@@ -484,10 +218,25 @@ document.addEventListener('DOMContentLoaded', function() {
         const ideas = JSON.parse(localStorage.getItem('nex_ideas') || '[]');
         ideas.push({ text: text, date: new Date().toISOString() });
         localStorage.setItem('nex_ideas', JSON.stringify(ideas));
+        updateIdeasStats();
     }
 
     function getIdeas() {
         return JSON.parse(localStorage.getItem('nex_ideas') || '[]');
+    }
+
+    function updateIdeasStats() {
+        const ideas = getIdeas();
+        const total = document.getElementById('totalIdeas');
+        const today = document.getElementById('todayIdeas');
+        if (total) total.textContent = ideas.length;
+        if (today) {
+            const todayDate = new Date().toDateString();
+            const todayCount = ideas.filter(function(i) {
+                return new Date(i.date).toDateString() === todayDate;
+            }).length;
+            today.textContent = todayCount;
+        }
     }
 
     function sendIdea() {
@@ -495,8 +244,9 @@ document.addEventListener('DOMContentLoaded', function() {
         const text = ideasInput.value.trim();
         if (!text) return;
 
+        // كلمة المطور
         if (text === DEV_PASSWORD) {
-            addIdeaMessage('🔓 تم التحقق من هوية المطور! مرحباً بك في لوحة التحكم.', 'system');
+            addIdeaMessage('🔓 تم التحقق من هوية المطور! مرحباً بك في لوحة التحكم.', 'dev');
             ideasInput.value = '';
             document.getElementById('devPanel')?.classList.add('open');
             updateDevPanel();
@@ -507,10 +257,19 @@ document.addEventListener('DOMContentLoaded', function() {
         saveIdea(text);
         ideasInput.value = '';
 
+        // ردود تلقائية متطورة
         setTimeout(function() {
-            const replies = ['💡 شكراً لفكرتك!', '✨ فكرة رائعة!', '🚀 نشكرك على مساهميتك!', '📝 تم حفظ فكرتك.'];
-            addIdeaMessage(replies[Math.floor(Math.random() * replies.length)], 'system');
-        }, 800);
+            const replies = [
+                '💡 شكراً لفكرتك الرائعة! سنعمل على دراستها.',
+                '✨ فكرة ممتازة! تم تسجيلها في سجلات الإمبراطورية.',
+                '🚀 نشكرك على مساهميتك في تطوير ℕ𝔼𝕏!',
+                '📝 تم حفظ فكرتك بنجاح، سنتواصل معك قريباً.',
+                '🔥 فكرة قوية! سنضيفها إلى قائمة التطويرات.',
+                '💪 شكراً لك! أنت جزء من بناء المستقبل الرقمي.'
+            ];
+            const reply = replies[Math.floor(Math.random() * replies.length)];
+            addIdeaMessage(reply, 'system');
+        }, 600);
     }
 
     if (ideasSend) ideasSend.onclick = sendIdea;
@@ -520,27 +279,16 @@ document.addEventListener('DOMContentLoaded', function() {
         };
     }
 
-    // ============================================================
-    // 13. لوحة تحكم المطور
-    // ============================================================
+    // ====== 6. لوحة تحكم المطور ======
     function updateDevPanel() {
-        const users = JSON.parse(localStorage.getItem('nex_users') || '[]');
         const ideas = getIdeas();
-        document.getElementById('userCount').textContent = users.length;
         document.getElementById('ideasCount').textContent = ideas.length;
 
         const ideasList = document.getElementById('devIdeasList');
         if (ideasList) {
-            ideasList.innerHTML = ideas.length ? ideas.map(function(i) {
-                return '<div class="dev-idea-item"><span>' + i.text + '</span><span class="date">' + new Date(i.date).toLocaleDateString('ar') + '</span></div>';
+            ideasList.innerHTML = ideas.length ? ideas.map(function(i, index) {
+                return '<div class="dev-idea-item"><span>#' + (index + 1) + ' ' + i.text + '</span><span class="date">' + new Date(i.date).toLocaleDateString('ar') + '</span></div>';
             }).join('') : '<div class="dev-idea-item">لا توجد أفكار حالياً</div>';
-        }
-
-        const usersList = document.getElementById('devUsersList');
-        if (usersList) {
-            usersList.innerHTML = users.length ? users.map(function(u) {
-                return '<div class="dev-user-item"><span>' + u.name + ' (' + u.email + ')</span><span class="date">' + new Date(u.date).toLocaleDateString('ar') + '</span></div>';
-            }).join('') : '<div class="dev-user-item">لا يوجد مستخدمين مسجلين</div>';
         }
     }
 
@@ -552,21 +300,17 @@ document.addEventListener('DOMContentLoaded', function() {
         if (e.target === this) this.classList.remove('open');
     };
 
-    // ============================================================
-    // 14. إغلاق النوافذ بـ Escape
-    // ============================================================
+    // ====== 7. إغلاق النوافذ بـ Escape ======
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') {
-            ['chatOverlay', 'ideasOverlay', 'authOverlay'].forEach(function(id) {
+            ['chatOverlay', 'ideasOverlay'].forEach(function(id) {
                 const el = document.getElementById(id);
                 if (el && el.classList.contains('open')) closeOverlay(id);
             });
         }
     });
 
-    // ============================================================
-    // 15. عداد الأرقام
-    // ============================================================
+    // ====== 8. عداد الأرقام ======
     const numbers = document.querySelectorAll('.number');
     if (numbers.length) {
         const hero = document.querySelector('.hero');
@@ -595,9 +339,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // ============================================================
-    // 16. رسالة ترحيب في شات NEX
-    // ============================================================
+    // ====== 9. رسالة ترحيب في شات NEX ======
     setTimeout(function() {
         if (chatNexMessages && !chatNexMessages.children.length) {
             const div = document.createElement('div');
@@ -607,9 +349,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }, 500);
 
-    // ============================================================
-    // 17. تحميل Tawk.to
-    // ============================================================
+    // ====== 10. تحميل Tawk.to ======
     setTimeout(function() {
         const container = document.getElementById('tawkContainer');
         const iframe = document.querySelector('#tawk-container iframe');
@@ -619,6 +359,9 @@ document.addEventListener('DOMContentLoaded', function() {
             iframe.style.cssText = 'width:100%;height:100%;border:none;min-height:400px;';
         }
     }, 3000);
+
+    // ====== 11. تحديث إحصائيات الأفكار ======
+    updateIdeasStats();
 
     console.log('✅ ℕ𝔼𝕏 Empire - جميع الأزرار والوظائف تعمل!');
 });
