@@ -1,9 +1,7 @@
 // ============================================================
-// ملف script.js - نسخة نظيفة ومنسقة بدون أي تعارض
-// تم دمج جميع الوظائف في مكان واحد
+// ملف script.js - النسخة النهائية المصححة
 // ============================================================
 
-// ====== انتظار تحميل الصفحة ======
 document.addEventListener('DOMContentLoaded', function() {
     console.log('🚀 ℕ𝔼𝕏 Empire - تم تحميل الصفحة');
 
@@ -56,17 +54,17 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // ============================================================
-    // 3. دوال فتح وإغلاق النوافذ (وظائف عامة)
+    // 3. دوال فتح وإغلاق النوافذ
     // ============================================================
     function openOverlay(overlayId) {
         const overlay = document.getElementById(overlayId);
         if (overlay) {
             overlay.classList.add('open');
             document.body.style.overflow = 'hidden';
-            console.log(`✅ فتح: ${overlayId}`);
+            console.log('✅ فتح:', overlayId);
             return true;
         }
-        console.error(`❌ العنصر غير موجود: ${overlayId}`);
+        console.error('❌ العنصر غير موجود:', overlayId);
         return false;
     }
 
@@ -75,15 +73,15 @@ document.addEventListener('DOMContentLoaded', function() {
         if (overlay) {
             overlay.classList.remove('open');
             document.body.style.overflow = '';
-            console.log(`✅ إغلاق: ${overlayId}`);
+            console.log('✅ إغلاق:', overlayId);
             return true;
         }
-        console.error(`❌ العنصر غير موجود: ${overlayId}`);
+        console.error('❌ العنصر غير موجود:', overlayId);
         return false;
     }
 
     // ============================================================
-    // 4. شات NEX (فتح وإغلاق)
+    // 4. شات NEX
     // ============================================================
     const chatOverlay = document.getElementById('chatOverlay');
     const chatClose = document.getElementById('chatClose');
@@ -128,7 +126,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // ============================================================
-    // 5. شات الأفكار (مع الإرسال)
+    // 5. شات الأفكار
     // ============================================================
     const ideasOverlay = document.getElementById('ideasOverlay');
     const ideasClose = document.getElementById('ideasClose');
@@ -138,10 +136,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const ideasInput = document.getElementById('ideasInput');
     const ideasSend = document.getElementById('ideasSend');
 
-    // كلمة السر للمطور
     const DEV_PASSWORD = process.env.dev_password || '8520261962026';
 
-    // فتح شات الأفكار
     function openIdeasChat() {
         if (openOverlay('ideasOverlay')) {
             setTimeout(() => { if (ideasInput) ideasInput.focus(); }, 300);
@@ -178,11 +174,10 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // وظائف شات الأفكار
     function addIdeaMessage(text, type) {
         if (!ideasMessages) return;
         const div = document.createElement('div');
-        div.className = `idea-message ${type}`;
+        div.className = 'idea-message ' + type;
         div.textContent = text;
         ideasMessages.appendChild(div);
         ideasMessages.scrollTop = ideasMessages.scrollHeight;
@@ -198,13 +193,11 @@ document.addEventListener('DOMContentLoaded', function() {
         return JSON.parse(localStorage.getItem('nex_ideas') || '[]');
     }
 
-    // دالة إرسال الفكرة
     function sendIdea() {
         if (!ideasInput) return;
         const text = ideasInput.value.trim();
         if (!text) return;
 
-        // التحقق من كلمة السر للمطور
         if (text === DEV_PASSWORD) {
             addIdeaMessage('🔓 تم التحقق من هوية المطور! مرحباً بك في لوحة التحكم.', 'system');
             ideasInput.value = '';
@@ -212,7 +205,6 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
-        // إرسال الفكرة كـ مستخدم عادي
         addIdeaMessage(text, 'user');
         saveIdea(text);
         ideasInput.value = '';
@@ -290,24 +282,18 @@ document.addEventListener('DOMContentLoaded', function() {
         if (ideasList) {
             ideasList.innerHTML = ideas.length === 0 ? 
                 '<div class="dev-idea-item">لا توجد أفكار حالياً</div>' :
-                ideas.map((idea, index) => `
-                    <div class="dev-idea-item">
-                        <span>${idea.text}</span>
-                        <span class="date">${new Date(idea.date).toLocaleDateString('ar')}</span>
-                    </div>
-                `).join('');
+                ideas.map(function(idea) {
+                    return '<div class="dev-idea-item"><span>' + idea.text + '</span><span class="date">' + new Date(idea.date).toLocaleDateString('ar') + '</span></div>';
+                }).join('');
         }
 
         const usersList = document.getElementById('devUsersList');
         if (usersList) {
             usersList.innerHTML = users.length === 0 ?
                 '<div class="dev-user-item">لا يوجد مستخدمين مسجلين</div>' :
-                users.map(user => `
-                    <div class="dev-user-item">
-                        <span>${user.name} (${user.email})</span>
-                        <span class="date">${new Date(user.date).toLocaleDateString('ar')}</span>
-                    </div>
-                `).join('');
+                users.map(function(user) {
+                    return '<div class="dev-user-item"><span>' + user.name + ' (' + user.email + ')</span><span class="date">' + new Date(user.date).toLocaleDateString('ar') + '</span></div>';
+                }).join('');
         }
     }
 
@@ -340,36 +326,40 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // تبديل علامات التبويب
-    document.querySelectorAll('.auth-tab').forEach(tab => {
+    document.querySelectorAll('.auth-tab').forEach(function(tab) {
         tab.addEventListener('click', function() {
-            const target = this.dataset.tab;
-            document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+            var target = this.dataset.tab;
+            document.querySelectorAll('.auth-tab').forEach(function(t) { t.classList.remove('active'); });
             this.classList.add('active');
-            document.querySelectorAll('.auth-form').forEach(f => f.classList.remove('active'));
-            document.getElementById(`auth-${target}`).classList.add('active');
+            document.querySelectorAll('.auth-form').forEach(function(f) { f.classList.remove('active'); });
+            document.getElementById('auth-' + target).classList.add('active');
         });
     });
 
-    // تسجيل الدخول
-    const loginBtn = document.getElementById('loginBtn');
+    var loginBtn = document.getElementById('loginBtn');
     if (loginBtn) {
         loginBtn.addEventListener('click', function(e) {
             e.preventDefault();
-            const email = document.getElementById('loginEmail').value.trim();
-            const password = document.getElementById('loginPassword').value.trim();
+            var email = document.getElementById('loginEmail').value.trim();
+            var password = document.getElementById('loginPassword').value.trim();
             
             if (!email || !password) {
                 alert('الرجاء إدخال البريد الإلكتروني وكلمة السر');
                 return;
             }
 
-            const users = JSON.parse(localStorage.getItem('nex_users') || '[]');
-            const user = users.find(u => u.email === email && u.password === password);
+            var users = JSON.parse(localStorage.getItem('nex_users') || '[]');
+            var user = null;
+            for (var i = 0; i < users.length; i++) {
+                if (users[i].email === email && users[i].password === password) {
+                    user = users[i];
+                    break;
+                }
+            }
             
             if (user) {
                 localStorage.setItem('nex_current_user', JSON.stringify(user));
-                alert(`مرحباً ${user.name}! تم تسجيل الدخول بنجاح`);
+                alert('مرحباً ' + user.name + '! تم تسجيل الدخول بنجاح');
                 closeOverlay('authOverlay');
                 updateUserUI(user);
             } else {
@@ -378,15 +368,14 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // إنشاء حساب
-    const registerBtn = document.getElementById('registerBtn');
+    var registerBtn = document.getElementById('registerBtn');
     if (registerBtn) {
         registerBtn.addEventListener('click', function(e) {
             e.preventDefault();
-            const name = document.getElementById('regName').value.trim();
-            const email = document.getElementById('regEmail').value.trim();
-            const password = document.getElementById('regPassword').value.trim();
-            const confirm = document.getElementById('regConfirm').value.trim();
+            var name = document.getElementById('regName').value.trim();
+            var email = document.getElementById('regEmail').value.trim();
+            var password = document.getElementById('regPassword').value.trim();
+            var confirm = document.getElementById('regConfirm').value.trim();
 
             if (!name || !email || !password || !confirm) {
                 alert('الرجاء ملء جميع الحقول');
@@ -403,65 +392,71 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
 
-            let users = JSON.parse(localStorage.getItem('nex_users') || '[]');
-            if (users.find(u => u.email === email)) {
-                alert('هذا البريد الإلكتروني مسجل بالفعل');
-                return;
+            var users = JSON.parse(localStorage.getItem('nex_users') || '[]');
+            for (var i = 0; i < users.length; i++) {
+                if (users[i].email === email) {
+                    alert('هذا البريد الإلكتروني مسجل بالفعل');
+                    return;
+                }
             }
 
-            const newUser = { name, email, password, date: new Date().toISOString() };
+            var newUser = { name: name, email: email, password: password, date: new Date().toISOString() };
             users.push(newUser);
             localStorage.setItem('nex_users', JSON.stringify(users));
             localStorage.setItem('nex_current_user', JSON.stringify(newUser));
 
-            alert(`مرحباً ${name}! تم إنشاء حسابك بنجاح`);
+            alert('مرحباً ' + name + '! تم إنشاء حسابك بنجاح');
             closeOverlay('authOverlay');
             updateUserUI(newUser);
         });
     }
 
-    // تسجيل الدخول بجوجل
-    const googleLogin = document.getElementById('googleLogin');
+    var googleLogin = document.getElementById('googleLogin');
     if (googleLogin) {
         googleLogin.addEventListener('click', function(e) {
             e.preventDefault();
-            const email = prompt('الرجاء إدخال بريدك الإلكتروني على جوجل:');
+            var email = prompt('الرجاء إدخال بريدك الإلكتروني على جوجل:');
             if (email) {
-                const name = email.split('@')[0];
-                const users = JSON.parse(localStorage.getItem('nex_users') || '[]');
-                let user = users.find(u => u.email === email);
+                var name = email.split('@')[0];
+                var users = JSON.parse(localStorage.getItem('nex_users') || '[]');
+                var user = null;
+                for (var i = 0; i < users.length; i++) {
+                    if (users[i].email === email) {
+                        user = users[i];
+                        break;
+                    }
+                }
                 
                 if (!user) {
-                    user = { name, email, password: 'google_auth', date: new Date().toISOString() };
+                    user = { name: name, email: email, password: 'google_auth', date: new Date().toISOString() };
                     users.push(user);
                     localStorage.setItem('nex_users', JSON.stringify(users));
                 }
                 
                 localStorage.setItem('nex_current_user', JSON.stringify(user));
-                alert(`مرحباً ${user.name}! تم تسجيل الدخول بجوجل بنجاح`);
+                alert('مرحباً ' + user.name + '! تم تسجيل الدخول بجوجل بنجاح');
                 closeOverlay('authOverlay');
                 updateUserUI(user);
             }
         });
     }
 
-    // تحديث واجهة المستخدم بعد تسجيل الدخول
     function updateUserUI(user) {
-        const authLink = document.querySelector('.sidebar-nav a[href="#"]');
+        var authLink = document.querySelector('.sidebar-nav a[href="#"]');
         if (authLink) {
-            authLink.innerHTML = `<i class="fas fa-user-check"></i> <span>مرحباً ${user.name}</span>`;
+            authLink.innerHTML = '<i class="fas fa-user-check"></i> <span>مرحباً ' + user.name + '</span>';
             authLink.style.color = '#6c5ce7';
         }
         
-        const sidebarNav = document.querySelector('.sidebar-nav');
+        var sidebarNav = document.querySelector('.sidebar-nav');
         if (sidebarNav) {
-            const oldLogout = sidebarNav.querySelector('.logout-btn');
+            var oldLogout = sidebarNav.querySelector('.logout-btn');
             if (oldLogout) oldLogout.remove();
             
-            const logoutBtn = document.createElement('a');
+            var logoutBtn = document.createElement('a');
             logoutBtn.href = '#';
             logoutBtn.className = 'logout-btn';
-            logoutBtn.innerHTML = `<i class="fas fa-sign-out-alt"></i> <span>تسجيل الخروج</span>`;
+            logoutBtn.innerHTML = '<i class="fas fa-sign-out-alt"></i> <span>تسجيل الخروج</span>';
             logoutBtn.style.color = '#e74c3c';
             logoutBtn.addEventListener('click', function(e) {
                 e.preventDefault();
@@ -472,7 +467,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    const currentUser = JSON.parse(localStorage.getItem('nex_current_user') || 'null');
+    var currentUser = JSON.parse(localStorage.getItem('nex_current_user') || 'null');
     if (currentUser) {
         updateUserUI(currentUser);
     }
@@ -482,28 +477,28 @@ document.addEventListener('DOMContentLoaded', function() {
     // ============================================================
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') {
-            if (chatOverlay?.classList.contains('open')) closeOverlay('chatOverlay');
-            if (ideasOverlay?.classList.contains('open')) closeOverlay('ideasOverlay');
-            if (authOverlay?.classList.contains('open')) closeOverlay('authOverlay');
+            if (chatOverlay && chatOverlay.classList.contains('open')) closeOverlay('chatOverlay');
+            if (ideasOverlay && ideasOverlay.classList.contains('open')) closeOverlay('ideasOverlay');
+            if (authOverlay && authOverlay.classList.contains('open')) closeOverlay('authOverlay');
         }
     });
 
     // ============================================================
     // 9. عداد الأرقام المتحرك
     // ============================================================
-    const numbers = document.querySelectorAll('.number');
+    var numbers = document.querySelectorAll('.number');
     if (numbers.length > 0) {
-        const heroSection = document.querySelector('.hero');
+        var heroSection = document.querySelector('.hero');
         if (heroSection) {
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
+            var observer = new IntersectionObserver(function(entries) {
+                entries.forEach(function(entry) {
                     if (entry.isIntersecting) {
-                        numbers.forEach(num => {
-                            const target = parseInt(num.getAttribute('data-target'));
-                            const duration = 2000;
-                            const step = target / (duration / 16);
-                            let current = 0;
-                            const updateNumber = () => {
+                        numbers.forEach(function(num) {
+                            var target = parseInt(num.getAttribute('data-target'));
+                            var duration = 2000;
+                            var step = target / (duration / 16);
+                            var current = 0;
+                            var updateNumber = function() {
                                 current += step;
                                 if (current >= target) {
                                     num.textContent = target;
@@ -525,15 +520,12 @@ document.addEventListener('DOMContentLoaded', function() {
     // ============================================================
     // 10. رسالة ترحيب في شات NEX
     // ============================================================
-    setTimeout(() => {
-        const chatNexMessages = document.getElementById('chatNexMessages');
+    setTimeout(function() {
+        var chatNexMessages = document.getElementById('chatNexMessages');
         if (chatNexMessages && chatNexMessages.children.length === 0) {
-            const div = document.createElement('div');
+            var div = document.createElement('div');
             div.className = 'msg bot';
-            div.innerHTML = `
-                <div class="msg-avatar">⚡</div>
-                <div class="msg-bubble">مرحباً، أنا مساعد NEX الذكي. كيف يمكنني مساعدتك اليوم؟</div>
-            `;
+            div.innerHTML = '<div class="msg-avatar">⚡</div><div class="msg-bubble">مرحباً، أنا مساعد NEX الذكي. كيف يمكنني مساعدتك اليوم؟</div>';
             chatNexMessages.appendChild(div);
         }
     }, 500);
@@ -541,9 +533,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // ============================================================
     // 11. تحميل Tawk.to
     // ============================================================
-    setTimeout(() => {
-        const tawkContainer = document.getElementById('tawkContainer');
-        const tawkIframe = document.querySelector('#tawk-container iframe');
+    setTimeout(function() {
+        var tawkContainer = document.getElementById('tawkContainer');
+        var tawkIframe = document.querySelector('#tawk-container iframe');
         if (tawkIframe && tawkContainer) {
             tawkContainer.innerHTML = '';
             tawkContainer.appendChild(tawkIframe);
