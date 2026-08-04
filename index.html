@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>ℕ𝔼𝕏 Empire | عصر الذكاء الرقمي</title>
+    <title>ℕ𝔼𝕏 Empire | منصة الذكاء الرقمي</title>
     <meta name="description" content="إمبراطورية ℕ𝔼𝕏 - منصة متكاملة للبوتات والذكاء الاصطناعي" />
     <link rel="stylesheet" href="style.css" />
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>" />
@@ -12,8 +12,8 @@
 </head>
 <body>
 
-    <!-- ====== شريط المطور العلوي ====== -->
-    <div class="dev-bar" id="devBar">
+    <!-- ====== شريط المطور ====== -->
+    <div class="dev-bar">
         <div class="dev-bar-content">
             <div class="dev-info">
                 <img src="https://files.catbox.moe/ik6ddc.png" alt="ℕ𝔼𝕏" class="dev-logo" />
@@ -22,31 +22,7 @@
             <div class="dev-actions">
                 <button id="devChatNex" class="dev-btn primary"><i class="fas fa-robot"></i> شات NEX</button>
                 <a href="https://wa.me/0998251277" target="_blank" class="dev-btn whatsapp"><i class="fab fa-whatsapp"></i> المطور</a>
-                <button id="devIdeasToggle" class="dev-btn ideas"><i class="fas fa-lightbulb"></i> شات الأفكار</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- ====== نافذة شات الأفكار ====== -->
-    <div id="ideasOverlay" class="ideas-overlay">
-        <div class="ideas-container">
-            <div class="ideas-header">
-                <span><i class="fas fa-lightbulb"></i> شات الأفكار</span>
-                <button id="ideasClose" class="ideas-close"><i class="fas fa-times"></i></button>
-            </div>
-            <div class="ideas-messages" id="ideasMessages">
-                <div class="idea-message system">
-                    💡 أهلاً بك في شات أفكار ℕ𝔼𝕏! شاركنا اقتراحاتك لتطوير الإمبراطورية.
-                </div>
-            </div>
-            <div class="ideas-input-area">
-                <div class="ideas-input-wrapper">
-                    <input type="text" id="ideasInput" placeholder="اكتب فكرتك..." />
-                    <button id="ideasSend"><i class="fas fa-paper-plane"></i></button>
-                </div>
-                <div class="ideas-footer">
-                    <span>🔒 للمطور: أدخل كلمة السر في الشات للوصول للوحة التحكم</span>
-                </div>
+                <button id="devIdeasToggle" class="dev-btn ideas"><i class="fas fa-lightbulb"></i> الأفكار</button>
             </div>
         </div>
     </div>
@@ -76,6 +52,26 @@
                     <button id="chatNexSend"><i class="fas fa-paper-plane"></i></button>
                 </div>
                 <div class="chat-footer">⚡ مدعوم بـ DeepSeek</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ====== نافذة الأفكار ====== -->
+    <div id="ideasOverlay" class="ideas-overlay">
+        <div class="ideas-container">
+            <div class="ideas-header">
+                <span><i class="fas fa-lightbulb"></i> شات الأفكار</span>
+                <button id="ideasClose" class="ideas-close"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="ideas-messages" id="ideasMessages">
+                <div class="idea-message system">💡 أهلاً بك في شات أفكار ℕ𝔼𝕏! شاركنا اقتراحاتك لتطوير الإمبراطورية.</div>
+            </div>
+            <div class="ideas-input-area">
+                <div class="ideas-input-wrapper">
+                    <input type="text" id="ideasInput" placeholder="اكتب فكرتك..." />
+                    <button id="ideasSend"><i class="fas fa-paper-plane"></i></button>
+                </div>
+                <div class="ideas-footer">🔒 للمطور: أدخل كلمة السر في الشات للوصول للوحة التحكم</div>
             </div>
         </div>
     </div>
@@ -143,6 +139,7 @@
             <a href="#home" class="active"><i class="fas fa-home"></i> <span>الرئيسية</span></a>
             <a href="#bots"><i class="fas fa-robot"></i> <span>البوتات</span></a>
             <a href="#features"><i class="fas fa-cogs"></i> <span>الميزات</span></a>
+            <a href="#community"><i class="fas fa-comments"></i> <span>المجتمع</span></a>
             <a href="#about"><i class="fas fa-info-circle"></i> <span>عن المنصة</span></a>
             <a href="#support"><i class="fas fa-headset"></i> <span>الدعم</span></a>
             <a href="#" id="authToggle"><i class="fas fa-user"></i> <span>تسجيل الدخول</span></a>
@@ -153,18 +150,18 @@
         </div>
     </aside>
 
-    <!-- ====== زر فتح القائمة الجانبية ====== -->
+    <!-- ====== زر فتح القائمة ====== -->
     <button id="sidebarToggle" class="sidebar-toggle">
         <i class="fas fa-bars"></i>
     </button>
 
-    <!-- ====== زر شات الأفكار العائم ====== -->
+    <!-- ====== زر الأفكار العائم ====== -->
     <button id="ideasFloat" class="float-btn ideas-float">
         <i class="fas fa-lightbulb"></i>
     </button>
 
     <!-- ====== المحتوى الرئيسي ====== -->
-    <main class="main-content" id="mainContent">
+    <main class="main-content">
 
         <!-- ====== قسم التطوير ====== -->
         <div class="dev-notice">
@@ -180,7 +177,7 @@
                 <p>منصة متكاملة للبوتات والذكاء الاصطناعي، صُممت لتقديم تجربة رقمية استثنائية</p>
                 <div class="hero-buttons">
                     <a href="#bots" class="btn primary"><i class="fas fa-rocket"></i> استكشف البوتات</a>
-                    <a href="#about" class="btn secondary"><i class="fas fa-info-circle"></i> تعرف على المنصة</a>
+                    <a href="#community" class="btn secondary"><i class="fas fa-comments"></i> انضم للمجتمع</a>
                 </div>
             </div>
             <div class="hero-stats">
@@ -263,6 +260,42 @@
             </div>
         </section>
 
+        <!-- ====== المجتمع (الأفكار + الشات) ====== -->
+        <section id="community">
+            <h2><i class="fas fa-comments"></i> المجتمع</h2>
+            <p class="section-desc">تواصل مع أعضاء إمبراطورية ℕ𝔼𝕏 وشارك أفكارك</p>
+            
+            <div class="community-grid">
+                <!-- قسم الأفكار -->
+                <div class="community-card">
+                    <h3><i class="fas fa-lightbulb"></i> أفكار المجتمع</h3>
+                    <div id="communityIdeasList" class="community-ideas-list">
+                        <!-- ستظهر الأفكار هنا عبر JavaScript -->
+                    </div>
+                    <div class="community-input">
+                        <input type="text" id="communityIdeaInput" placeholder="شارك فكرتك..." />
+                        <button id="communityIdeaSend"><i class="fas fa-paper-plane"></i></button>
+                    </div>
+                </div>
+
+                <!-- قسم الشات -->
+                <div class="community-card">
+                    <h3><i class="fas fa-comment-dots"></i> شات المجتمع</h3>
+                    <div class="community-chat-messages" id="communityChatMessages">
+                        <div class="chat-message system">👋 مرحباً بك في شات المجتمع!</div>
+                    </div>
+                    <div class="community-chat-users" id="communityChatUsers">
+                        <span><i class="fas fa-circle online"></i> NEX_DEV 👑</span>
+                        <span><i class="fas fa-circle online"></i> المستخدم_1</span>
+                    </div>
+                    <div class="community-input">
+                        <input type="text" id="communityChatInput" placeholder="اكتب رسالتك..." />
+                        <button id="communityChatSend"><i class="fas fa-paper-plane"></i></button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <!-- ====== عن المنصة ====== -->
         <section id="about">
             <h2><i class="fas fa-info-circle"></i> عن ℕ𝔼𝕏</h2>
@@ -325,6 +358,7 @@
                     <h4>روابط سريعة</h4>
                     <a href="#home">الرئيسية</a>
                     <a href="#bots">البوتات</a>
+                    <a href="#community">المجتمع</a>
                     <a href="#about">عن المنصة</a>
                     <a href="#support">الدعم</a>
                 </div>
