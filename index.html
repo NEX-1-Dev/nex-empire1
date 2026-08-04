@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="style.css" />
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet" />
 </head>
 <body>
 
@@ -87,20 +87,35 @@
                 <button class="auth-tab active" data-tab="login">تسجيل دخول</button>
                 <button class="auth-tab" data-tab="register">إنشاء حساب</button>
             </div>
+
+            <!-- تسجيل الدخول -->
             <div id="auth-login" class="auth-form active">
                 <input type="email" id="loginEmail" placeholder="البريد الإلكتروني" />
                 <input type="password" id="loginPassword" placeholder="كلمة السر" />
+                <div id="loginOtpContainer" style="display:none;">
+                    <input type="text" id="loginOtp" placeholder="أدخل كود التحقق (6 أرقام)" maxlength="6" />
+                    <button id="loginResendOtp" class="auth-btn" style="background:transparent;color:var(--accent);font-size:0.8rem;padding:4px;">إعادة إرسال الكود</button>
+                </div>
                 <button id="loginBtn" class="auth-btn">تسجيل الدخول</button>
+                <button id="loginVerifyBtn" class="auth-btn" style="display:none;">تحقق من الكود</button>
                 <div class="auth-or"><span>أو</span></div>
                 <button id="googleLogin" class="auth-btn google"><i class="fab fa-google"></i> تسجيل بجوجل</button>
             </div>
+
+            <!-- إنشاء حساب -->
             <div id="auth-register" class="auth-form">
                 <input type="text" id="regName" placeholder="الاسم الكامل" />
                 <input type="email" id="regEmail" placeholder="البريد الإلكتروني" />
                 <input type="password" id="regPassword" placeholder="كلمة السر" />
                 <input type="password" id="regConfirm" placeholder="تأكيد كلمة السر" />
+                <div id="registerOtpContainer" style="display:none;">
+                    <input type="text" id="registerOtp" placeholder="أدخل كود التحقق (6 أرقام)" maxlength="6" />
+                    <button id="registerResendOtp" class="auth-btn" style="background:transparent;color:var(--accent);font-size:0.8rem;padding:4px;">إعادة إرسال الكود</button>
+                </div>
                 <button id="registerBtn" class="auth-btn">إنشاء حساب</button>
+                <button id="registerVerifyBtn" class="auth-btn" style="display:none;">تحقق من الكود</button>
             </div>
+
             <div class="auth-close"><button id="authClose"><i class="fas fa-times"></i></button></div>
         </div>
     </div>
@@ -139,7 +154,6 @@
             <a href="#home" class="active"><i class="fas fa-home"></i> <span>الرئيسية</span></a>
             <a href="#bots"><i class="fas fa-robot"></i> <span>البوتات</span></a>
             <a href="#features"><i class="fas fa-cogs"></i> <span>الميزات</span></a>
-            <a href="#community"><i class="fas fa-comments"></i> <span>المجتمع</span></a>
             <a href="#about"><i class="fas fa-info-circle"></i> <span>عن المنصة</span></a>
             <a href="#support"><i class="fas fa-headset"></i> <span>الدعم</span></a>
             <a href="#" id="authToggle"><i class="fas fa-user"></i> <span>تسجيل الدخول</span></a>
@@ -160,6 +174,11 @@
         <i class="fas fa-lightbulb"></i>
     </button>
 
+    <!-- ====== زر تبديل الوضع ====== -->
+    <button id="themeToggle" class="theme-btn">
+        <i class="fas fa-moon"></i>
+    </button>
+
     <!-- ====== المحتوى الرئيسي ====== -->
     <main class="main-content">
 
@@ -177,7 +196,7 @@
                 <p>منصة متكاملة للبوتات والذكاء الاصطناعي، صُممت لتقديم تجربة رقمية استثنائية</p>
                 <div class="hero-buttons">
                     <a href="#bots" class="btn primary"><i class="fas fa-rocket"></i> استكشف البوتات</a>
-                    <a href="#community" class="btn secondary"><i class="fas fa-comments"></i> انضم للمجتمع</a>
+                    <a href="#about" class="btn secondary"><i class="fas fa-info-circle"></i> تعرف على المنصة</a>
                 </div>
             </div>
             <div class="hero-stats">
@@ -260,103 +279,6 @@
             </div>
         </section>
 
-       <!-- ====== المجتمع المتكامل ====== -->
-<section id="community">
-    <h2><i class="fas fa-users"></i> مجتمع ℕ𝔼𝕏</h2>
-    <p class="section-desc">تواصل، شارك، وابنِ شبكة علاقاتك الرقمية</p>
-    
-    <div class="community-wrapper">
-        <!-- الشريط الجانبي للمجتمع -->
-        <aside class="community-sidebar">
-            <div class="community-profile-card">
-                <div class="profile-avatar" id="profileAvatar">👤</div>
-                <h4 id="profileName">زائر</h4>
-                <p id="profileStatus">غير مسجل</p>
-                <button id="profileEditBtn" class="profile-btn">تعديل الملف</button>
-            </div>
-            
-            <nav class="community-nav">
-                <a href="#" class="active" data-section="feed"><i class="fas fa-newspaper"></i> الأخبار</a>
-                <a href="#" data-section="friends"><i class="fas fa-user-friends"></i> الأصدقاء</a>
-                <a href="#" data-section="messages"><i class="fas fa-envelope"></i> الرسائل</a>
-                <a href="#" data-section="notifications"><i class="fas fa-bell"></i> الإشعارات</a>
-                <a href="#" data-section="explore"><i class="fas fa-compass"></i> استكشف</a>
-            </nav>
-            
-            <div class="community-online">
-                <h5><i class="fas fa-circle online"></i> متصلون (<span id="onlineCount">0</span>)</h5>
-                <div id="onlineUsersList"></div>
-            </div>
-        </aside>
-
-        <!-- المحتوى الرئيسي للمجتمع -->
-        <main class="community-main">
-            <!-- قسم الأخبار (المنشورات) -->
-            <div id="feed-section" class="community-section active">
-                <div class="create-post">
-                    <div class="post-input-wrapper">
-                        <textarea id="postInput" placeholder="ماذا يحدث في إمبراطورية ℕ𝔼𝕏؟" rows="2"></textarea>
-                        <div class="post-actions">
-                            <button id="postImageBtn" class="post-action-btn"><i class="fas fa-image"></i></button>
-                            <button id="postSubmitBtn" class="post-submit-btn"><i class="fas fa-paper-plane"></i> نشر</button>
-                        </div>
-                    </div>
-                </div>
-                <div id="feedPosts" class="feed-posts">
-                    <!-- تظهر المنشورات هنا -->
-                </div>
-            </div>
-
-            <!-- قسم الأصدقاء -->
-            <div id="friends-section" class="community-section">
-                <h3><i class="fas fa-user-friends"></i> الأصدقاء</h3>
-                <div class="friends-tabs">
-                    <button class="friends-tab active" data-tab="all">جميع الأصدقاء</button>
-                    <button class="friends-tab" data-tab="requests">طلبات الصداقة <span id="requestsCount">0</span></button>
-                    <button class="friends-tab" data-tab="suggestions">اقتراحات</button>
-                </div>
-                <div id="friendsList" class="friends-list"></div>
-            </div>
-
-            <!-- قسم الرسائل -->
-            <div id="messages-section" class="community-section">
-                <h3><i class="fas fa-envelope"></i> الرسائل الخاصة</h3>
-                <div class="messages-container">
-                    <div class="messages-list" id="messagesList">
-                        <!-- قائمة المحادثات -->
-                    </div>
-                    <div class="message-chat" id="messageChat">
-                        <div class="message-chat-header" id="chatHeader">
-                            <span>اختر محادثة للبدء</span>
-                        </div>
-                        <div class="message-chat-body" id="chatMessages">
-                            <div class="message-placeholder">👋 اختر محادثة من اليسار</div>
-                        </div>
-                        <div class="message-chat-input">
-                            <input type="text" id="chatMessageInput" placeholder="اكتب رسالة..." disabled />
-                            <button id="chatMessageSend" disabled><i class="fas fa-paper-plane"></i></button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- قسم الإشعارات -->
-            <div id="notifications-section" class="community-section">
-                <h3><i class="fas fa-bell"></i> الإشعارات</h3>
-                <div id="notificationsList" class="notifications-list"></div>
-            </div>
-
-            <!-- قسم الاستكشاف -->
-            <div id="explore-section" class="community-section">
-                <h3><i class="fas fa-compass"></i> استكشف</h3>
-                <div class="explore-grid" id="exploreGrid">
-                    <!-- مستخدمين مقترحين -->
-                </div>
-            </div>
-        </main>
-    </div>
-</section>
-
         <!-- ====== عن المنصة ====== -->
         <section id="about">
             <h2><i class="fas fa-info-circle"></i> عن ℕ𝔼𝕏</h2>
@@ -419,7 +341,6 @@
                     <h4>روابط سريعة</h4>
                     <a href="#home">الرئيسية</a>
                     <a href="#bots">البوتات</a>
-                    <a href="#community">المجتمع</a>
                     <a href="#about">عن المنصة</a>
                     <a href="#support">الدعم</a>
                 </div>
