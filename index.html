@@ -260,41 +260,102 @@
             </div>
         </section>
 
-        <!-- ====== المجتمع (الأفكار + الشات) ====== -->
-        <section id="community">
-            <h2><i class="fas fa-comments"></i> المجتمع</h2>
-            <p class="section-desc">تواصل مع أعضاء إمبراطورية ℕ𝔼𝕏 وشارك أفكارك</p>
+       <!-- ====== المجتمع المتكامل ====== -->
+<section id="community">
+    <h2><i class="fas fa-users"></i> مجتمع ℕ𝔼𝕏</h2>
+    <p class="section-desc">تواصل، شارك، وابنِ شبكة علاقاتك الرقمية</p>
+    
+    <div class="community-wrapper">
+        <!-- الشريط الجانبي للمجتمع -->
+        <aside class="community-sidebar">
+            <div class="community-profile-card">
+                <div class="profile-avatar" id="profileAvatar">👤</div>
+                <h4 id="profileName">زائر</h4>
+                <p id="profileStatus">غير مسجل</p>
+                <button id="profileEditBtn" class="profile-btn">تعديل الملف</button>
+            </div>
             
-            <div class="community-grid">
-                <!-- قسم الأفكار -->
-                <div class="community-card">
-                    <h3><i class="fas fa-lightbulb"></i> أفكار المجتمع</h3>
-                    <div id="communityIdeasList" class="community-ideas-list">
-                        <!-- ستظهر الأفكار هنا عبر JavaScript -->
-                    </div>
-                    <div class="community-input">
-                        <input type="text" id="communityIdeaInput" placeholder="شارك فكرتك..." />
-                        <button id="communityIdeaSend"><i class="fas fa-paper-plane"></i></button>
+            <nav class="community-nav">
+                <a href="#" class="active" data-section="feed"><i class="fas fa-newspaper"></i> الأخبار</a>
+                <a href="#" data-section="friends"><i class="fas fa-user-friends"></i> الأصدقاء</a>
+                <a href="#" data-section="messages"><i class="fas fa-envelope"></i> الرسائل</a>
+                <a href="#" data-section="notifications"><i class="fas fa-bell"></i> الإشعارات</a>
+                <a href="#" data-section="explore"><i class="fas fa-compass"></i> استكشف</a>
+            </nav>
+            
+            <div class="community-online">
+                <h5><i class="fas fa-circle online"></i> متصلون (<span id="onlineCount">0</span>)</h5>
+                <div id="onlineUsersList"></div>
+            </div>
+        </aside>
+
+        <!-- المحتوى الرئيسي للمجتمع -->
+        <main class="community-main">
+            <!-- قسم الأخبار (المنشورات) -->
+            <div id="feed-section" class="community-section active">
+                <div class="create-post">
+                    <div class="post-input-wrapper">
+                        <textarea id="postInput" placeholder="ماذا يحدث في إمبراطورية ℕ𝔼𝕏؟" rows="2"></textarea>
+                        <div class="post-actions">
+                            <button id="postImageBtn" class="post-action-btn"><i class="fas fa-image"></i></button>
+                            <button id="postSubmitBtn" class="post-submit-btn"><i class="fas fa-paper-plane"></i> نشر</button>
+                        </div>
                     </div>
                 </div>
+                <div id="feedPosts" class="feed-posts">
+                    <!-- تظهر المنشورات هنا -->
+                </div>
+            </div>
 
-                <!-- قسم الشات -->
-                <div class="community-card">
-                    <h3><i class="fas fa-comment-dots"></i> شات المجتمع</h3>
-                    <div class="community-chat-messages" id="communityChatMessages">
-                        <div class="chat-message system">👋 مرحباً بك في شات المجتمع!</div>
+            <!-- قسم الأصدقاء -->
+            <div id="friends-section" class="community-section">
+                <h3><i class="fas fa-user-friends"></i> الأصدقاء</h3>
+                <div class="friends-tabs">
+                    <button class="friends-tab active" data-tab="all">جميع الأصدقاء</button>
+                    <button class="friends-tab" data-tab="requests">طلبات الصداقة <span id="requestsCount">0</span></button>
+                    <button class="friends-tab" data-tab="suggestions">اقتراحات</button>
+                </div>
+                <div id="friendsList" class="friends-list"></div>
+            </div>
+
+            <!-- قسم الرسائل -->
+            <div id="messages-section" class="community-section">
+                <h3><i class="fas fa-envelope"></i> الرسائل الخاصة</h3>
+                <div class="messages-container">
+                    <div class="messages-list" id="messagesList">
+                        <!-- قائمة المحادثات -->
                     </div>
-                    <div class="community-chat-users" id="communityChatUsers">
-                        <span><i class="fas fa-circle online"></i> NEX_DEV 👑</span>
-                        <span><i class="fas fa-circle online"></i> المستخدم_1</span>
-                    </div>
-                    <div class="community-input">
-                        <input type="text" id="communityChatInput" placeholder="اكتب رسالتك..." />
-                        <button id="communityChatSend"><i class="fas fa-paper-plane"></i></button>
+                    <div class="message-chat" id="messageChat">
+                        <div class="message-chat-header" id="chatHeader">
+                            <span>اختر محادثة للبدء</span>
+                        </div>
+                        <div class="message-chat-body" id="chatMessages">
+                            <div class="message-placeholder">👋 اختر محادثة من اليسار</div>
+                        </div>
+                        <div class="message-chat-input">
+                            <input type="text" id="chatMessageInput" placeholder="اكتب رسالة..." disabled />
+                            <button id="chatMessageSend" disabled><i class="fas fa-paper-plane"></i></button>
+                        </div>
                     </div>
                 </div>
             </div>
-        </section>
+
+            <!-- قسم الإشعارات -->
+            <div id="notifications-section" class="community-section">
+                <h3><i class="fas fa-bell"></i> الإشعارات</h3>
+                <div id="notificationsList" class="notifications-list"></div>
+            </div>
+
+            <!-- قسم الاستكشاف -->
+            <div id="explore-section" class="community-section">
+                <h3><i class="fas fa-compass"></i> استكشف</h3>
+                <div class="explore-grid" id="exploreGrid">
+                    <!-- مستخدمين مقترحين -->
+                </div>
+            </div>
+        </main>
+    </div>
+</section>
 
         <!-- ====== عن المنصة ====== -->
         <section id="about">
