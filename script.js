@@ -276,102 +276,320 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // ============================================================
-    // 6. المجتمع (الأفكار العامة + الشات)
-    // ============================================================
-    function renderCommunityIdeas() {
-        const list = document.getElementById('communityIdeasList');
-        if (!list) return;
-        const ideas = getIdeas();
-        if (ideas.length === 0) {
-            list.innerHTML = '<div class="idea-item" style="text-align:center;color:var(--text-secondary);">لا توجد أفكار حالياً، كن أول من يشارك!</div>';
-            return;
-        }
-        list.innerHTML = ideas.map(function(idea, index) {
-            return '<div class="idea-item">' +
-                '<span class="idea-text">' + idea.text + '</span>' +
-                '<div class="idea-votes">' +
-                '<button onclick="voteIdea(' + index + ', -1)"><i class="fas fa-thumbs-down"></i></button>' +
-                '<span class="count" id="voteCount' + index + '">' + (idea.votes || 0) + '</span>' +
-                '<button onclick="voteIdea(' + index + ', 1)"><i class="fas fa-thumbs-up"></i></button>' +
-                '<span class="idea-date">' + new Date(idea.date).toLocaleDateString('ar') + '</span>' +
-                '</div></div>';
-        }).join('');
-    }
+// ====== المجتمع المتكامل – شبكة اجتماعية كاملة ======
+// ============================================================
 
-    window.voteIdea = function(index, value) {
-        const ideas = getIdeas();
-        if (!ideas[index]) return;
-        ideas[index].votes = (ideas[index].votes || 0) + value;
-        localStorage.setItem('nex_ideas', JSON.stringify(ideas));
-        renderCommunityIdeas();
+// ====== بنية بيانات المجتمع ======
+const CommunityDB = {
+    users: JSON.parse(localStorage.getItem('nex_users') || '[]'),
+    posts: JSON.parse(localStorage.getItem('nex_posts') || '[]'),
+    friends: JSON.parse(localStorage.getItem('nex_friends') || '{}'),
+    messages: JSON.parse(localStorage.getItem('nex_messages') || '{}'),
+    notifications: JSON.parse(localStorage.getItem('nex_notifications') || '[]'),
+    onlineUsers: ['NEX_DEV 👑', 'المستخدم_1']
+};
+
+// ====== المستخدم الحالي ======
+let currentUser = JSON.parse(localStorage.getItem('nex_current_user') || 'null');
+
+// ====== تهيئة المجتمع ======
+function initCommunity() {
+    if (!currentUser) {
+        document.querySelector('.community-profile-card h4').textContent = 'زائر';
+        document.querySelector('.community-profile-card p').textContent = 'سجل دخولك للمشاركة';
+        document.querySelector('.profile-avatar').textContent = '👤';
+        document.getElementById('profileEditBtn').style.display = 'none';
+        document.getElementById('postSubmitBtn').disabled = true;
+        return;
+    }
+    document.querySelector('.community-profile-card h4').textContent = currentUser.name;
+    document.querySelector('.community-profile-card p').textContent = currentUser.email;
+    document.querySelector('.profile-avatar').textContent = currentUser.name.charAt(0).toUpperCase();
+    document.getElementById('profileEditBtn').style.display = 'inline-block';
+    document.getElementById('postSubmitBtn').disabled = false;
+    
+    renderFeed();
+    renderFriends();
+    renderMessages();
+    renderNotifications();
+    renderExplore();
+    renderOnlineUsers();
+}
+
+// ====== إنشاء منشور ======
+function createPost(text, image = null) {
+    if (!currentUser) { alert('يرجى تسجيل الدخول أولاً'); return; }
+    if (!text.trim() && !image) return;
+    
+    const post = {
+        id: Date.now(),
+        author: currentUser.name,
+        authorEmail: currentUser.email,
+        text: text.trim(),
+        image: image,
+        time: new Date().toISOString(),
+        likes: [],
+        comments: []
     };
+    
+    CommunityDB.posts.unshift(post);
+    localStorage.setItem('nex_posts', JSON.stringify(CommunityDB.posts));
+    renderFeed();
+    addNotification('📝 نشرت منشوراً جديداً');
+}
 
-    document.getElementById('communityIdeaSend')?.addEventListener('click', function() {
-        const input = document.getElementById('communityIdeaInput');
-        if (!input) return;
-        const text = input.value.trim();
-        if (!text) return;
-        saveIdea(text);
-        input.value = '';
-        renderCommunityIdeas();
-        addCommunityMessage('💡 تم إضافة فكرة جديدة: "' + text + '"', 'system');
-    });
-
-    document.getElementById('communityIdeaInput')?.addEventListener('keydown', function(e) {
-        if (e.key === 'Enter') {
-            e.preventDefault();
-            document.getElementById('communityIdeaSend')?.click();
-        }
-    });
-
-    // شات المجتمع
-    let communityMessages = JSON.parse(localStorage.getItem('nex_community_messages') || '[]');
-
-    function renderCommunityChat() {
-        const container = document.getElementById('communityChatMessages');
-        if (!container) return;
-        container.innerHTML = communityMessages.map(function(msg) {
-            return '<div class="chat-message ' + msg.type + '"><span class="username">' + msg.user + ':</span> ' + msg.text + '</div>';
-        }).join('');
-        container.scrollTop = container.scrollHeight;
+// ====== عرض المنشورات ======
+function renderFeed() {
+    const feed = document.getElementById('feedPosts');
+    if (!feed) return;
+    
+    if (CommunityDB.posts.length === 0) {
+        feed.innerHTML = '<div class="post-card" style="text-align:center;color:var(--text-secondary);padding:40px;">📝 لا توجد منشورات بعد، كن أول من يشارك!</div>';
+        return;
     }
+    
+    feed.innerHTML = CommunityDB.posts.map(post => {
+        const isLiked = currentUser && post.likes.includes(currentUser.email);
+        return `
+            <div class="post-card" data-id="${post.id}">
+                <div class="post-header">
+                    <div class="post-avatar">${post.author.charAt(0).toUpperCase()}</div>
+                    <div>
+                        <div class="post-author">${post.author}</div>
+                        <div class="post-time">${timeAgo(post.time)}</div>
+                    </div>
+                </div>
+                <div class="post-content">${post.text}</div>
+                ${post.image ? `<img src="${post.image}" class="post-image" />` : ''}
+                <div class="post-actions-bar">
+                    <button onclick="toggleLike(${post.id})" class="${isLiked ? 'liked' : ''}">
+                        <i class="fas fa-heart"></i> ${post.likes.length}
+                    </button>
+                    <button onclick="toggleComments(${post.id})">
+                        <i class="fas fa-comment"></i> ${post.comments.length}
+                    </button>
+                    <button onclick="deletePost(${post.id})" style="color:#d32f2f;">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+                <div class="post-comments" id="comments-${post.id}" style="display:none;">
+                    ${post.comments.map(c => `
+                        <div class="post-comment">
+                            <span><span class="comment-author">${c.author}:</span> ${c.text}</span>
+                            <span class="comment-time">${timeAgo(c.time)}</span>
+                        </div>
+                    `).join('')}
+                    <div class="comment-input-wrapper">
+                        <input type="text" id="commentInput-${post.id}" placeholder="اكتب تعليقاً..." />
+                        <button onclick="addComment(${post.id})"><i class="fas fa-paper-plane"></i></button>
+                    </div>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
 
-    function addCommunityMessage(text, type, user) {
-        if (!user) user = 'نظام';
-        if (type === 'user') {
-            const currentUser = JSON.parse(localStorage.getItem('nex_current_user') || 'null');
-            user = currentUser ? currentUser.name : 'مستخدم';
-        }
-        communityMessages.push({ text: text, type: type, user: user });
-        localStorage.setItem('nex_community_messages', JSON.stringify(communityMessages));
-        renderCommunityChat();
+// ====== إعجاب ======
+window.toggleLike = function(postId) {
+    if (!currentUser) { alert('يرجى تسجيل الدخول'); return; }
+    const post = CommunityDB.posts.find(p => p.id === postId);
+    if (!post) return;
+    
+    const index = post.likes.indexOf(currentUser.email);
+    if (index > -1) {
+        post.likes.splice(index, 1);
+    } else {
+        post.likes.push(currentUser.email);
+        addNotification(`❤️ أعجبك منشور من ${post.author}`);
     }
+    localStorage.setItem('nex_posts', JSON.stringify(CommunityDB.posts));
+    renderFeed();
+};
 
-    document.getElementById('communityChatSend')?.addEventListener('click', function() {
-        const input = document.getElementById('communityChatInput');
-        if (!input) return;
-        const text = input.value.trim();
-        if (!text) return;
-        addCommunityMessage(text, 'user');
-        input.value = '';
+// ====== تعليق ======
+window.addComment = function(postId) {
+    if (!currentUser) { alert('يرجى تسجيل الدخول'); return; }
+    const input = document.getElementById(`commentInput-${postId}`);
+    if (!input) return;
+    const text = input.value.trim();
+    if (!text) return;
+    
+    const post = CommunityDB.posts.find(p => p.id === postId);
+    if (!post) return;
+    
+    post.comments.push({
+        author: currentUser.name,
+        text: text,
+        time: new Date().toISOString()
     });
+    localStorage.setItem('nex_posts', JSON.stringify(CommunityDB.posts));
+    renderFeed();
+    addNotification(`💬 علقت على منشور من ${post.author}`);
+};
 
-    document.getElementById('communityChatInput')?.addEventListener('keydown', function(e) {
-        if (e.key === 'Enter') {
-            e.preventDefault();
-            document.getElementById('communityChatSend')?.click();
-        }
-    });
+// ====== إظهار/إخفاء التعليقات ======
+window.toggleComments = function(postId) {
+    const el = document.getElementById(`comments-${postId}`);
+    if (el) el.style.display = el.style.display === 'none' ? 'block' : 'none';
+};
 
-    function renderCommunityUsers() {
-        const container = document.getElementById('communityChatUsers');
-        if (!container) return;
-        const users = ['NEX_DEV 👑', 'المستخدم_1', 'المستخدم_2'];
-        container.innerHTML = users.map(function(user) {
-            const isOnline = user.includes('👑') || Math.random() > 0.3;
-            return '<span><i class="fas fa-circle ' + (isOnline ? 'online' : 'offline') + '"></i> ' + user + '</span>';
-        }).join('');
+// ====== حذف منشور ======
+window.deletePost = function(postId) {
+    if (!currentUser) return;
+    const post = CommunityDB.posts.find(p => p.id === postId);
+    if (!post || post.authorEmail !== currentUser.email) {
+        alert('لا يمكنك حذف هذا المنشور');
+        return;
     }
+    if (confirm('هل أنت متأكد من حذف المنشور؟')) {
+        CommunityDB.posts = CommunityDB.posts.filter(p => p.id !== postId);
+        localStorage.setItem('nex_posts', JSON.stringify(CommunityDB.posts));
+        renderFeed();
+    }
+};
+
+// ====== الأصدقاء ======
+function renderFriends() {
+    const list = document.getElementById('friendsList');
+    if (!list) return;
+    
+    const userFriends = CommunityDB.friends[currentUser?.email] || [];
+    const requests = userFriends.filter(f => f.status === 'pending');
+    const friends = userFriends.filter(f => f.status === 'accepted');
+    
+    list.innerHTML = `
+        <div class="friends-tabs">
+            <button class="friends-tab active" onclick="showFriendsTab('all')">جميع الأصدقاء (${friends.length})</button>
+            <button class="friends-tab" onclick="showFriendsTab('requests')">طلبات الصداقة (${requests.length})</button>
+            <button class="friends-tab" onclick="showFriendsTab('suggestions')">اقتراحات</button>
+        </div>
+        <div id="friendsTabContent">
+            ${friends.map(f => `
+                <div class="friend-card">
+                    <div class="friend-avatar">${f.name.charAt(0).toUpperCase()}</div>
+                    <div class="friend-name">${f.name}</div>
+                    <div class="friend-status">صديق</div>
+                    <div class="friend-actions">
+                        <button class="message-btn" onclick="startChat('${f.email}')"><i class="fas fa-envelope"></i></button>
+                        <button class="remove-btn" onclick="removeFriend('${f.email}')"><i class="fas fa-user-minus"></i></button>
+                    </div>
+                </div>
+            `).join('') || '<div style="color:var(--text-secondary);text-align:center;padding:20px;">لا يوجد أصدقاء</div>'}
+        </div>
+    `;
+}
+
+window.showFriendsTab = function(tab) {
+    // سيتم تنفيذها لاحقاً
+};
+
+// ====== الرسائل الخاصة ======
+function renderMessages() {
+    const list = document.getElementById('messagesList');
+    if (!list) return;
+    
+    const userMessages = CommunityDB.messages[currentUser?.email] || {};
+    const chats = Object.keys(userMessages);
+    
+    list.innerHTML = chats.map(email => {
+        const messages = userMessages[email];
+        const last = messages[messages.length - 1];
+        const user = CommunityDB.users.find(u => u.email === email);
+        const name = user ? user.name : email;
+        return `
+            <div class="message-item" onclick="openChat('${email}')">
+                <div class="msg-avatar">${name.charAt(0).toUpperCase()}</div>
+                <div class="msg-info">
+                    <div class="msg-name">${name}</div>
+                    <div class="msg-preview">${last ? last.text : ''}</div>
+                </div>
+                <div class="msg-time">${last ? timeAgo(last.time) : ''}</div>
+            </div>
+        `;
+    }).join('') || '<div style="color:var(--text-secondary);text-align:center;padding:20px;">لا توجد رسائل</div>';
+}
+
+// ====== الإشعارات ======
+function renderNotifications() {
+    const list = document.getElementById('notificationsList');
+    if (!list) return;
+    
+    list.innerHTML = CommunityDB.notifications.map(n => `
+        <div class="notification-item">
+            <span class="notif-icon">${n.icon || '🔔'}</span>
+            <span class="notif-content">${n.text}</span>
+            <span class="notif-time">${timeAgo(n.time)}</span>
+        </div>
+    `).join('') || '<div style="color:var(--text-secondary);text-align:center;padding:20px;">لا توجد إشعارات</div>';
+}
+
+function addNotification(text, icon = '🔔') {
+    CommunityDB.notifications.unshift({
+        text: text,
+        time: new Date().toISOString(),
+        icon: icon
+    });
+    if (CommunityDB.notifications.length > 50) CommunityDB.notifications.pop();
+    localStorage.setItem('nex_notifications', JSON.stringify(CommunityDB.notifications));
+    renderNotifications();
+}
+
+// ====== المستخدمين المتصلين ======
+function renderOnlineUsers() {
+    const list = document.getElementById('onlineUsersList');
+    if (!list) return;
+    document.getElementById('onlineCount').textContent = CommunityDB.onlineUsers.length;
+    list.innerHTML = CommunityDB.onlineUsers.map(user => `
+        <div class="online-user">
+            <span class="dot online"></span>
+            ${user}
+        </div>
+    `).join('');
+}
+
+// ====== timeAgo ======
+function timeAgo(date) {
+    const now = new Date();
+    const past = new Date(date);
+    const diff = Math.floor((now - past) / 1000);
+    if (diff < 60) return 'الآن';
+    if (diff < 3600) return Math.floor(diff / 60) + ' دقيقة';
+    if (diff < 86400) return Math.floor(diff / 3600) + ' ساعة';
+    if (diff < 2592000) return Math.floor(diff / 86400) + ' يوم';
+    return past.toLocaleDateString('ar');
+}
+
+// ====== استكشاف ======
+function renderExplore() {
+    const grid = document.getElementById('exploreGrid');
+    if (!grid) return;
+    const users = CommunityDB.users.filter(u => u.email !== currentUser?.email);
+    grid.innerHTML = users.map(u => `
+        <div class="explore-card">
+            <div class="explore-avatar">${u.name.charAt(0).toUpperCase()}</div>
+            <div class="explore-name">${u.name}</div>
+            <div class="explore-bio">${u.bio || 'عضو في ℕ𝔼𝕏'}</div>
+            <button class="explore-btn" onclick="sendFriendRequest('${u.email}')">➕ إضافة صديق</button>
+        </div>
+    `).join('') || '<div style="color:var(--text-secondary);text-align:center;padding:20px;">لا يوجد مستخدمين للاستكشاف</div>';
+}
+
+// ====== تنقل المجتمع ======
+document.querySelectorAll('.community-nav a').forEach(link => {
+    link.addEventListener('click', function(e) {
+        e.preventDefault();
+        const section = this.dataset.section;
+        document.querySelectorAll('.community-nav a').forEach(l => l.classList.remove('active'));
+        this.classList.add('active');
+        document.querySelectorAll('.community-section').forEach(s => s.classList.remove('active'));
+        document.getElementById(section + '-section').classList.add('active');
+    });
+});
+
+// ====== تهيئة المجتمع عند التحميل ======
+setTimeout(initCommunity, 100);
+
+console.log('🏛️ ℕ𝔼𝕏 Community - شبكة اجتماعية متكاملة');
 
     // ============================================================
     // 7. لوحة تحكم المطور
