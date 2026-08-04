@@ -1,12 +1,14 @@
 // ============================================================
-// ℕ𝔼𝕏 Empire - بدون تسجيل دخول
-// شات NEX + شات الأفكار المطور
+// ℕ𝔼𝕏 Empire - الملف الكامل النهائي
+// بدون تسجيل دخول - شات NEX + شات الأفكار المطور
 // ============================================================
 
 document.addEventListener('DOMContentLoaded', function() {
     console.log('🚀 ℕ𝔼𝕏 Empire - تم تحميل الصفحة');
 
-    // ====== 1. تبديل الوضع ======
+    // ============================================================
+    // 1. تبديل الوضع (ليلي/نهاري)
+    // ============================================================
     const themeToggle = document.getElementById('themeToggle');
     const body = document.body;
 
@@ -23,7 +25,9 @@ document.addEventListener('DOMContentLoaded', function() {
         };
     }
 
-    // ====== 2. القائمة الجانبية ======
+    // ============================================================
+    // 2. القائمة الجانبية
+    // ============================================================
     const sidebarToggle = document.getElementById('sidebarToggle');
     const sidebar = document.getElementById('sidebar');
 
@@ -37,7 +41,9 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // ====== 3. دوال فتح وإغلاق النوافذ ======
+    // ============================================================
+    // 3. دوال فتح وإغلاق النوافذ
+    // ============================================================
     function openOverlay(id) {
         const el = document.getElementById(id);
         if (el) { el.classList.add('open'); document.body.style.overflow = 'hidden'; }
@@ -47,7 +53,9 @@ document.addEventListener('DOMContentLoaded', function() {
         if (el) { el.classList.remove('open'); document.body.style.overflow = ''; }
     }
 
-    // ====== 4. شات NEX ======
+    // ============================================================
+    // 4. شات NEX
+    // ============================================================
     const chatOverlay = document.getElementById('chatOverlay');
     const chatClose = document.getElementById('chatClose');
     const devChatNex = document.getElementById('devChatNex');
@@ -165,7 +173,9 @@ document.addEventListener('DOMContentLoaded', function() {
         };
     });
 
-    // ====== 5. شات الأفكار المطور ======
+    // ============================================================
+    // 5. شات الأفكار المطور (مع إصلاح العرض)
+    // ============================================================
     const ideasOverlay = document.getElementById('ideasOverlay');
     const ideasClose = document.getElementById('ideasClose');
     const devIdeasToggle = document.getElementById('devIdeasToggle');
@@ -178,6 +188,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function openIdeasChat() {
         openOverlay('ideasOverlay');
+        renderAllIdeas();
         setTimeout(function() { if (ideasInput) ideasInput.focus(); }, 300);
     }
 
@@ -205,6 +216,37 @@ document.addEventListener('DOMContentLoaded', function() {
         };
     }
 
+    // ====== عرض جميع الأفكار في شات الأفكار ======
+    function renderAllIdeas() {
+        if (!ideasMessages) return;
+        const ideas = getIdeas();
+
+        if (ideas.length === 0) {
+            ideasMessages.innerHTML = `
+                <div class="idea-message system">💡 أهلاً بك في شات أفكار ℕ𝔼𝕏! شاركنا اقتراحاتك لتطوير الإمبراطورية.</div>
+            `;
+            return;
+        }
+
+        let html = '';
+        html += `<div class="idea-message system">💡 أهلاً بك في شات أفكار ℕ𝔼𝕏! شاركنا اقتراحاتك لتطوير الإمبراطورية.</div>`;
+
+        const reversedIdeas = [...ideas].reverse();
+        reversedIdeas.forEach(function(idea) {
+            const date = new Date(idea.date);
+            const timeStr = date.toLocaleDateString('ar') + ' ' + date.toLocaleTimeString('ar', {hour: '2-digit', minute: '2-digit'});
+            html += `
+                <div class="idea-message user">
+                    💡 ${idea.text}
+                    <small style="display:block;font-size:0.6rem;opacity:0.7;margin-top:4px;">📅 ${timeStr}</small>
+                </div>
+            `;
+        });
+
+        ideasMessages.innerHTML = html;
+        ideasMessages.scrollTop = ideasMessages.scrollHeight;
+    }
+
     function addIdeaMessage(text, type) {
         if (!ideasMessages) return;
         const div = document.createElement('div');
@@ -219,6 +261,8 @@ document.addEventListener('DOMContentLoaded', function() {
         ideas.push({ text: text, date: new Date().toISOString() });
         localStorage.setItem('nex_ideas', JSON.stringify(ideas));
         updateIdeasStats();
+        renderAllIdeas();
+        updateDevPanel();
     }
 
     function getIdeas() {
@@ -253,7 +297,8 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
-        addIdeaMessage(text, 'user');
+        // إضافة الفكرة
+        addIdeaMessage('📝 ' + text, 'user');
         saveIdea(text);
         ideasInput.value = '';
 
@@ -269,6 +314,7 @@ document.addEventListener('DOMContentLoaded', function() {
             ];
             const reply = replies[Math.floor(Math.random() * replies.length)];
             addIdeaMessage(reply, 'system');
+            renderAllIdeas();
         }, 600);
     }
 
@@ -279,16 +325,25 @@ document.addEventListener('DOMContentLoaded', function() {
         };
     }
 
-    // ====== 6. لوحة تحكم المطور ======
+    // ============================================================
+    // 6. لوحة تحكم المطور
+    // ============================================================
     function updateDevPanel() {
         const ideas = getIdeas();
         document.getElementById('ideasCount').textContent = ideas.length;
 
         const ideasList = document.getElementById('devIdeasList');
         if (ideasList) {
-            ideasList.innerHTML = ideas.length ? ideas.map(function(i, index) {
-                return '<div class="dev-idea-item"><span>#' + (index + 1) + ' ' + i.text + '</span><span class="date">' + new Date(i.date).toLocaleDateString('ar') + '</span></div>';
-            }).join('') : '<div class="dev-idea-item">لا توجد أفكار حالياً</div>';
+            if (ideas.length === 0) {
+                ideasList.innerHTML = '<div class="dev-idea-item">لا توجد أفكار حالياً</div>';
+            } else {
+                const reversedIdeas = [...ideas].reverse();
+                ideasList.innerHTML = reversedIdeas.map(function(i, index) {
+                    const date = new Date(i.date);
+                    const timeStr = date.toLocaleDateString('ar') + ' ' + date.toLocaleTimeString('ar', {hour: '2-digit', minute: '2-digit'});
+                    return '<div class="dev-idea-item"><span>#' + (index + 1) + ' ' + i.text + '</span><span class="date">' + timeStr + '</span></div>';
+                }).join('');
+            }
         }
     }
 
@@ -300,7 +355,9 @@ document.addEventListener('DOMContentLoaded', function() {
         if (e.target === this) this.classList.remove('open');
     };
 
-    // ====== 7. إغلاق النوافذ بـ Escape ======
+    // ============================================================
+    // 7. إغلاق النوافذ بـ Escape
+    // ============================================================
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') {
             ['chatOverlay', 'ideasOverlay'].forEach(function(id) {
@@ -310,7 +367,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // ====== 8. عداد الأرقام ======
+    // ============================================================
+    // 8. عداد الأرقام المتحرك
+    // ============================================================
     const numbers = document.querySelectorAll('.number');
     if (numbers.length) {
         const hero = document.querySelector('.hero');
@@ -339,7 +398,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // ====== 9. رسالة ترحيب في شات NEX ======
+    // ============================================================
+    // 9. رسالة ترحيب في شات NEX
+    // ============================================================
     setTimeout(function() {
         if (chatNexMessages && !chatNexMessages.children.length) {
             const div = document.createElement('div');
@@ -349,7 +410,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }, 500);
 
-    // ====== 10. تحميل Tawk.to ======
+    // ============================================================
+    // 10. تحميل Tawk.to
+    // ============================================================
     setTimeout(function() {
         const container = document.getElementById('tawkContainer');
         const iframe = document.querySelector('#tawk-container iframe');
@@ -360,8 +423,15 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }, 3000);
 
-    // ====== 11. تحديث إحصائيات الأفكار ======
+    // ============================================================
+    // 11. تحميل الأفكار عند بدء الصفحة
+    // ============================================================
     updateIdeasStats();
+    setTimeout(function() {
+        renderAllIdeas();
+        updateDevPanel();
+    }, 300);
 
     console.log('✅ ℕ𝔼𝕏 Empire - جميع الأزرار والوظائف تعمل!');
+    console.log('💡 عدد الأفكار المحفوظة:', getIdeas().length);
 });
