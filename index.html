@@ -4,7 +4,6 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>ℕ𝔼𝕏 Empire | منصة الذكاء الرقمي</title>
-    <meta name="description" content="إمبراطورية ℕ𝔼𝕏 - منصة متكاملة للبوتات والذكاء الاصطناعي" />
     <link rel="stylesheet" href="style.css" />
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
@@ -56,12 +55,16 @@
         </div>
     </div>
 
-    <!-- ====== نافذة الأفكار ====== -->
+    <!-- ====== نافذة الأفكار (المطورة) ====== -->
     <div id="ideasOverlay" class="ideas-overlay">
         <div class="ideas-container">
             <div class="ideas-header">
                 <span><i class="fas fa-lightbulb"></i> شات الأفكار</span>
                 <button id="ideasClose" class="ideas-close"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="ideas-stats" id="ideasStats">
+                <span>💡 <span id="totalIdeas">0</span> فكرة</span>
+                <span>🔥 <span id="todayIdeas">0</span> اليوم</span>
             </div>
             <div class="ideas-messages" id="ideasMessages">
                 <div class="idea-message system">💡 أهلاً بك في شات أفكار ℕ𝔼𝕏! شاركنا اقتراحاتك لتطوير الإمبراطورية.</div>
@@ -76,50 +79,6 @@
         </div>
     </div>
 
-    <!-- ====== نافذة تسجيل الدخول ====== -->
-    <div id="authOverlay" class="auth-overlay">
-        <div class="auth-container">
-            <div class="auth-header">
-                <h2>مرحباً بك في ℕ𝔼𝕏</h2>
-                <p>سجل دخولك للوصول لميزات متقدمة</p>
-            </div>
-            <div class="auth-tabs">
-                <button class="auth-tab active" data-tab="login">تسجيل دخول</button>
-                <button class="auth-tab" data-tab="register">إنشاء حساب</button>
-            </div>
-
-            <!-- تسجيل الدخول -->
-            <div id="auth-login" class="auth-form active">
-                <input type="email" id="loginEmail" placeholder="البريد الإلكتروني" />
-                <input type="password" id="loginPassword" placeholder="كلمة السر" />
-                <div id="loginOtpContainer" style="display:none;">
-                    <input type="text" id="loginOtp" placeholder="أدخل كود التحقق (6 أرقام)" maxlength="6" />
-                    <button id="loginResendOtp" class="auth-btn" style="background:transparent;color:var(--accent);font-size:0.8rem;padding:4px;">إعادة إرسال الكود</button>
-                </div>
-                <button id="loginBtn" class="auth-btn">تسجيل الدخول</button>
-                <button id="loginVerifyBtn" class="auth-btn" style="display:none;">تحقق من الكود</button>
-                <div class="auth-or"><span>أو</span></div>
-                <button id="googleLogin" class="auth-btn google"><i class="fab fa-google"></i> تسجيل بجوجل</button>
-            </div>
-
-            <!-- إنشاء حساب -->
-            <div id="auth-register" class="auth-form">
-                <input type="text" id="regName" placeholder="الاسم الكامل" />
-                <input type="email" id="regEmail" placeholder="البريد الإلكتروني" />
-                <input type="password" id="regPassword" placeholder="كلمة السر" />
-                <input type="password" id="regConfirm" placeholder="تأكيد كلمة السر" />
-                <div id="registerOtpContainer" style="display:none;">
-                    <input type="text" id="registerOtp" placeholder="أدخل كود التحقق (6 أرقام)" maxlength="6" />
-                    <button id="registerResendOtp" class="auth-btn" style="background:transparent;color:var(--accent);font-size:0.8rem;padding:4px;">إعادة إرسال الكود</button>
-                </div>
-                <button id="registerBtn" class="auth-btn">إنشاء حساب</button>
-                <button id="registerVerifyBtn" class="auth-btn" style="display:none;">تحقق من الكود</button>
-            </div>
-
-            <div class="auth-close"><button id="authClose"><i class="fas fa-times"></i></button></div>
-        </div>
-    </div>
-
     <!-- ====== لوحة تحكم المطور ====== -->
     <div id="devPanel" class="dev-panel">
         <div class="dev-panel-content">
@@ -129,16 +88,11 @@
             </div>
             <div class="dev-panel-body">
                 <div class="dev-stats">
-                    <div class="dev-stat"><i class="fas fa-users"></i> المستخدمين: <span id="userCount">0</span></div>
                     <div class="dev-stat"><i class="fas fa-lightbulb"></i> الأفكار: <span id="ideasCount">0</span></div>
                 </div>
                 <div class="dev-section">
-                    <h3>💡 أفكار المستخدمين</h3>
+                    <h3>💡 جميع الأفكار</h3>
                     <div id="devIdeasList" class="dev-ideas-list"></div>
-                </div>
-                <div class="dev-section">
-                    <h3>👤 المستخدمين المسجلين</h3>
-                    <div id="devUsersList" class="dev-users-list"></div>
                 </div>
             </div>
         </div>
@@ -156,7 +110,6 @@
             <a href="#features"><i class="fas fa-cogs"></i> <span>الميزات</span></a>
             <a href="#about"><i class="fas fa-info-circle"></i> <span>عن المنصة</span></a>
             <a href="#support"><i class="fas fa-headset"></i> <span>الدعم</span></a>
-            <a href="#" id="authToggle"><i class="fas fa-user"></i> <span>تسجيل الدخول</span></a>
         </nav>
         <div class="sidebar-footer">
             <p>𝑵𝑬𝑿_𝑫𝑬𝑽_𝑽𝟏</p>
@@ -223,7 +176,7 @@
                         <span><i class="fas fa-check"></i> ذكاء اصطناعي</span>
                     </div>
                     <span class="status online"><i class="fas fa-circle"></i> نشط</span>
-                    <a href="https://t.me/Tigrex_V1_bot" target="_blank" class="bot-btn"><i class="fab fa-telegram"></i> تجربة البوت</a>
+                    <a href="#" class="bot-btn"><i class="fab fa-telegram"></i> تجربة البوت</a>
                 </div>
                 <div class="bot-card maintenance">
                     <div class="bot-icon">🔄</div>
@@ -309,16 +262,16 @@
             <h2><i class="fas fa-headset"></i> الدعم</h2>
             <p class="section-desc">فريق دعم متخصص على مدار الساعة</p>
             <div class="support-links">
-                <a href="https://whatsapp.com/channel/0029Vb6ABUf7IUYRaBVFPu3f" target="_blank" class="support-link whatsapp">
+                <a href="#" class="support-link whatsapp">
                     <i class="fab fa-whatsapp"></i> قناة واتساب
                 </a>
-                <a href="https://t.me/+dojQs3Dxo-YzMDlk" target="_blank" class="support-link telegram">
+                <a href="#" class="support-link telegram">
                     <i class="fab fa-telegram"></i> قناة تليغرام
                 </a>
-                <a href="https://chat.whatsapp.com/DfAefWpYypaInWIqxPFVmW" target="_blank" class="support-link support-group">
+                <a href="#" class="support-link support-group">
                     <i class="fas fa-users"></i> مجموعة الدعم
                 </a>
-                <a href="https://wa.me/0998251277" target="_blank" class="support-link developer">
+                <a href="#" class="support-link developer">
                     <i class="fas fa-code"></i> المطور
                 </a>
             </div>
@@ -331,10 +284,10 @@
                     <h3>ℕ𝔼𝕏</h3>
                     <p>منصة الذكاء الرقمي</p>
                     <div class="social-icons">
-                        <a href="https://github.com/NEX-1-Dev" target="_blank"><i class="fab fa-github"></i></a>
-                        <a href="https://t.me/+dojQs3Dxo-YzMDlk" target="_blank"><i class="fab fa-telegram"></i></a>
-                        <a href="https://whatsapp.com/channel/0029Vb6ABUf7IUYRaBVFPu3f" target="_blank"><i class="fab fa-whatsapp"></i></a>
-                        <a href="#" target="_blank"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-github"></i></a>
+                        <a href="#"><i class="fab fa-telegram"></i></a>
+                        <a href="#"><i class="fab fa-whatsapp"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
                     </div>
                 </div>
                 <div class="footer-section">
